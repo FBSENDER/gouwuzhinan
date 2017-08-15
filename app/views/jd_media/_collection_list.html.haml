@@ -1,0 +1,9 @@
+.c-list
+  - cs.each do |c|
+    %a{href: "/collection/#{c.id}/"}
+      .list-item
+        %p.title #{c.title}
+        %p.desc #{c.description}
+        .img-area
+          - c.sku_img_urls.split(',').each_with_index do |img_url, index|
+            %img{src: "#{img_url}", alt: "#{c.title}图片#{index}",style: "#{'float: left;' if index > 0}#{'margin: 0;' if index == 2}"}

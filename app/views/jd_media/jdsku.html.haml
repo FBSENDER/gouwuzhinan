@@ -1,0 +1,23 @@
+- title("#{@sku.title}_购物指南")
+- head_desc("#{@sku.title}，#{@sku.description if @sku.description && !@sku.description.empty?}购物指南网 - 每日精品推荐，天天特价，新品不断!汇聚环球购物、家家购物、东方购物、家有购物、优购物等网站指南攻略，网络购物，一站指南！")
+- keywords("#{@sku.title},#{@sku.title}购买指南,#{@sku.title}折扣,#{@sku.title}优惠")
+- path(@path)
+- h1(@sku.title)
+
+.wrapper
+  .product-list-2
+    .product-item
+      .img-area
+        %img{src: "#{@sku.img_url}", alt: "#{@sku.title}图片"}
+        .mask
+          %p.title #{@sku.title}
+          %p.price-area
+            %span.price ￥#{@sku.price}
+            - if @sku.o_price > 0
+              %span.o-price 原价 ￥#{@sku.o_price}
+            - else
+              %span.o-price 去看看 别错过
+    .desc-area
+      %p #{@sku.description}
+  = render partial: "jd_media/sku_list_1", locals: {skus: @skus}
+  = render partial: "jd_media/collection_list", locals: {cs: @cs}

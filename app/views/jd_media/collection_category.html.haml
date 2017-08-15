@@ -1,0 +1,14 @@
+- title("#{@title}_购物指南")
+- head_desc("#{@title}，购物指南网 - 每日精品推荐，天天特价，新品不断!汇聚环球购物、家家购物、东方购物、家有购物、优购物等网站指南攻略，网络购物，一站指南！")
+- keywords("购物指南,家家购物,环球购物,东方购物,天天特价,天天新品,优购物,家有购物")
+- path(@path)
+- h1(@title)
+
+.wrapper
+  = render partial: "jd_media/collection_list", locals: {cs: @cs}
+  .sno
+    %p 
+      页码:
+      - (0..@page_count).to_a.each do |num|
+        %a{href: "#{@path}?page=#{num}"} 第#{num}页
+      

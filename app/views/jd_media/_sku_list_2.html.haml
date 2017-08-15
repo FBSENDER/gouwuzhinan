@@ -1,0 +1,32 @@
+.product-list-2
+  - skus.each_with_index do |sku, index| 
+    - if !@is_robot && sku.ad_url && !sku.ad_url.empty?
+      %a{href: "#{sku.ad_url}", target: "_blank"}
+        .product-item
+          .img-area
+            %img{src: "#{sku.img_url}", alt: "#{sku.title}"}
+            .mask
+              %p.title #{sku.title}
+              %p.price-area
+                %span.price ￥#{sku.price}
+                - if sku.o_price > 0
+                  %span.o-price 原价 ￥#{sku.o_price}
+                - else
+                  %span.o-price 去看看 别错过
+        .product-item
+          %p.desc #{sku.description}
+    - else
+      %a{href: "/jdsku/#{sku.id}/", target: "_blank"}
+        .product-item
+          .img-area
+            %img{src: "#{sku.img_url}", alt: "#{sku.title}"}
+            .mask
+              %p.title #{sku.title}
+              %p.price-area
+                %span.price ￥#{sku.price}
+                - if sku.o_price > 0
+                  %span.o-price 原价 ￥#{sku.o_price}
+                - else
+                  %span.o-price 去看看 别错过
+        .product-item
+          %p.desc #{sku.description}

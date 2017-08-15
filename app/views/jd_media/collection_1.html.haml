@@ -1,0 +1,15 @@
+- title("#{@collection.title}_购物指南")
+- head_desc("#{@collection.title},#{@collection.description} - 购物指南")
+- keywords("购物指南,gouwuzhinan,#{@collection.title}")
+- path(@path)
+- h1(@collection.title)
+
+.wrapper
+  %img{src: "#{@collection.img_url}", alt: "#{@title}"}
+  %p.collection-title #{@collection.title}
+  %p.collection-desc #{@collection.description}
+  %p.sno
+    %a{href: "/"} 购物指南
+    %a{href: "/cc/#{@collection.category}/"} 精品购物指南
+  = render partial: "jd_media/sku_list_1", locals: {skus: @skus}
+  = render partial: "jd_media/collection_list", locals: {cs: @cs}

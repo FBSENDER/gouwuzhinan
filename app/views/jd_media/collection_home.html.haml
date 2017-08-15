@@ -1,0 +1,27 @@
+- title("购物指南-家家购物攻略,天天特价,天天新品")
+- head_desc("购物指南网 - 每日精品推荐，天天特价，新品不断!汇聚环球购物、家家购物、东方购物、家有购物、优购物等网站指南攻略，网络购物，一站指南！")
+- keywords("购物指南,家家购物,环球购物,东方购物,天天特价,天天新品,优购物,家有购物")
+- path(@path)
+- h1("家家购物指南")
+
+.wrapper
+  %h2.sno
+    %a{href: "/cc/7/"} 精选购物指南
+  = render partial: "jd_media/collection_list", locals: {cs: @cs7}
+  %h2.sno
+    %a{href: "/cc/1/"} 服饰购物指南
+  = render partial: "jd_media/collection_list", locals: {cs: @cs1}
+  %h2.sno
+    %a{href: "/cc/2/"} 礼物购物指南
+  = render partial: "jd_media/collection_list", locals: {cs: @cs2}
+  %h2.sno
+    %a{href: "/cc/3/"} 美妆购物指南
+  = render partial: "jd_media/collection_list", locals: {cs: @cs3}
+  %h2.sno
+    %a{href: "/cc/4/"} 娱乐购物指南
+  = render partial: "jd_media/collection_list", locals: {cs: @cs4}
+  %h2.sno
+    %a{href: "/cc/5/"} 美食购物指南
+  %h2.sno
+    %a{href: "/cc/6/"} 阅读购物指南
+  = render partial: "jd_media/collection_list", locals: {cs: @cs6}
