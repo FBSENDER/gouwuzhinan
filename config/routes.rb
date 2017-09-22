@@ -4,4 +4,10 @@ Rails.application.routes.draw do
   get "collection/:id", to: "jd_media#collection"
   get "cc/:id", to: "jd_media#collection_category"
   get "jdsku/:id", to: "jd_media#jdsku"
+  get "tj/:wx_id/", to: "tj#tj"
+  get "tjp/:wx_id/", to: "tj#tj_point"
+
+  get "mm/topic/:id", to: "mm#topic"
+  get "mm/tag/:tag", to: "mm#tag"
+  get "mm/hot_tags", to: "mm#hot_tags"
 end
