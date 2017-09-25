@@ -45,13 +45,15 @@ class MmController < ApplicationController
         return
       end
       keyword = pkeyword.strip
-      save_search_keyword(keyword)
+      page = params[:page] ? params[:page].to_i : 0
+      if(page == 0)
+        save_search_keyword(keyword)
+      end
       tag = MmTag.where(tag: keyword).take
       unless tag.nil?
         redirect_to "/mm/tag/#{URI.encode(keyword)}/", status: 302
         return
       end
-      page = params[:page] ? params[:page].to_i : 0
       all_ids = MmTopic.where("title like ?", "%#{keyword}%").order("id desc").pluck(:id)
       ids = all_ids[page * 20, 20].map{|id| id.to_i}
       topics = MmTopic.where(id: ids).select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
