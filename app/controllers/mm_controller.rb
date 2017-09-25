@@ -14,6 +14,36 @@ class MmController < ApplicationController
     end
   end
 
+  def new
+    begin
+      page = params[:page] ? params[:page].to_i : 0
+      if(page > 20)
+        render json: {status: 0}
+        return
+      end
+      topics = MmTopic.order("id desc").offset(page * 20).limit(20).select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
+      render json: {status: 1, content: topics, total: 20}
+    rescue Exception => ex
+      puts ex
+      render json: {status: 0}
+    end
+  end
+
+  def hot
+    begin
+      page = params[:page] ? params[:page].to_i : 0
+      if(page > 20)
+        render json: {status: 0}
+        return
+      end
+      topics = MmTopic.order("views desc").offset(page * 20).limit(20).select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
+      render json: {status: 1, content: topics, total: 20}
+    rescue Exception => ex
+      puts ex
+      render json: {status: 0}
+    end
+  end
+
   def tag
     begin
       tag_name = params[:tag]
