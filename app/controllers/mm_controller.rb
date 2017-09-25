@@ -44,6 +44,19 @@ class MmController < ApplicationController
     end
   end
 
+  def collect
+    begin
+      page = params[:page] ? params[:page].to_i : 0
+      all_ids = params[:ids].nil? ? [] : params[:ids].strip.split(',')
+      ids = all_ids[page * 20, 20].map{|id| id.to_i}
+      topics = MmTopic.where(id: ids).select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
+      render json: {status: 1, content: topics, total: all_ids.size}
+    rescue Exception => ex
+      puts ex
+      render json: {status: 0}
+    end
+  end
+
   def tag
     begin
       tag_name = params[:tag]
