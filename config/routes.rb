@@ -15,4 +15,5 @@ Rails.application.routes.draw do
   get "mm/new", to: "mm#new"
   get "mm/hot", to: "mm#hot"
   get "mm/app_init_config", to: "mm#app_init_config"
+  get "mm/app_feedback", to: "mm#app_feedback"
 end

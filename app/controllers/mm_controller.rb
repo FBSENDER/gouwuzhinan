@@ -117,4 +117,18 @@ class MmController < ApplicationController
     config = MmAppInitConfig.take
     render json: {status: 1,inreview: config.inreview, update: {update_type: config.update_type, update_url: config.update_url, update_text: config.update_text, update_version: config.update_version}, appstore_comment_text: config.appstore_comment_text, appstore_comment_button_text: config.appstore_comment_button_text, default_tag: config.default_tag, default_hot: config.default_hot}
   end
+
+  def app_feedback
+    begin
+      feed = MmFeedback.new
+      feed.content = params[:content]
+      feed.device_id = params[:device_id]
+      feed.version = params[:version]
+      feed.save
+      render json: {status: 1}
+    rescue Exception => ex
+      puts ex
+      render json: {status: 0}
+    end
+  end
 end
