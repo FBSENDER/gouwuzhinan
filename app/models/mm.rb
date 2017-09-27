@@ -9,3 +9,7 @@ end
 class MmSearchKeyword < ApplicationRecord
   self.table_name = 'mmjpg_search_keywords'
 end
+
+class MmAppInitConfig < ApplicationRecord
+  self.table_name = 'mmjpg_app_initconfig'
+end
