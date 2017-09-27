@@ -99,6 +99,9 @@ class MmController < ApplicationController
       end
       all_ids = MmTopic.where("title like ?", "%#{keyword}%").order("id desc").pluck(:id)
       ids = all_ids[page * 20, 20].map{|id| id.to_i}
+      if ids.size.zero?
+        ids = (1..1000).to_a.sample(20)
+      end
       topics = MmTopic.where(id: ids).select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
       render json: {status: 1, content: topics, total: all_ids.size}
     rescue Exception => ex
