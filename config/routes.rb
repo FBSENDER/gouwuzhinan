@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get "mm/topic/:id", to: "mm#topic"
   get "mm/tag/:tag", to: "mm#tag"
   get "mm/hot_tags", to: "mm#hot_tags"
+  get "mm/search/", to: "mm#search"
   get "mm/search/:keyword", to: "mm#search"
   get "mm/collect/:ids", to: "mm#collect"
   get "mm/new", to: "mm#new"
