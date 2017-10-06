@@ -84,7 +84,7 @@ class MmController < ApplicationController
     begin
       config = MmAppInitConfig.take
       if config.inreview == 1
-        topics = MmTopic.where(tag: '明星').order("id desc").select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
+        topics = MmTopic.where(tags: '明星').order("id desc").select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
         render json: {status: 1, content: topics, total: topics.size}
         return
       end
