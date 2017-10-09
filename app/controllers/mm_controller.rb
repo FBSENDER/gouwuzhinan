@@ -82,12 +82,6 @@ class MmController < ApplicationController
 
   def search
     begin
-      config = MmAppInitConfig.take
-      if config.inreview == 1
-        topics = MmTopic.where(tags: '明星').order("id desc").select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
-        render json: {status: 1, content: topics, total: topics.size}
-        return
-      end
       pkeyword = params[:keyword]
       if(pkeyword.nil? || pkeyword.strip.empty?)
         ids = (1..1000).to_a.sample(20)
