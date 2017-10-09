@@ -84,7 +84,8 @@ class MmController < ApplicationController
     begin
       pkeyword = params[:keyword]
       if(pkeyword.nil? || pkeyword.strip.empty?)
-        ids = (1..1000).to_a.sample(20)
+        #ids = (1..1000).to_a.sample(20)
+        ids = (1..202).to_a.sample(20)
         topics = MmTopic.where(id: ids).select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
         render json: {status: 1, content: topics, total: 0}
         return
@@ -102,7 +103,7 @@ class MmController < ApplicationController
       all_ids = MmTopic.where("title like ?", "%#{keyword}%").order("id desc").pluck(:id)
       ids = all_ids[page * 20, 20].map{|id| id.to_i}
       if ids.size.zero?
-        ids = (1..1000).to_a.sample(20)
+        ids = (1..202).to_a.sample(20)
       end
       topics = MmTopic.where(id: ids).select(:id, :title, :image_dir, :views, :likes, :published_at, :tags).to_a
       render json: {status: 1, content: topics, total: all_ids.size}
