@@ -14,7 +14,7 @@ class TopicController < ApplicationController
     @coupons = JSON.parse(@topic.json_data)
     @title = @topic.title
     @desc = build_coupon_desc_1(@topic.search_keyword, @coupons)
-    render "/mip/topic/topic_show_1"
+    render "/mip/topic/topic_show_1", layout: "xiongzhang"
   end
 
   def show_1
