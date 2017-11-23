@@ -39,18 +39,18 @@
     </article>
   </div>
   <% if !@related_topics.nil? && @related_topics.size > 0  %>
-    <% @related_topics.each do |topic| %>
-      <div class="item-wrap">
-        <section class="related-news section" data-pos="2">
-          <div class="section-title">
-            <h2>相关推荐</h2>
-          </div>
-          <ul>
+    <div class="item-wrap">
+      <section class="related-news section" data-pos="2">
+        <div class="section-title">
+          <h2>相关推荐</h2>
+        </div>
+        <ul>
+          <% @related_topics.each do |topic| %>
             <li><a href="/topic/<%= topic.id %>/"><%= topic.title %></a></li>
-          </ul>
-        </section> 
-      </div>
-    <% end %>
+          <% end %>
+        </ul>
+      </section> 
+    </div>
   <% end %>
   <div class="item-wrap">
     <section class="article-notice">
