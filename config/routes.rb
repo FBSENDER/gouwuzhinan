@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   get "tj/:wx_id/", to: "tj#tj"
   get "tjp/:wx_id/", to: "tj#tj_point"
 
+  get "topic/:id", to: "topic#show_1"
+  get "topictest", to: "topic#show_1"
+
   get "mm/topic/:id", to: "mm#topic"
   get "mm/tag/:tag", to: "mm#tag"
   get "mm/hot_tags", to: "mm#hot_tags"

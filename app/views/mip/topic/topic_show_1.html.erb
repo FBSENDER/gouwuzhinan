@@ -1,0 +1,61 @@
+<% title("#{@title}_购物指南") %>
+<% path(@path) %>
+
+<div id="detail-page">
+  <div class="item-wrap">
+    <header class="article-header" data-pos="1">
+      <div class="article-title">
+        <h1><%= @title %></h1>
+      </div>
+    </header>
+  </div>
+  <div class="item-wrap">
+    <article>
+      <div class="article-body">
+        <p><%= @desc %></p>
+        <% @coupons.each do |coupon| %>
+          <div class="mip-img-container">
+            <mip-img src="<%= coupon["thumbnail_pic"] %>"></mip-img>
+          </div>
+          <p>
+            <%= coupon["title"] %> - <%= coupon["gap_price"]=%>元优惠券
+            <br/>
+            <%= coupon["platform_id"] == 2 ? '天猫' : '淘宝' %>在售，券后价：￥<%= coupon["coupon_price"] %> 
+            <% if coupon["coupon_price"].to_f <= 20 %>
+              —— 够便宜，值得一看
+            <% elsif coupon["coupon_pirce"].to_f <= 100 %>
+              —— 价格适中，性价比高
+            <% else %>
+              —— 品质好货，速抢神券
+            <% end %>
+            <br/>
+            <a href="http://www.sqkb.com/zk/<%= coupon["coupon_id"]%>/" target="_blank" class="get-coupon">
+              <<点我领券>>
+            </a>
+          </p>
+        <% end %>
+      </div>
+      <footer class="article-footer clear"></footer>
+    </article>
+  </div>
+  <% if !@related_topics.nil? && @related_topics.size > 0  %>
+    <% @related_topics.each do |topic| %>
+      <div class="item-wrap">
+        <section class="related-news section" data-pos="2">
+          <div class="section-title">
+            <h2>相关推荐</h2>
+          </div>
+          <ul>
+            <li><a href="/topic/<%= topic.id %>/"><%= topic.title %></a></li>
+          </ul>
+        </section> 
+      </div>
+    <% end %>
+  <% end %>
+  <div class="item-wrap">
+    <section class="article-notice">
+      <p>更多优惠信息，请关注 —— 购物指南</p>
+    </section>
+  </div>
+</div>
+
