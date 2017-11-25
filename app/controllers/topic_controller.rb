@@ -14,6 +14,15 @@ class TopicController < ApplicationController
     @coupons = JSON.parse(@topic.json_data)
     @title = @topic.title
     @desc = build_coupon_desc_1(@topic.search_keyword, @coupons)
+    json_ld = {}
+    json_ld["@contex"] = "https://ziyuan.baidu.com/contexts/cambrian.jsonld"
+    json_ld["@id"] = "http://www.gouwuzhinan.cn#{@path}"
+    json_ld["appid"] = 1583226250921762
+    json_ld["title"] = @title
+    json_ld["images"] = @coupons.map{|c| c["thumbnail_pic"]}[0,3]
+    json_ld["description"] = "#{@desc} - #{@title}"
+    json_ld["pubDate"] = @topic.published_at.strftime("%FT%T")
+    @json_ld = json_ld.to_json
     render "/mip/topic/topic_show_1", layout: "xiongzhang"
   end
 
