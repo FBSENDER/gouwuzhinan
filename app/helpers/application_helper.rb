@@ -20,4 +20,7 @@ module ApplicationHelper
   def disable_turbolinks?(disable = false)
     content_for :disable_turbolinks, disable ? 'data-no-turbolink' : ''
   end
+  def json_ld(json)
+    content_for :json_ld, raw(json)
+  end
 end
