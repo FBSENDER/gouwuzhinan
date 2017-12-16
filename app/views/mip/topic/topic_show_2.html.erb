@@ -1,0 +1,89 @@
+<% title("#{@title}_购物指南") %>
+<% path(@path) %>
+<% json_ld(@json_ld) %>
+
+<div id="detail-page">
+  <div class="item-wrap">
+    <header class="article-header" data-pos="1">
+      <div class="article-title">
+        <h1><%= @title %></h1>
+      </div>
+    </header>
+  </div>
+  <div class="item-wrap">
+    <article>
+      <div class="article-body">
+        <p><%= @desc %></p>
+        <% @coupons.each do |coupon| %>
+          <div class="mip-img-container">
+            <mip-img src="<%= coupon["pict_url"] %>"></mip-img>
+          </div>
+          <p>
+            <%= coupon["title"] %>
+            <br/>
+            <% unless coupon["item_description"].empty? %>
+              <%= coupon["item_description"]%>
+              <br/>
+            <% end %>
+            <%= coupon["user_type"] == 1 ? '天猫' : '淘宝' %>在售，￥<%= coupon["zk_final_price"] %> ,<%= coupon["coupon_info"]%>
+            <br/>
+            店铺：<%= coupon["shop_title"] %>
+            <br/>
+            <a href="http://www.shikuaigou.com/buy/<%= coupon["num_iid"]%>/?activity_id=" target="_blank" class="get-coupon">
+              <<点我领券>>
+            </a>
+          </p>
+        <% end %>
+        <% @jus.each do |ju| %>
+          <div class="mip-img-container">
+            <mip-img src="<%= ju["pic_url_for_w_l"] %>"></mip-img>
+          </div>
+          <p>
+            <%= ju["title"] %>
+            <br/>
+            <% ju["usp_desc_list"]["string"].each do |usp| %>
+              <%= usp %>
+              <br/>
+            <% end %>
+            原价：￥<%= ju["orig_price"] %>
+            <br/> 
+            现价：￥<%= ju["act_price"]%>
+            <br/>
+            <a href="<%= ju["wap_url"]%>" target="_blank" class="get-coupon">
+              <<立即购买>>
+            </a>
+          </p>
+        <% end %>
+        <% @shops.each do |shop| %>
+          <div class="mip-img-container">
+            <mip-img src="<%= shop["pict_url"] %>"></mip-img>
+          </div>
+          <p>
+            推荐店铺：<%= shop["shop_title"] %>
+          </p>
+        <% end %>
+      </div>
+      <footer class="article-footer clear"></footer>
+    </article>
+  </div>
+  <% if !@related_topics.nil? && @related_topics.size > 0  %>
+    <div class="item-wrap">
+      <section class="related-news section" data-pos="2">
+        <div class="section-title">
+          <h2>相关推荐</h2>
+        </div>
+        <ul>
+          <% @related_topics.each do |topic| %>
+            <li><a href="/topic/<%= topic.id %>/"><%= topic.title %></a></li>
+          <% end %>
+        </ul>
+      </section> 
+    </div>
+  <% end %>
+  <div class="item-wrap">
+    <section class="article-notice">
+      <p>更多优惠信息，请关注 —— 购物指南</p>
+    </section>
+  </div>
+</div>
+
