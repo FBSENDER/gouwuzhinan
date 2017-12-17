@@ -19,7 +19,7 @@ class TopicController < ApplicationController
     @title = @topic.title
     @desc = build_coupon_desc_1(@topic.search_keyword, @coupons)
     json_ld = {}
-    json_ld["@contex"] = "https://ziyuan.baidu.com/contexts/cambrian.jsonld"
+    json_ld["@context"] = "https://ziyuan.baidu.com/contexts/cambrian.jsonld"
     json_ld["@id"] = "http://www.gouwuzhinan.cn#{@path}"
     json_ld["appid"] = 1583226250921762
     json_ld["title"] = @title
@@ -38,7 +38,7 @@ class TopicController < ApplicationController
     @title = @topic.title
     @desc = build_coupon_desc_2(@topic.search_keyword)
     json_ld = {}
-    json_ld["@contex"] = "https://ziyuan.baidu.com/contexts/cambrian.jsonld"
+    json_ld["@context"] = "https://ziyuan.baidu.com/contexts/cambrian.jsonld"
     json_ld["@id"] = "http://www.gouwuzhinan.cn#{@path}"
     json_ld["appid"] = 1583226250921762
     json_ld["title"] = @title
