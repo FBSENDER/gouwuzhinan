@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get "topic/:id", to: "topic#show"
   get "topictest", to: "topic#show_1"
 
+  get "gpost/:id", to: "guang#gpost_show"
+
   get "mm/topic/:id", to: "mm#topic"
   get "mm/tag/:tag", to: "mm#tag"
   get "mm/hot_tags", to: "mm#hot_tags"
