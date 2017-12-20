@@ -12,7 +12,7 @@ class GuangController < ApplicationController
     json_ld["@id"] = "http://www.gouwuzhinan.cn#{@path}"
     json_ld["appid"] = 1583226250921762
     json_ld["title"] = @post.title
-    json_ld["images"] = @products.map{|c| c["pic_url"]}[0,3]
+    json_ld["images"] = @products.map{|c| "http:" + c["pic_url"]}[0,3]
     json_ld["description"] = "#{@post.description} - #{@post.title}"
     json_ld["pubDate"] = @post.created_at.strftime("%FT%T")
     @json_ld = json_ld.to_json
