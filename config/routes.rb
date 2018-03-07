@@ -22,4 +22,6 @@ Rails.application.routes.draw do
   get "mm/hot", to: "mm#hot"
   get "mm/app_init_config", to: "mm#app_init_config"
   get "mm/app_feedback", to: "mm#app_feedback"
+
+  get "uu/home_list", to: "uu#home_list"
 end
