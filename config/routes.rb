@@ -24,4 +24,5 @@ Rails.application.routes.draw do
   get "mm/app_feedback", to: "mm#app_feedback"
 
   get "uu/home_list", to: "uu#home_list"
+  get "uu/product", to: "uu#product"
 end
