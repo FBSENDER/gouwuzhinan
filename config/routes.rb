@@ -25,4 +25,6 @@ Rails.application.routes.draw do
 
   get "uu/home_list", to: "uu#home_list"
   get "uu/product", to: "uu#product"
+  get "uu/goods_list", to: "uu#goods_list"
+  get "uu/category_list", to: "uu#category_list"
 end
