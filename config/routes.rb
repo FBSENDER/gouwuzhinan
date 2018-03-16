@@ -26,5 +26,9 @@ Rails.application.routes.draw do
   get "uu/home_list", to: "uu#home_list"
   get "uu/product", to: "uu#product"
   get "uu/goods_list", to: "uu#goods_list"
+  get "uu/sale_list", to: "uu#sale_list"
+  get "uu/temai_list", to: "uu#temai_list"
+  get "uu/brand_list", to: "uu#brand_list"
+  get "uu/jiukuaijiu_list", to: "uu#jiukuaijiu_list"
   get "uu/category_list", to: "uu#category_list"
 end

@@ -22,4 +22,24 @@ class UuController < ApplicationController
   def category_list
     render json: lanlan_category_list
   end
+
+  def jiukuaijiu_list
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    render json: lanlan_type_coupon_list(4, 1, page, 20)
+  end
+
+  def temai_list
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    render json: lanlan_type_coupon_list(1, 1, page, 20)
+  end
+
+  def sale_list
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    render json: lanlan_type_coupon_list(2, 1, page, 20)
+  end
+
+  def brand_list
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    render json: lanlan_type_coupon_list(3, 1, page, 20)
+  end
 end
