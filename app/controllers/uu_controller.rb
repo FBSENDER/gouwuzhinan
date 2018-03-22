@@ -109,4 +109,12 @@ class UuController < ApplicationController
   def detail_redirect
     redirect_to "http://wap.uuhaodian.com/saber/detail?itemId=#{params[:id]}&pid=mm_32854514_34792441_314020343&forCms=1&super=1", status: 302
   end
+
+  def inreview
+    begin
+      render json: {in_review: params[:version] == '1.1.0'}
+    rescue
+      render json: {in_review: false}
+    end
+  end
 end
