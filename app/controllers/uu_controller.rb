@@ -1,5 +1,6 @@
 require 'net/http'
 require 'lanlan_api' 
+require 'uuhaodian'
 class UuController < ApplicationController
   def home_list
     page = params[:page].nil? ? 1 : params[:page].to_i
@@ -41,5 +42,24 @@ class UuController < ApplicationController
   def brand_list
     page = params[:page].nil? ? 1 : params[:page].to_i
     render json: lanlan_type_coupon_list(3, 1, page, 20)
+  end
+
+  def user_login
+    begin
+      url = "https://api.weixin.qq.com/sns/jscode2session?appid=wx3abfca2f798f0e6c&secret=dab3feb141a0f8635cd45795d00e684c&js_code=#{params[:code]}&grant_type=authorization_code"
+      result = Net::HTTP.get(URI(URI.encode(url)))
+      data = JSON.parse(result)
+      user = UuUser.where(open_id: data["openid"]).take || UuUser.new
+      user.open_id = data["openid"]
+      user.session_key = data["session_key"]
+      user.save
+      render json: result
+    rescue
+      render json: {status: -1}
+    end
+  end
+
+  def post_message
+    render plain: "success"
   end
 end

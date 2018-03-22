@@ -31,4 +31,6 @@ Rails.application.routes.draw do
   get "uu/brand_list", to: "uu#brand_list"
   get "uu/jiukuaijiu_list", to: "uu#jiukuaijiu_list"
   get "uu/category_list", to: "uu#category_list"
+  get "uu/user_login", to: "uu#user_login"
+  post "uu/post_message", to: "uu#post_message"
 end
