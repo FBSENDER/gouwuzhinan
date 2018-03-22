@@ -66,7 +66,7 @@ class UuController < ApplicationController
       item_id = params[:SessionFrom]
       if !item_id.nil? && m = item_id.match(/detail_(\d+)/)
         item_id = m[1].to_i
-        detail = JSON.parse(lanlan_coupon_detail(item_id)
+        detail = JSON.parse(lanlan_coupon_detail(item_id))
         token = UuToken.take.token
         url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=#{token}"
         Net::HTTP.post_form(URI(url), "touser" => params[:FromUserName], "msgtype" => "link", "link" => {"title" => "#{detail["result"]["couponMoney"].to_i}元优惠券", "description" => detail["result"]["shortTitle"], "url" => "http://wap.uuhaodian.com/saber/detail?itemId=#{item_id}&pid=mm_32854514_34792441_314020343&forCms=1&super=1", "thumb_url" => detail["result"]["coverImage"]})
