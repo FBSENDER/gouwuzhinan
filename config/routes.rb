@@ -33,4 +33,5 @@ Rails.application.routes.draw do
   get "uu/category_list", to: "uu#category_list"
   get "uu/user_login", to: "uu#user_login"
   post "uu/post_message", to: "uu#post_message"
+  get "uu/post_message", to: "uu#check_post_message"
 end
