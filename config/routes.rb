@@ -34,4 +34,5 @@ Rails.application.routes.draw do
   get "uu/user_login", to: "uu#user_login"
   post "uu/post_message", to: "uu#post_message"
   get "uu/post_message", to: "uu#check_post_message"
+  get "uu/detail_redirect/:id", to: "uu#detail_redirect"
 end

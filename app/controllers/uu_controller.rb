@@ -69,7 +69,23 @@ class UuController < ApplicationController
         detail = JSON.parse(lanlan_coupon_detail(item_id))
         token = UuToken.take.token
         url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=#{token}"
-        Net::HTTP.post_form(URI(url), "touser" => params[:FromUserName], "msgtype" => "link", "link" => {"title" => "#{detail["result"]["couponMoney"].to_i}元优惠券", "description" => detail["result"]["shortTitle"], "url" => "http://wap.uuhaodian.com/saber/detail?itemId=#{item_id}&pid=mm_32854514_34792441_314020343&forCms=1&super=1", "thumb_url" => detail["result"]["coverImage"]})
+        qq = {
+          "touser" => params[:FromUserName],
+          "msgtype" => "link",
+          "link" => {
+            "title" => "#{detail["result"]["couponMoney"].to_i}元优惠券",
+            "description" => detail["result"]["shortTitle"],
+            "url" => "https://api.uuhaodian.com/uu/detail_redirect/#{item_id}",
+            "thumb_url" => detail["result"]["coverImage"]
+          }
+        }
+        uri = URI(url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+        request.body = qq.to_json
+        response = http.request(request)
+        puts response.body
       end
     rescue
       puts "ERROR: post_message #{item_id}"
@@ -88,5 +104,9 @@ class UuController < ApplicationController
     else
       render plain: "fail"
     end
+  end
+
+  def detail_redirect
+    redirect_to "http://wap.uuhaodian.com/saber/detail?itemId=#{params[:id]}&pid=mm_32854514_34792441_314020343&forCms=1&super=1", status: 302
   end
 end
