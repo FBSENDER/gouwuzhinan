@@ -66,9 +66,12 @@ class UuController < ApplicationController
   def check_post_message
     arr = ['uuapi', params[:timestamp], params[:nonce]].sort
     tmp_str = arr.join('')
+    puts tmp_str
     key = Digest::SHA1.hexdigest(tmp_str)
+    puts key
+    puts params[:signature]
     if key == params[:signature]
-      render plain: params[:nonce]
+      render plain: params[:echostr]
     else
       render plain: "fail"
     end
