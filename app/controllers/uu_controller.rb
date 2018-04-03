@@ -21,6 +21,24 @@ class UuController < ApplicationController
     render json: lanlan_search_coupon_list(keyword, sort, 0, page, 20)
   end
 
+  def tb_goods_list
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    keyword = params[:keyword]
+    tb_coupon_result = get_tbk_coupon_search_json(keyword, 218532065, page)
+    if tb_coupon_result && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]  && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"] && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"].size > 0
+      data = {status: 1, results: tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"]}
+      render json: data
+      return 
+    end
+    tb_result = get_tbk_search_json(keyword, page)
+    if tb_result && tb_result["tbk_item_get_response"]["total_results"] > 0
+      data = {status: 2, results: tb_result["tbk_item_get_response"]["results"]["n_tbk_item"]}
+      render json: data
+      return
+    end
+    render json: {status: 0}
+  end
+
   def category_list
     render json: lanlan_category_list
   end
@@ -85,7 +103,6 @@ class UuController < ApplicationController
         request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
         request.body = qq.to_json
         response = http.request(request)
-        puts response.body
       end
     rescue
       puts "ERROR: post_message #{item_id}"
@@ -112,9 +129,42 @@ class UuController < ApplicationController
 
   def inreview
     begin
-      render json: {in_review: params[:version] == '1.1.0'}
+      render json: {in_review: params[:version] == '1.2.0'}
     rescue
       render json: {in_review: false}
     end
   end
+
+  def apply_high_commission(product_id, pid)
+    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=28&pid=#{pid}&num_iid=#{product_id}"
+    JSON.parse(Net::HTTP.get(URI(url)))
+  end
+
+  def buy
+    begin
+      url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+      result = apply_high_commission(params[:id], $pid)
+      url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
+      redirect_to url, status: 302
+      click = ProductClick.new
+      click.product_id = params[:id].to_i
+      click.activity_id = params[:activity_id]
+      click.commission_rate = result["max_commission_rate"].nil? ? 0 : result["max_commission_rate"].to_f
+      click.status =  click.commission_rate == 0 ? 0 : 1
+      click.referer = 'weixin'
+      click.save
+    rescue
+    end
+  end
+
+  def get_tbk_search_json(keyword, page_no)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_item_get(keyword, $taobao_app_id, $taobao_app_secret, page_no,50))
+  end
+
+  def get_tbk_coupon_search_json(keyword, adzone, page_no)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_dg_item_coupon_get(keyword, adzone, $taobao_app_id, $taobao_app_secret, page_no,50))
+  end
+
 end

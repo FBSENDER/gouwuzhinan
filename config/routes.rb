@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get "uu/home_list", to: "uu#home_list"
   get "uu/product", to: "uu#product"
   get "uu/goods_list", to: "uu#goods_list"
+  get "uu/tb_goods_list", to: "uu#tb_goods_list"
   get "uu/sale_list", to: "uu#sale_list"
   get "uu/temai_list", to: "uu#temai_list"
   get "uu/brand_list", to: "uu#brand_list"
@@ -36,4 +37,5 @@ Rails.application.routes.draw do
   get "uu/post_message", to: "uu#check_post_message"
   get "uu/detail_redirect/:id", to: "uu#detail_redirect"
   get "uu/inreview", to: "uu#inreview"
+  get "uu/buy", to: "uu#buy"
 end
