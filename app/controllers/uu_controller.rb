@@ -129,7 +129,7 @@ class UuController < ApplicationController
 
   def inreview
     begin
-      render json: {in_review: params[:version] == '1.2.0'}
+      render json: {in_review: params[:version] == '1.5.0'}
     rescue
       render json: {in_review: false}
     end
