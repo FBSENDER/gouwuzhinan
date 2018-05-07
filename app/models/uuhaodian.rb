@@ -9,3 +9,7 @@ end
 class ProductClick < ApplicationRecord
   self.table_name = 'iquan_product_clicks'
 end
+
+class Game < ApplicationRecord
+  self.table_name = 'steam_games'
+end

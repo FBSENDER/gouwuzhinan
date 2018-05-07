@@ -167,4 +167,11 @@ class UuController < ApplicationController
     JSON.parse(tbk.taobao_tbk_dg_item_coupon_get(keyword, adzone, $taobao_app_id, $taobao_app_secret, page_no,50))
   end
 
+  def game_list
+    page = params[:page] || 0
+    page = page.to_i
+    games = Game.select(:title, :img_url, :price, :s_record, :s_win, :s_mac, :s_linux, :released_time).order(:id).offset(25 * page).limit(25)
+    render json: {status: 1001, result: games}
+  end
+
 end
