@@ -13,3 +13,11 @@ end
 class Game < ApplicationRecord
   self.table_name = 'steam_games'
 end
+
+class MkqBrand < ApplicationRecord
+  self.table_name = 'mkq_brands'
+end
+
+class MkqCoupon < ApplicationRecord
+  self.table_name = 'mkq_coupons'
+end

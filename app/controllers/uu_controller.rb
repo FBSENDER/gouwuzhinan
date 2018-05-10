@@ -174,4 +174,14 @@ class UuController < ApplicationController
     render json: {status: 1001, result: games}
   end
 
+  def mkq_list
+    coupons = MkqCoupon.where(brand_id: params[:id].to_i).select(:id, :title, :img_url, :time_to, :description).to_a
+    render json: {status: 1001, result: coupons}
+  end
+
+  def mkq_detail
+    coupon = MkqCoupon.where(id: params[:id].to_i).take
+    render json: {status: 1001, result: coupon}
+  end
+
 end
