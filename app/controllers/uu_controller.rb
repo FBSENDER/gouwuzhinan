@@ -3,6 +3,9 @@ require 'lanlan_api'
 require 'uuhaodian'
 class UuController < ApplicationController
   skip_before_action :verify_authenticity_token
+  def hot_keywords
+    render json: lanlan_hot_search_keywords
+  end
   def home_list
     page = params[:page].nil? ? 1 : params[:page].to_i
     cid = params[:cid].nil? ? 0 : params[:cid].to_i

@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   get "uu/game_list", to: "uu#game_list"
   get "uu/mkq_list", to: "uu#mkq_list"
   get "uu/mkq_detail", to: "uu#mkq_detail"
+  get "uu/hot_keywords", to: "uu#hot_keywords"
 
   get "jduu/collection_list", to: "jd_uu#collection_list"
   get "jduu/collection/:id", to: "jd_uu#collection"
