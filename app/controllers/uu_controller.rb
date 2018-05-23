@@ -160,6 +160,23 @@ class UuController < ApplicationController
     end
   end
 
+  def pcbuy
+    begin
+      url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+      result = apply_high_commission(params[:id], $pc_pid)
+      url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
+      redirect_to url, status: 302
+      click = ProductClick.new
+      click.product_id = params[:id].to_i
+      click.activity_id = params[:activity_id]
+      click.commission_rate = result["max_commission_rate"].nil? ? 0 : result["max_commission_rate"].to_f
+      click.status =  click.commission_rate == 0 ? 0 : 1
+      click.referer = 'uu_web_pc'
+      click.save
+    rescue
+    end
+  end
+
   def get_tbk_search_json(keyword, page_no)
     tbk = Tbkapi::Taobaoke.new
     JSON.parse(tbk.taobao_tbk_item_get(keyword, $taobao_app_id, $taobao_app_secret, page_no,50))

@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   get "uu/detail_redirect/:id", to: "uu#detail_redirect"
   get "uu/inreview", to: "uu#inreview"
   get "uu/buy", to: "uu#buy"
+  get "uu/pcbuy", to: "uu#pcbuy"
   get "uu/game_list", to: "uu#game_list"
   get "uu/mkq_list", to: "uu#mkq_list"
   get "uu/mkq_detail", to: "uu#mkq_detail"
