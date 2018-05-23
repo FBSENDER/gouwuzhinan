@@ -187,4 +187,9 @@ class UuController < ApplicationController
     render json: {status: 1001, result: coupon}
   end
 
+  def banners
+    bs = Banner.where(status: 1).select(:id, :link_url, :img_url).order("id desc").limit(5)
+    render json: {status: 1001, result: bs.to_a}
+  end
+
 end

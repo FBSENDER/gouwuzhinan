@@ -21,3 +21,7 @@ end
 class MkqCoupon < ApplicationRecord
   self.table_name = 'mkq_coupons'
 end
+
+class Banner < ApplicationRecord
+  self.table_name = 'iquan_banners'
+end
