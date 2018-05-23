@@ -21,7 +21,7 @@ class UuController < ApplicationController
     page = params[:page].nil? ? 1 : params[:page].to_i
     keyword = params[:keyword]
     sort = params[:sort].nil? ? 7 : params[:sort].to_i
-    render json: lanlan_search_coupon_list(keyword, sort, 0, page, 20)
+    render json: lanlan_search_coupon_list(keyword, sort, 0, page, 20), callback: params[:callback]
   end
 
   def tb_goods_list
@@ -30,16 +30,16 @@ class UuController < ApplicationController
     tb_coupon_result = get_tbk_coupon_search_json(keyword, 218532065, page)
     if tb_coupon_result && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]  && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"] && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"].size > 0
       data = {status: 1, results: tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"]}
-      render json: data
+      render json: data, callback: params[:callback]
       return 
     end
     tb_result = get_tbk_search_json(keyword, page)
     if tb_result && tb_result["tbk_item_get_response"]["total_results"] > 0
       data = {status: 2, results: tb_result["tbk_item_get_response"]["results"]["n_tbk_item"]}
-      render json: data
+      render json: data, callback: params[:callback]
       return
     end
-    render json: {status: 0}
+    render json: {status: 0}, callback: params[:callback]
   end
 
   def category_list
@@ -48,22 +48,22 @@ class UuController < ApplicationController
 
   def jiukuaijiu_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(4, 1, page, 20)
+    render json: lanlan_type_coupon_list(4, 1, page, 20), callback: params[:callback]
   end
 
   def temai_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(1, 1, page, 20)
+    render json: lanlan_type_coupon_list(1, 1, page, 20), callback: params[:callback]
   end
 
   def sale_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(2, 1, page, 20)
+    render json: lanlan_type_coupon_list(2, 1, page, 20), callback: params[:callback]
   end
 
   def brand_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(3, 1, page, 20)
+    render json: lanlan_type_coupon_list(3, 1, page, 20), callback: params[:callback]
   end
 
   def user_login
