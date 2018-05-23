@@ -165,6 +165,7 @@ class UuController < ApplicationController
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
       result = apply_high_commission(params[:id], $pc_pid)
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
+      url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
       redirect_to url, status: 302
       click = ProductClick.new
       click.product_id = params[:id].to_i
