@@ -44,6 +44,8 @@ Rails.application.routes.draw do
   get "uu/mkq_detail", to: "uu#mkq_detail"
   get "uu/hot_keywords", to: "uu#hot_keywords"
   get "uu/banners", to: "uu#banners"
+  get "uu/create_tbwd", to: "uu#create_tbwd"
+  get "uu/query_tbwd", to: "uu#query_tbwd"
 
   get "jduu/collection_list", to: "jd_uu#collection_list"
   get "jduu/collection/:id", to: "jd_uu#collection"
