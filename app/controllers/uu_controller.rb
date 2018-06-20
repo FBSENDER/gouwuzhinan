@@ -44,7 +44,8 @@ class UuController < ApplicationController
         category: detail.category,
         shopType: product.is_tmall == 1 ? "tmall" : "taobao",
         coverImage: detail.cover_url,
-        auctionImages: JSON.parse(detail.detail_images),
+        auctionImages: JSON.parse(product.small_images),
+        detailImages: JSON.parse(detail.detail_images),
         couponUrl: coupon.nil? ? "" : ("activityId=" + coupon.activity_id),
         couponMoney: coupon.nil? ? 0 : coupon.price,
         couponEndTime: coupon.nil? ? 0 : coupon.end_time
