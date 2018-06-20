@@ -252,9 +252,9 @@ class UuController < ApplicationController
 
   def create_tbwd
     tbk = Tbkapi::Taobaoke.new
-    result = JSON.parse(tbk.taobao_wireless_share_tpwd_create(params[:url],params[:content], $taobao_app_id, $taobao_app_secret, params[:logo], params[:user_id]))
-    if result["wireless_share_tpwd_create_response"]
-      render json: {status: 1001, result: result["wireless_share_tpwd_create_response"]["model"]}
+    result = JSON.parse(tbk.taobao_tbk_tpwd_create(params[:url],params[:content], $taobao_app_id, $taobao_app_secret, params[:logo], params[:user_id]))
+    if result["tbk_tpwd_create_response"] && result["tbk_tpwd_create_response"]["data"] && result["tbk_tpwd_create_response"]["data"]["model"]
+      render json: {status: 1001, result: result["tbk_tpwd_create_response"]["data"]["model"]}
     else
       render json: {status: 0}
     end
