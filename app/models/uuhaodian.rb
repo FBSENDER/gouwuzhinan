@@ -1,6 +1,9 @@
 class UuUser < ApplicationRecord
   self.table_name = 'uu_users'
 end
+class LoveUser < ApplicationRecord
+  self.table_name = 'love_users'
+end
 
 class UuToken < ApplicationRecord
   self.table_name = 'uu_tokens'
@@ -24,4 +27,16 @@ end
 
 class Banner < ApplicationRecord
   self.table_name = 'iquan_banners'
+end
+
+class Product < ApplicationRecord
+  self.table_name = 'iquan_products'
+end
+
+class ProductDetail < ApplicationRecord
+  self.table_name = 'iquan_product_details'
+end
+
+class ProductCoupon < ApplicationRecord
+  self.table_name = 'iquan_product_coupons'
 end

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   get "uu/home_list", to: "uu#home_list"
   get "uu/product", to: "uu#product"
+  get "uu/product_db", to: "uu#product_db"
   get "uu/goods_list", to: "uu#goods_list"
   get "uu/tb_goods_list", to: "uu#tb_goods_list"
   get "uu/sale_list", to: "uu#sale_list"
@@ -46,6 +47,9 @@ Rails.application.routes.draw do
   get "uu/banners", to: "uu#banners"
   get "uu/create_tbwd", to: "uu#create_tbwd"
   get "uu/query_tbwd", to: "uu#query_tbwd"
+
+  get "love/user_login", to: "love#user_login"
+  post "love/user_info", to: "love#user_info"
 
   get "jduu/collection_list", to: "jd_uu#collection_list"
   get "jduu/collection/:id", to: "jd_uu#collection"

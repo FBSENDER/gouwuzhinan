@@ -17,6 +17,40 @@ class UuController < ApplicationController
     render json: lanlan_coupon_detail(params[:item_id])
   end
 
+  def product_db
+    item_id = params[:item_id].to_i
+    if item_id.zero?
+      render json: {status: 0}
+      return
+    end
+    product = Product.where(item_id: item_id).take
+    detail = ProductDetail.where(item_id: item_id).take
+    coupon = ProductCoupon.where(item_id: item_id).order("id desc").take
+    if product.nil? || detail.nil?
+      render json: {status: 0}
+      return
+    end
+    render json: {status:{code: 1001, msg: "ok"}, result: {
+        itemId: item_id.to_s,
+        title: product.title,
+        shortTitle: detail.short_title,
+        recommend: detail.description,
+        price: product.price,
+        nowPrice: coupon.nil? ? product.price : (product.price - coupon.price),
+        monthSales: detail.month_sales,
+        sales2h: detail.sales_2h,
+        sellerName: product.nick,
+        sellerId: product.seller_id,
+        category: detail.category,
+        shopType: product.is_tmall == 1 ? "tmall" : "taobao",
+        coverImage: detail.cover_url,
+        auctionImages: JSON.parse(detail.detail_images),
+        couponUrl: coupon.nil? ? "" : ("activityId=" + coupon.activity_id),
+        couponMoney: coupon.nil? ? 0 : coupon.price,
+        couponEndTime: coupon.nil? ? 0 : coupon.end_time
+    }}
+  end
+
   def goods_list
     page = params[:page].nil? ? 1 : params[:page].to_i
     keyword = params[:keyword]
