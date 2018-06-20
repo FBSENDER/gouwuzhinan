@@ -185,6 +185,7 @@ class UuController < ApplicationController
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       if params[:xcx]
         render plain: url
+        return
       else
         redirect_to url, status: 302
       end
