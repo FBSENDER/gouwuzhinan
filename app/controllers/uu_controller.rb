@@ -264,11 +264,21 @@ class UuController < ApplicationController
     end
   end
 
+  def check_product_liked
+    user_id = 1
+    item_id = params[:item_id].to_i
+    if user_id.zero? || item_id.zero?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
+    render json: {status: Liked.exists?(user_id: user_id, item_id: item_id) ? 1 : 0}, callback: params[:callback]
+  end
+
   def add_product_liked
     user_id = 1
     item_id = params[:item_id].to_i
     if user_id.zero? || item_id.zero?
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
       return
     end
     begin
@@ -277,7 +287,7 @@ class UuController < ApplicationController
       liked.item_id = item_id
       liked.save
     ensure
-      render json: {status: 1}
+      render json: {status: 1}, callback: params[:callback]
     end
   end
 
@@ -285,13 +295,13 @@ class UuController < ApplicationController
     user_id = 1
     item_id = params[:item_id].to_i
     if user_id.zero? || item_id.zero?
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
       return
     end
     begin
       Liked.destroy_all(user_id: user_id, item_id: item_id)
     ensure
-      render json: {status: 1}
+      render json: {status: 1}, callback: params[:callback]
     end
   end
 
@@ -300,7 +310,7 @@ class UuController < ApplicationController
     page = params[:page] || 1
     page = page.to_i - 1
     if user_id.zero?
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
       return
     end
     liked = Liked.where(user_id: user_id).select(:id,:item_id).order("id desc").offset(20 * page).limit(20).to_a
