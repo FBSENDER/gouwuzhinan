@@ -264,4 +264,69 @@ class UuController < ApplicationController
     end
   end
 
+  def add_product_liked
+    user_id = 1
+    item_id = params[:item_id].to_i
+    if user_id.zero? || item_id.zero?
+      render json: {status: 0}
+      return
+    end
+    begin
+      liked = Liked.new
+      liked.user_id = user_id
+      liked.item_id = item_id
+      liked.save
+    ensure
+      render json: {status: 1}
+    end
+  end
+
+  def cancel_product_liked
+    user_id = 1
+    item_id = params[:item_id].to_i
+    if user_id.zero? || item_id.zero?
+      render json: {status: 0}
+      return
+    end
+    begin
+      Liked.destroy_all(user_id: user_id, item_id: item_id)
+    ensure
+      render json: {status: 1}
+    end
+  end
+
+  def get_product_liked
+    user_id = 1
+    page = params[:page] || 1
+    page = page.to_i - 1
+    if user_id.zero?
+      render json: {status: 0}
+      return
+    end
+    liked = Liked.where(user_id: user_id).select(:id,:item_id).order("id desc").offset(20 * page).limit(20).to_a
+    item_ids = liked.map{|item| item.item_id}
+    products = Product.where(item_id: item_ids).select(:item_id, :price,:is_tmall).to_a
+    details = ProductDetail.where(item_id: item_ids).select(:item_id, :short_title, :month_sales, :cover_url).to_a
+    coupons = ProductCoupon.where(item_id: item_ids).select(:id, :item_id, :price, :end_time)
+
+    result = []
+    products.each do |pd|
+      detail = details.select{|item| item.item_id == pd.item_id}.first
+      next if detail.nil?
+      coupon = coupons.select{|item| item.item_id == pd.item_id}.first
+      next if coupon.nil?
+      item = {}
+      item[:itemId] = pd.item_id
+      item[:shortTitle] = detail.short_title 
+      item[:monthSales] = detail.month_sales
+      item[:coverImage] = detail.cover_url
+      item[:price] = pd.price
+      item[:nowPrice] = pd.price - coupon.price
+      item[:couponMoney] = coupon.price
+      item[:shopType] = pd.is_tmall == 1 ? "tmall" : "taobao"
+      result << item
+    end
+    render json: {status: {code: 1001, msg: "ok"}, result: result}, callback: params[:callback]
+  end
+
 end

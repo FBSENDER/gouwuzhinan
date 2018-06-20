@@ -47,6 +47,9 @@ Rails.application.routes.draw do
   get "uu/banners", to: "uu#banners"
   get "uu/create_tbwd", to: "uu#create_tbwd"
   get "uu/query_tbwd", to: "uu#query_tbwd"
+  get "uu/get_product_liked", to: "uu#get_product_liked"
+  get "uu/add_product_liked", to: "uu#add_product_liked"
+  get "uu/cancel_product_liked", to: "uu#cancel_product_liked"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"

@@ -40,3 +40,7 @@ end
 class ProductCoupon < ApplicationRecord
   self.table_name = 'iquan_product_coupons'
 end
+
+class Liked < ApplicationRecord
+  self.table_name = 'uu_user_product_relations'
+end
