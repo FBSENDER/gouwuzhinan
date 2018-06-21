@@ -355,7 +355,7 @@ class UuController < ApplicationController
 
   def web_login
     begin
-      url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=#{$wx_app_id}&secret=#{$wx_app_secret}&code=#{params[:CODE]}&grant_type=authorization_code"
+      url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=#{$wx_app_key}&secret=#{$wx_app_secret}&code=#{params[:code]}&grant_type=authorization_code"
       result = Net::HTTP.get(URI(URI.encode(url)))
       data = JSON.parse(result)
       if data["openid"].nil?
@@ -390,6 +390,7 @@ class UuController < ApplicationController
       user.session_key = session_key
       user.save
       detail = WebUserDetail.where(user_id: user.id).take || WebUserDetail.new
+      detail.user_id = user.id
       detail.name = data_1["nickname"]
       detail.headimgurl = data_1["headimgurl"]
       detail.sex = data_1["sex"]
