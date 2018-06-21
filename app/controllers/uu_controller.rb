@@ -271,6 +271,10 @@ class UuController < ApplicationController
   end
 
   def check_product_liked
+    if cookies[:session_key].nil? || cookies[:session_key].empty?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
     user_id = 0
     user = WebUser.where(session_key: cookies[:session_key]).take
     user_id = user.id unless  user.nil?
@@ -283,6 +287,10 @@ class UuController < ApplicationController
   end
 
   def add_product_liked
+    if cookies[:session_key].nil? || cookies[:session_key].empty?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
     user_id = 0
     user = WebUser.where(session_key: cookies[:session_key]).take
     user_id = user.id unless  user.nil?
@@ -302,6 +310,10 @@ class UuController < ApplicationController
   end
 
   def cancel_product_liked
+    if cookies[:session_key].nil? || cookies[:session_key].empty?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
     user_id = 0
     user = WebUser.where(session_key: cookies[:session_key]).take
     user_id = user.id unless  user.nil?
@@ -318,6 +330,10 @@ class UuController < ApplicationController
   end
 
   def get_product_liked
+    if cookies[:session_key].nil? || cookies[:session_key].empty?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
     user_id = 0
     user = WebUser.where(session_key: cookies[:session_key]).take
     user_id = user.id unless  user.nil?
@@ -402,6 +418,20 @@ class UuController < ApplicationController
     rescue
       redirect_to "#{params[:uu_path].nil? ? "http://www.uuhaodian.com" : params[:uu_path]}", status: 302
     end
+  end
+
+  def web_logout
+    user = WebUser.where(session_key: cookies[:session_key]).take
+    if user.nil?
+      redirect_to "http://www.uuhaodian.com", status: 302
+      return
+    end
+    cookies.delete(:nickname, :domain => 'uuhaodian.com')
+    cookies.delete(:headimgurl, :domain => 'uuhaodian.com')
+    cookies.delete(:session_key, :domain => 'uuhaodian.com')
+    redirect_to "http://www.uuhaodian.com", status: 302
+    user.session_key = ''
+    user.save
   end
 
 end
