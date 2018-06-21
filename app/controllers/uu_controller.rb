@@ -271,7 +271,9 @@ class UuController < ApplicationController
   end
 
   def check_product_liked
-    user_id = 1
+    user_id = 0
+    user = WebUser.where(session_key: cookies[:session_key]).take
+    user_id = user.id unless  user.nil?
     item_id = params[:item_id].to_i
     if user_id.zero? || item_id.zero?
       render json: {status: 0}, callback: params[:callback]
@@ -281,7 +283,9 @@ class UuController < ApplicationController
   end
 
   def add_product_liked
-    user_id = 1
+    user_id = 0
+    user = WebUser.where(session_key: cookies[:session_key]).take
+    user_id = user.id unless  user.nil?
     item_id = params[:item_id].to_i
     if user_id.zero? || item_id.zero?
       render json: {status: 0}, callback: params[:callback]
@@ -298,7 +302,9 @@ class UuController < ApplicationController
   end
 
   def cancel_product_liked
-    user_id = 1
+    user_id = 0
+    user = WebUser.where(session_key: cookies[:session_key]).take
+    user_id = user.id unless  user.nil?
     item_id = params[:item_id].to_i
     if user_id.zero? || item_id.zero?
       render json: {status: 0}, callback: params[:callback]
@@ -312,7 +318,9 @@ class UuController < ApplicationController
   end
 
   def get_product_liked
-    user_id = 1
+    user_id = 0
+    user = WebUser.where(session_key: cookies[:session_key]).take
+    user_id = user.id unless  user.nil?
     page = params[:page] || 1
     page = page.to_i - 1
     if user_id.zero?
@@ -343,6 +351,56 @@ class UuController < ApplicationController
       result << item
     end
     render json: {status: {code: 1001, msg: "ok"}, result: result}, callback: params[:callback]
+  end
+
+  def web_login
+    begin
+      url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=#{$wx_app_id}&secret=#{$wx_app_secret}&code=#{params[:CODE]}&grant_type=authorization_code"
+      result = Net::HTTP.get(URI(URI.encode(url)))
+      data = JSON.parse(result)
+      if data["openid"].nil?
+        redirect_to "http://www.uuhaodian.com", status: 302
+        return
+      end
+      url_1 = "https://api.weixin.qq.com/sns/userinfo?access_token=#{data["access_token"]}&openid=#{data["openid"]}"
+      result_1 = Net::HTTP.get(URI(URI.encode(url_1)))
+      data_1 = JSON.parse(result_1)
+      #set cookies | redirect | save to db
+      session_key = data_1["openid"][0,10] + Time.now.to_i.to_s
+      cookies[:nickname] ={
+        value: data_1["nickname"],
+        expires: 7.day,
+        domain: 'uuhaodian.com'
+      }
+      cookies[:headimgurl] ={
+        value: data_1["headimgurl"],
+        expires: 7.day,
+        domain: 'uuhaodian.com'
+      }
+      cookies[:session_key] ={
+        value: session_key,
+        expires: 7.day,
+        domain: 'uuhaodian.com'
+      }
+      redirect_to "#{params[:uu_path].nil? ? "http://www.uuhaodian.com" : params[:uu_path]}", status: 302
+      user = WebUser.where(open_id: data["openid"]).take || WebUser.new
+      user.open_id = data["openid"]
+      user.union_id = data["unionid"]
+      user.access_token = data["access_token"]
+      user.session_key = session_key
+      user.save
+      detail = WebUserDetail.where(user_id: user.id).take || WebUserDetail.new
+      detail.name = data_1["nickname"]
+      detail.headimgurl = data_1["headimgurl"]
+      detail.sex = data_1["sex"]
+      detail.language = data_1["language"]
+      detail.city = data_1["city"]
+      detail.province = data_1["province"]
+      detail.country = data_1["country"]
+      detail.save
+    rescue
+      redirect_to "#{params[:uu_path].nil? ? "http://www.uuhaodian.com" : params[:uu_path]}", status: 302
+    end
   end
 
 end

@@ -1,6 +1,15 @@
 class UuUser < ApplicationRecord
   self.table_name = 'uu_users'
 end
+
+class WebUser < ApplicationRecord
+  self.table_name = 'uu_web_users'
+end
+
+class WebUserDetail < ApplicationRecord
+  self.table_name = 'uu_web_user_details'
+end
+
 class LoveUser < ApplicationRecord
   self.table_name = 'love_users'
 end
