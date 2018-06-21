@@ -369,17 +369,17 @@ class UuController < ApplicationController
       session_key = data_1["openid"][0,10] + Time.now.to_i.to_s
       cookies[:nickname] ={
         value: data_1["nickname"],
-        expires: 7.day,
+        expires: 7.day.from_now,
         domain: 'uuhaodian.com'
       }
       cookies[:headimgurl] ={
         value: data_1["headimgurl"],
-        expires: 7.day,
+        expires: 7.day.from_now,
         domain: 'uuhaodian.com'
       }
       cookies[:session_key] ={
         value: session_key,
-        expires: 7.day,
+        expires: 7.day.from_now,
         domain: 'uuhaodian.com'
       }
       redirect_to "#{params[:uu_path].nil? ? "http://www.uuhaodian.com" : params[:uu_path]}", status: 302
