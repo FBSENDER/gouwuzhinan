@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   get "uu/add_product_liked", to: "uu#add_product_liked"
   get "uu/cancel_product_liked", to: "uu#cancel_product_liked"
   get "uu/web_login", to: "uu#web_login"
+  get "uu/web_logout", to: "uu#web_logout"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"
