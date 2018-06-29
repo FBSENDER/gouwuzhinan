@@ -304,6 +304,11 @@ class UuController < ApplicationController
       liked.user_id = user_id
       liked.item_id = item_id
       liked.save
+      unless MonitorProduct.exists?(item_id: item_id)
+        monitor = MonitorProduct.new
+        monitor.item_id = item_id
+        monitor.save
+      end
     ensure
       render json: {status: 1}, callback: params[:callback]
     end

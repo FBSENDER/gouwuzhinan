@@ -53,3 +53,7 @@ end
 class Liked < ApplicationRecord
   self.table_name = 'uu_user_product_relations'
 end
+
+class MonitorProduct< ApplicationRecord
+  self.table_name = 'uu_monitor_products'
+end
