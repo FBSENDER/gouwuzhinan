@@ -77,6 +77,17 @@ class UuController < ApplicationController
     render json: {status: 0}, callback: params[:callback]
   end
 
+  def tb_goods_recommend
+    item_id = params[:item_id]
+    tb_coupon_result = get_tbk_recommend_json(item_id)
+    if tb_coupon_result && tb_coupon_result["tbk_item_recommend_get_response"]["results"]  && tb_coupon_result["tbk_item_recommend_get_response"]["results"]["n_tbk_item"] && tb_coupon_result["tbk_item_recommend_get_response"]["results"]["n_tbk_item"].size > 0
+      data = {status: 2, results: tb_coupon_result["tbk_item_recommend_get_response"]["results"]["n_tbk_item"]}
+      render json: data, callback: params[:callback]
+      return 
+    end
+    render json: {status: 0}, callback: params[:callback]
+  end
+
   def category_list
     render json: lanlan_category_list
   end
@@ -226,6 +237,11 @@ class UuController < ApplicationController
   def get_tbk_coupon_search_json(keyword, adzone, page_no)
     tbk = Tbkapi::Taobaoke.new
     JSON.parse(tbk.taobao_tbk_dg_item_coupon_get(keyword, adzone, $taobao_app_id, $taobao_app_secret, page_no,50))
+  end
+
+  def get_tbk_recommend_json(item_id, page_size = 20)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_item_recommend_get(item_id, $taobao_app_id, $taobao_app_secret,page_size))
   end
 
   def game_list
