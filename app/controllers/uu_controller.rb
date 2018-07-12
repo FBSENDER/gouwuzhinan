@@ -214,6 +214,7 @@ class UuController < ApplicationController
   def pcbuy
     begin
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+      pid = params[:from] == "iquan" ? $pc_pid_1 : $pc_pid
       result = apply_high_commission(params[:id], $pc_pid)
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
