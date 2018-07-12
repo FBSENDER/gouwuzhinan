@@ -94,22 +94,26 @@ class UuController < ApplicationController
 
   def jiukuaijiu_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(4, 1, page, 20), callback: params[:callback]
+    cid = params[:cid].nil? ? 0 : params[:cid].to_i
+    render json: lanlan_type_coupon_list(4, cid, 1, page, 20), callback: params[:callback]
   end
 
   def temai_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(1, 1, page, 20), callback: params[:callback]
+    cid = params[:cid].nil? ? 0 : params[:cid].to_i
+    render json: lanlan_type_coupon_list(1, cid, 1, page, 20), callback: params[:callback]
   end
 
   def sale_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(2, 1, page, 20), callback: params[:callback]
+    cid = params[:cid].nil? ? 0 : params[:cid].to_i
+    render json: lanlan_type_coupon_list(2, cid, 1, page, 20), callback: params[:callback]
   end
 
   def brand_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    render json: lanlan_type_coupon_list(3, 1, page, 20), callback: params[:callback]
+    cid = params[:cid].nil? ? 0 : params[:cid].to_i
+    render json: lanlan_type_coupon_list(3, cid, 1, page, 20), callback: params[:callback]
   end
 
   def user_login
