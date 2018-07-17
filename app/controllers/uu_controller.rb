@@ -118,17 +118,102 @@ class UuController < ApplicationController
 
   def user_login
     begin
-      url = "https://api.weixin.qq.com/sns/jscode2session?appid=wx3abfca2f798f0e6c&secret=dab3feb141a0f8635cd45795d00e684c&js_code=#{params[:code]}&grant_type=authorization_code"
+      url = "https://api.weixin.qq.com/sns/jscode2session?appid=wx80e26f4dc3534b2d&secret=26d4b6321b80a52cc5df1350d0c631ac&js_code=#{params[:code]}&grant_type=authorization_code"
       result = Net::HTTP.get(URI(URI.encode(url)))
       data = JSON.parse(result)
       user = UuUser.where(open_id: data["openid"]).take || UuUser.new
       user.open_id = data["openid"]
       user.session_key = data["session_key"]
+      user.union_id = data["unionid"]
       user.save
-      render json: result
+      render json: {user_id: user.id, session_key: user.session_key}
     rescue
       render json: {status: -1}
     end
+  end
+
+  def add_user_info
+    user = UuUser.where(id: params[:user_id].to_i, session_key: params[:session_key]).take
+    if user.nil?
+      render json: {status: -1}
+      return
+    end
+    data_1 =  JSON.parse(params[:user_info])
+    detail = UuUserDetail.where(user_id: user.id).take || UuUserDetail.new
+    detail.user_id = user.id
+    detail.name = data_1["nickName"]
+    detail.headimgurl = data_1["avatarUrl"]
+    detail.sex = data_1["gender"]
+    detail.language = data_1["language"]
+    detail.city = data_1["city"]
+    detail.province = data_1["province"]
+    detail.country = data_1["country"]
+    detail.save
+    render json: {status: 1}
+  end
+
+  def add_user_score
+    user = UuUser.where(id: params[:user_id].to_i, session_key: params[:session_key]).take
+    if user.nil?
+      render json: {status: -1}
+      return
+    end
+    detail = UuUserDetail.where(user_id: user.id).take
+    if detail.nil?
+      render json: {status: -1}
+      return
+    end
+    detail.score = params[:score]
+    detail.save
+    render json: {status: 1}
+  end
+
+  def get_user_info
+    detail = UuUserDetail.where(user_id: params[:user_id]).take
+    render json: {
+      nickName: detail.name,
+      gender: detail.sex,
+      avatarUrl: detail.headimgurl,
+      score: JSON.parse(detail.score)
+    }
+  end
+
+  def add_user_review
+    user = UuUser.where(id: params[:review_user_id].to_i, session_key: params[:session_key]).take
+    if user.nil?
+      render json: {status: -1}
+      return
+    end
+    r = UuUserReview.new
+    r.user_id = params[:user_id].to_i
+    r.review_user_id = user.id
+    r.name = params[:nickName]
+    r.headimgurl = params[:avatarUrl]
+    r.content = params[:content]
+    r.r_content = '' 
+    r.save
+    render json: {status: 1}
+  end
+
+  def user_review_reply
+    user = UuUser.where(id: params[:user_id].to_i, session_key: params[:session_key]).take
+    if user.nil?
+      render json: {status: -1}
+      return
+    end
+    r = UuUserReview.where(id: params[:review_id].to_i, user_id: user.id).take
+    if r.nil?
+      render json: {status: -1}
+      return
+    end
+    r.r_content = params[:r_content]
+    r.save
+    render json: {status: 1}
+  end
+
+  def get_user_review
+    reviews = UuUserReview.where(user_id: params[:user_id].to_i).select(:id, :name, :headimgurl, :content, :r_content, :created_at, :updated_at).order("id desc").to_a
+    render json: reviews
   end
 
   def post_message

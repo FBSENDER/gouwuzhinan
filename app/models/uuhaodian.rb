@@ -2,6 +2,14 @@ class UuUser < ApplicationRecord
   self.table_name = 'uu_users'
 end
 
+class UuUserDetail < ApplicationRecord
+  self.table_name = 'uu_user_details'
+end
+
+class UuUserReview < ApplicationRecord
+  self.table_name = 'uu_user_reviews'
+end
+
 class WebUser < ApplicationRecord
   self.table_name = 'uu_web_users'
 end
