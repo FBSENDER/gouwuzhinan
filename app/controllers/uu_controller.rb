@@ -124,7 +124,7 @@ class UuController < ApplicationController
       user = UuUser.where(open_id: data["openid"]).take || UuUser.new
       user.open_id = data["openid"]
       user.session_key = data["session_key"]
-      user.union_id = data["unionid"]
+      user.union_id = data["unionid"] || ''
       user.save
       render json: {user_id: user.id, session_key: user.session_key}
   end
