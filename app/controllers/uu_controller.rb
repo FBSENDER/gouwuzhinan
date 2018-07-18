@@ -63,6 +63,7 @@ class UuController < ApplicationController
     page = params[:page].nil? ? 1 : params[:page].to_i
     keyword = params[:keyword]
     tb_coupon_result = get_tbk_coupon_search_json(keyword, 218532065, page)
+    p tb_coupon_result
     if tb_coupon_result && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]  && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"] && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"].size > 0
       data = {status: 1, results: tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"]}
       render json: data, callback: params[:callback]
@@ -117,7 +118,6 @@ class UuController < ApplicationController
   end
 
   def user_login
-    begin
       url = "https://api.weixin.qq.com/sns/jscode2session?appid=wx80e26f4dc3534b2d&secret=26d4b6321b80a52cc5df1350d0c631ac&js_code=#{params[:code]}&grant_type=authorization_code"
       result = Net::HTTP.get(URI(URI.encode(url)))
       data = JSON.parse(result)
@@ -127,9 +127,6 @@ class UuController < ApplicationController
       user.union_id = data["unionid"]
       user.save
       render json: {user_id: user.id, session_key: user.session_key}
-    rescue
-      render json: {status: -1}
-    end
   end
 
   def add_user_info
@@ -359,6 +356,7 @@ class UuController < ApplicationController
   def create_tbwd
     tbk = Tbkapi::Taobaoke.new
     result = JSON.parse(tbk.taobao_tbk_tpwd_create(params[:url],params[:content], $taobao_app_id, $taobao_app_secret, params[:logo], params[:user_id]))
+    p result
     if result["tbk_tpwd_create_response"] && result["tbk_tpwd_create_response"]["data"] && result["tbk_tpwd_create_response"]["data"]["model"]
       render json: {status: 1001, result: result["tbk_tpwd_create_response"]["data"]["model"]}
     else
