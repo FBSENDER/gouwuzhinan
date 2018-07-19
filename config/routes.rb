@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   get "uu/goods_list", to: "uu#goods_list"
   get "uu/tb_goods_list", to: "uu#tb_goods_list"
   get "uu/tb_goods_recommend", to: "uu#tb_goods_recommend"
+  get "uu/tb_dg_list", to: "uu#tb_dg_list"
   get "uu/sale_list", to: "uu#sale_list"
   get "uu/temai_list", to: "uu#temai_list"
   get "uu/brand_list", to: "uu#brand_list"

@@ -63,7 +63,6 @@ class UuController < ApplicationController
     page = params[:page].nil? ? 1 : params[:page].to_i
     keyword = params[:keyword]
     tb_coupon_result = get_tbk_coupon_search_json(keyword, 218532065, page)
-    p tb_coupon_result
     if tb_coupon_result && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]  && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"] && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"].size > 0
       data = {status: 1, results: tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"]}
       render json: data, callback: params[:callback]
@@ -85,6 +84,18 @@ class UuController < ApplicationController
       data = {status: 2, results: tb_coupon_result["tbk_item_recommend_get_response"]["results"]["n_tbk_item"]}
       render json: data, callback: params[:callback]
       return 
+    end
+    render json: {status: 0}, callback: params[:callback]
+  end
+
+  def tb_dg_list
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    material_id = params[:cid]
+    tb_dg_result = get_tbk_dg_list_json(material_id, page)
+    if tb_dg_result && tb_dg_result["tbk_dg_optimus_material_response"]["result_list"] && tb_dg_result["tbk_dg_optimus_material_response"]["result_list"]["map_data"] && tb_dg_result["tbk_dg_optimus_material_response"]["result_list"]["map_data"].size > 0
+      data = {status: 1, results: tb_dg_result["tbk_dg_optimus_material_response"]["result_list"]["map_data"]}
+      render json: data, callback: params[:callback]
+      return
     end
     render json: {status: 0}, callback: params[:callback]
   end
@@ -329,6 +340,11 @@ class UuController < ApplicationController
   def get_tbk_recommend_json(item_id, page_size = 20)
     tbk = Tbkapi::Taobaoke.new
     JSON.parse(tbk.taobao_tbk_item_recommend_get(item_id, $taobao_app_id, $taobao_app_secret,page_size))
+  end
+
+  def get_tbk_dg_list_json(material_id, page_no, page_size = 20)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_dg_optimus_material($taobao_adzone_id, $taobao_app_id, $taobao_app_secret, material_id, page_no, page_size))
   end
 
   def game_list
