@@ -568,9 +568,9 @@ class UuController < ApplicationController
           "msgtype" => "miniprogrampage",
           "miniprogrampage" =>
           {
-            "title" => xml.xpath('//Content').text + "优惠券",
+            "title" => "优惠券",
             "appid" => "wx80e26f4dc3534b2d",
-            "pagepath" => "pages/goodsList/goodsList?keyword=" + xml.xpath('//Content').txt,
+            "pagepath" => "pages/index/index",
             "thumb_media_id" => 'MG83gcEBg0Yv1BhoD35TlhHbrpV1c5AMa-GE9EpNh62zjS3FzEI3jzs8ck8fKeMx'
           }
         }
