@@ -563,7 +563,7 @@ class UuController < ApplicationController
       if xml.xpath('//MsgType').text == 'text'
         token = UuToken.where(id: 2).take.token
         url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=#{token}"
-        content = '%3Ca href="http://mobile.uuhaodian.com" data-miniprogram-appid="wx80e26f4dc3534b2d" data-miniprogram-path="/pages/goodsList/goodsList?keyword=' + xml.xpath('//Content').text + '"%3E点击领券%3C/a%3E'
+        content = '点击<a href="http://mobile.uuhaodian.com" data-miniprogram-appid="wx80e26f4dc3534b2d" data-miniprogram-path="/pages/goodsList/goodsList?keyword=' + xml.xpath('//Content').text + '">点击领券</a>领券'
         qq = {
           "touser" => xml.xpath('//FromUserName').text,
           "msgtype" => "text",
