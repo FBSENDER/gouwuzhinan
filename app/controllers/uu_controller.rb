@@ -225,7 +225,7 @@ class UuController < ApplicationController
   end
 
   def post_message
-    Rails.logger.info "#{params[:body]}"
+    Rails.logger.info "#{request.body.read}"
     render plain: "success"
     begin
       item_id = params[:SessionFrom]
