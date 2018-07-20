@@ -45,6 +45,7 @@ Rails.application.routes.draw do
   post "uu/post_message", to: "uu#post_message"
   post "uu/gzh_reply", to: "uu#gzh_reply"
   get "uu/post_message", to: "uu#check_post_message"
+  get "uu/gzh_reply", to: "uu#check_post_message"
   get "uu/detail_redirect/:id", to: "uu#detail_redirect"
   get "uu/inreview", to: "uu#inreview"
   get "uu/buy", to: "uu#buy"
