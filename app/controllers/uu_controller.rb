@@ -225,7 +225,6 @@ class UuController < ApplicationController
   end
 
   def post_message
-    Rails.logger.info "#{request.body.read}"
     render plain: "success"
     begin
       item_id = params[:SessionFrom]
@@ -259,7 +258,6 @@ class UuController < ApplicationController
   def check_post_message
     arr = ['uuapi', params[:timestamp], params[:nonce]].sort
     tmp_str = arr.join('')
-    puts tmp_str
     key = Digest::SHA1.hexdigest(tmp_str)
     puts params[:signature]
     if key == params[:signature]
@@ -556,6 +554,34 @@ class UuController < ApplicationController
     redirect_to "http://www.uuhaodian.com", status: 302
     user.session_key = ''
     user.save
+  end
+
+  def gzh_reply
+    render plain: "success"
+    begin
+      xml = Nokogiri::XML request.body.read
+      if xml.xpath('//MsgType').text == 'text'
+        token = UuToken.where(id: 2).take.token
+        url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=#{token}"
+        content = '<a href="http://mobile.uuhaodian.com" data-miniprogram-appid="wx80e26f4dc3534b2d" data-miniprogram-path="/pages/goodsList/goodsList?keyword=' + xml.xpath('//Content').text + '">点击领券</a>'
+        qq = {
+          "touser" => xml.xpath('//FromUserName').text,
+          "msgtype" => "text",
+          "text" =>
+          {
+            "content" => content
+          }
+        }
+        uri = URI(url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+        request.body = qq.to_json
+        response = http.request(request)
+      end
+    rescue
+      Rails.logger.fatal "ERROR: gzh_reply"
+    end
   end
 
 end

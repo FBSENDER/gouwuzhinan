@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   get "uu/user_review_reply", to: "uu#user_review_reply"
   get "uu/get_user_review", to: "uu#get_user_review"
   post "uu/post_message", to: "uu#post_message"
+  post "uu/gzh_reply", to: "uu#gzh_reply"
   get "uu/post_message", to: "uu#check_post_message"
   get "uu/detail_redirect/:id", to: "uu#detail_redirect"
   get "uu/inreview", to: "uu#inreview"
