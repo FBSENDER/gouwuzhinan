@@ -225,6 +225,7 @@ class UuController < ApplicationController
   end
 
   def post_message
+    p params[:body]
     render plain: "success"
     begin
       item_id = params[:SessionFrom]
@@ -260,7 +261,6 @@ class UuController < ApplicationController
     tmp_str = arr.join('')
     puts tmp_str
     key = Digest::SHA1.hexdigest(tmp_str)
-    puts key
     puts params[:signature]
     if key == params[:signature]
       render plain: params[:echostr]
@@ -372,7 +372,6 @@ class UuController < ApplicationController
   def create_tbwd
     tbk = Tbkapi::Taobaoke.new
     result = JSON.parse(tbk.taobao_tbk_tpwd_create(params[:url],params[:content], $taobao_app_id, $taobao_app_secret, params[:logo], params[:user_id]))
-    p result
     if result["tbk_tpwd_create_response"] && result["tbk_tpwd_create_response"]["data"] && result["tbk_tpwd_create_response"]["data"]["model"]
       render json: {status: 1001, result: result["tbk_tpwd_create_response"]["data"]["model"]}
     else
