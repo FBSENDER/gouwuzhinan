@@ -580,6 +580,7 @@ class UuController < ApplicationController
         request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
         request.body = qq.to_json
         response = http.request(request)
+        Rails.logger.info response.body
       end
     rescue
       Rails.logger.fatal "ERROR: gzh_reply"
