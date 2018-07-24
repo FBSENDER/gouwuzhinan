@@ -587,4 +587,36 @@ class UuController < ApplicationController
     end
   end
 
+  def user_group
+    session_key = params[:session_key]
+    user = UuUser.where(session_key: session_key).take
+    if user.nil?
+      render json: {status: -1}
+      return
+    end
+    decipher = OpenSSL::Cipher::AES.new(128, :CBC)
+    decipher.decrypt
+    decipher.key = Base64.decode64(session_key)
+    decipher.iv = Base64.decode64(params[:iv])
+    data = JSON.parse(decipher.update(Base64.decode64(params[:edata])) + decipher.final)
+    group = UuUserGroup.where(group_open_id: data["openGId"], user_id: user.id).take
+    if group.nil?
+      group = UuUserGroup.new
+      group.group_open_id = data["openGId"]
+      group.user_id = user.id
+      group.save
+    end
+    render json: {status: 1, openGId: data["openGId"], group_id: group.id}
+  end
+
+  def get_my_groups
+    user = UuUser.where(id: params[:user_id].to_i, session_key: params[:session_key]).take
+    if user.nil?
+      render json: {status: -1}
+      return
+    end
+    groups = UuUserGroup.where(user_id: user.id).select(:id, :group_open_id).to_a
+    render json: {status: 1, result: groups}
+  end
+
 end

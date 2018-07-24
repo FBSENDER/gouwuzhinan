@@ -36,6 +36,8 @@ Rails.application.routes.draw do
   get "uu/jiukuaijiu_list", to: "uu#jiukuaijiu_list"
   get "uu/category_list", to: "uu#category_list"
   get "uu/user_login", to: "uu#user_login"
+  get "uu/user_group", to: "uu#user_group"
+  get "uu/get_my_groups", to: "uu#get_my_groups"
   get "uu/add_user_info", to: "uu#add_user_info"
   get "uu/get_user_info", to: "uu#get_user_info"
   get "uu/add_user_score", to: "uu#add_user_score"

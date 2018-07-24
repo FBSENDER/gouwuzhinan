@@ -6,6 +6,10 @@ class UuUserDetail < ApplicationRecord
   self.table_name = 'uu_user_details'
 end
 
+class UuUserGroup < ApplicationRecord
+  self.table_name = 'uu_user_groups'
+end
+
 class UuUserReview < ApplicationRecord
   self.table_name = 'uu_user_reviews'
 end
