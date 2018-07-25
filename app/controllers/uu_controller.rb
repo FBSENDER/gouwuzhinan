@@ -628,7 +628,11 @@ class UuController < ApplicationController
     users = UuUserDetail.where(user_id: user_ids).select(:id, :name, :headimgurl, :score,:user_id)
     result = []
     users.each do |u|
-      j = JSON.parse(u.score)
+      if u.score == ''
+        j = [0]
+      else
+        j = JSON.parse(u.score)
+      end
       sum = j.inject(0){|sum,x| sum + x }
       rank = (sum * 1.0 / 5).floor
       result << {
