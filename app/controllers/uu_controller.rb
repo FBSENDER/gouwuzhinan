@@ -619,4 +619,27 @@ class UuController < ApplicationController
     render json: {status: 1, result: groups}
   end
 
+  def get_group_detail
+    user_ids = UuUserGroup.where(group_open_id: params[:group_open_id]).pluck(:user_id)
+    if user_ids.size.zero?
+      render json: {status: -1}
+      return
+    end
+    users = UuUserDetail.where(id: user_ids).select(:id, :name, :headimgurl, :score)
+    result = []
+    users.each do |u|
+      j = JSON.parse(u.score)
+      sum = j.inject(0){|sum,x| sum + x }
+      rank = (sum * 1.0 / 5).floor
+      result << {
+        id: u.id,
+        name: u.name,
+        headimgurl: u.headimgurl,
+        scores: sum,
+        rank: rank
+      }
+    end
+    render json: {status: 1, result: result.sort{|a,b| b[:scores] <=> a[:scores]}}
+  end
+
 end

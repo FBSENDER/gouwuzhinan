@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   get "uu/user_login", to: "uu#user_login"
   get "uu/user_group", to: "uu#user_group"
   get "uu/get_my_groups", to: "uu#get_my_groups"
+  get "uu/get_group_detail", to: "uu#get_group_detail"
   get "uu/add_user_info", to: "uu#add_user_info"
   get "uu/get_user_info", to: "uu#get_user_info"
   get "uu/add_user_score", to: "uu#add_user_score"
