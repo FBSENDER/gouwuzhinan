@@ -625,7 +625,7 @@ class UuController < ApplicationController
       render json: {status: -1}
       return
     end
-    users = UuUserDetail.where(user_id: user_ids).select(:id, :name, :headimgurl, :score)
+    users = UuUserDetail.where(user_id: user_ids).select(:id, :name, :headimgurl, :score,:user_id)
     result = []
     users.each do |u|
       j = JSON.parse(u.score)
