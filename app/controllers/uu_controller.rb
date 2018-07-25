@@ -632,7 +632,7 @@ class UuController < ApplicationController
       sum = j.inject(0){|sum,x| sum + x }
       rank = (sum * 1.0 / 5).floor
       result << {
-        id: u.id,
+        id: u.user_id,
         name: u.name,
         headimgurl: u.headimgurl,
         scores: sum,
