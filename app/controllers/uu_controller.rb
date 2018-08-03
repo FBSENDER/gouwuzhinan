@@ -61,7 +61,7 @@ class UuController < ApplicationController
 
   def tb_goods_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    keyword = params[:keyword]
+    keyword = params[:keyword].gsub('+', '')
     tb_coupon_result = get_tbk_coupon_search_json(keyword, 218532065, page)
     if tb_coupon_result && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]  && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"] && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"].size > 0
       data = {status: 1, results: tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"]}
