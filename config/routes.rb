@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get "uu/home_list", to: "uu#home_list"
   get "uu/product", to: "uu#product"
   get "uu/product_db", to: "uu#product_db"
+  get "uu/product_tb", to: "uu#product_tb"
   get "uu/goods_list", to: "uu#goods_list"
   get "uu/tb_goods_list", to: "uu#tb_goods_list"
   get "uu/tb_goods_recommend", to: "uu#tb_goods_recommend"

@@ -52,6 +52,36 @@ class UuController < ApplicationController
     }}
   end
 
+  def product_tb
+    item_id = params[:item_id].to_i
+    item_result = get_tbk_item_info_json(item_id)
+    if item_result && item_result["tbk_item_info_get_response"]["results"]  && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"] && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].size > 0
+      detail = item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].first
+      render json: {status:{code: 1001, msg: "ok"}, result: {
+        itemId: item_id.to_s,
+        title: detail["title"],
+        shortTitle: detail["title"],
+        recommend: "",
+        price: detail["reserve_price"].to_f,
+        nowPrice: detail["zk_final_price"].to_f,
+        monthSales: detail["volume"].to_i,
+        sales2h: detail["volume"].to_i,
+        sellerName: detail["nick"],
+        sellerId: detail["seller_id"],
+        category: detail["cat_name"],
+        shopType: detail["user_type"].to_i == 1 ? "tmall" : "taobao",
+        coverImage: detail["pict_url"],
+        auctionImages: detail["small_images"]["string"],
+        detailImages: [],
+        couponUrl: "",
+        couponMoney: 0,
+        couponEndTime: 0 
+      }}
+      return
+    end
+    render json: {status: 0}
+  end
+
   def goods_list
     page = params[:page].nil? ? 1 : params[:page].to_i
     keyword = params[:keyword]
@@ -343,6 +373,11 @@ class UuController < ApplicationController
   def get_tbk_dg_list_json(material_id, page_no, page_size = 20)
     tbk = Tbkapi::Taobaoke.new
     JSON.parse(tbk.taobao_tbk_dg_optimus_material($taobao_adzone_id, $taobao_app_id, $taobao_app_secret, material_id, page_no, page_size))
+  end
+
+  def get_tbk_item_info_json(item_id)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_item_info_get([item_id], $taobao_app_id, $taobao_app_secret))
   end
 
   def game_list
