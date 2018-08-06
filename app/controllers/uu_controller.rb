@@ -57,6 +57,10 @@ class UuController < ApplicationController
     item_result = get_tbk_item_info_json(item_id)
     if item_result && item_result["tbk_item_info_get_response"]["results"]  && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"] && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].size > 0
       detail = item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].first
+      imgs = []
+      if detail["small_images"] && detail["small_images"]["string"]
+        imgs = detail["small_images"]["string"]
+      end
       render json: {status:{code: 1001, msg: "ok"}, result: {
         itemId: item_id.to_s,
         title: detail["title"],
@@ -71,7 +75,7 @@ class UuController < ApplicationController
         category: detail["cat_name"],
         shopType: detail["user_type"].to_i == 1 ? "tmall" : "taobao",
         coverImage: detail["pict_url"],
-        auctionImages: detail["small_images"]["string"],
+        auctionImages: imgs,
         detailImages: [],
         couponUrl: "",
         couponMoney: 0,
