@@ -15,7 +15,7 @@ gem 'coffee-rails', '~> 4.2'
 #gem 'redis', '~> 3.0'
 gem 'jquery-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
+#gem 'turbolinks', '~> 5'
 gem 'ffi', '1.9.14'
 gem 'nio4r', '1.2.1'
 gem 'dalli'
