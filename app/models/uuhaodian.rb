@@ -6,6 +6,14 @@ class UuUserDetail < ApplicationRecord
   self.table_name = 'uu_user_details'
 end
 
+class QxUser < ApplicationRecord
+  self.table_name = 'qx_users'
+end
+
+class QxUserDetail < ApplicationRecord
+  self.table_name = 'qx_user_details'
+end
+
 class UuUserGroup < ApplicationRecord
   self.table_name = 'uu_user_groups'
 end

@@ -73,4 +73,7 @@ Rails.application.routes.draw do
 
   get "jduu/collection_list", to: "jd_uu#collection_list"
   get "jduu/collection/:id", to: "jd_uu#collection"
+
+  post "qx/gzh_reply", to: "qx#gzh_reply"
+  get "qx/gzh_reply", to: "qx#check_post_message"
 end
