@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get "uu/product", to: "uu#product"
   get "uu/product_db", to: "uu#product_db"
   get "uu/product_tb", to: "uu#product_tb"
+  get "uu/product_tbs", to: "uu#product_tbs"
   get "uu/goods_list", to: "uu#goods_list"
   get "uu/tb_goods_list", to: "uu#tb_goods_list"
   get "uu/tb_goods_recommend", to: "uu#tb_goods_recommend"
@@ -67,6 +68,8 @@ Rails.application.routes.draw do
   get "uu/cancel_product_liked", to: "uu#cancel_product_liked"
   get "uu/web_login", to: "uu#web_login"
   get "uu/web_logout", to: "uu#web_logout"
+  get "uu/video_list", to: "uu#video_list"
+  get "uu/video", to: "uu#video"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"
@@ -74,6 +77,4 @@ Rails.application.routes.draw do
   get "jduu/collection_list", to: "jd_uu#collection_list"
   get "jduu/collection/:id", to: "jd_uu#collection"
 
-  post "qx/gzh_reply", to: "qx#gzh_reply"
-  get "qx/gzh_reply", to: "qx#check_post_message"
 end

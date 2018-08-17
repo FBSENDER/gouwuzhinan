@@ -86,6 +86,23 @@ class UuController < ApplicationController
     render json: {status: 0}
   end
 
+  def product_tbs
+    if params[:item_ids].nil? || params[:item_ids].empty?
+      render json: {status: 0}
+      return
+    end
+    item_ids = params[:item_ids].split(',')
+    item_result = get_tbk_items_info_json(item_ids)
+    if item_result && item_result["tbk_item_info_get_response"]["results"]  && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"] && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].size > 0
+      details = item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"]
+      if details.size > 0
+        render json: {status: 2, result: details}
+        return
+      end
+    end
+    render json: {status: 0}
+  end
+
   def goods_list
     page = params[:page].nil? ? 1 : params[:page].to_i
     keyword = params[:keyword]
@@ -382,6 +399,11 @@ class UuController < ApplicationController
   def get_tbk_item_info_json(item_id)
     tbk = Tbkapi::Taobaoke.new
     JSON.parse(tbk.taobao_tbk_item_info_get([item_id], $taobao_app_id, $taobao_app_secret))
+  end
+
+  def get_tbk_items_info_json(item_ids)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_item_info_get(item_ids, $taobao_app_id, $taobao_app_secret))
   end
 
   def game_list
@@ -683,6 +705,29 @@ class UuController < ApplicationController
       }
     end
     render json: {status: 1, result: result.sort{|a,b| b[:scores] <=> a[:scores]}}
+  end
+
+  def video_list
+    page = params[:page].nil? ? 0 : params[:page].to_i
+    videos = Video.select(:id,:cover_url,:user_avatar,:user_name).offset(20 * page).limit(20).to_a
+    if videos.size > 0
+      render json: {status: 1, result: videos}
+    else
+      render json: {status: 0}
+    end
+  end
+
+  def video
+    video = Video.where(id: params[:id].to_i).select(:id, :cover_url, :video_url, :video_desc, :user_name, :user_avatar).take
+    if video.nil?
+      render json: {status: 0}
+      return
+    end
+    product_ids = VideoProduct.where(video_id: video.id).pluck(:product_id)
+    render json: {status: 1, result: {
+      video: video,
+      product_ids: product_ids
+    }}
   end
 
 end

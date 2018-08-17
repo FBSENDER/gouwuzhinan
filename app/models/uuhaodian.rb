@@ -6,14 +6,6 @@ class UuUserDetail < ApplicationRecord
   self.table_name = 'uu_user_details'
 end
 
-class QxUser < ApplicationRecord
-  self.table_name = 'qx_users'
-end
-
-class QxUserDetail < ApplicationRecord
-  self.table_name = 'qx_user_details'
-end
-
 class UuUserGroup < ApplicationRecord
   self.table_name = 'uu_user_groups'
 end
@@ -76,4 +68,12 @@ end
 
 class MonitorProduct< ApplicationRecord
   self.table_name = 'uu_monitor_products'
+end
+
+class Video < ApplicationRecord
+  self.table_name = 'iquan_videos'
+end
+
+class VideoProduct < ApplicationRecord
+  self.table_name = 'iquan_video_product_relations'
 end
