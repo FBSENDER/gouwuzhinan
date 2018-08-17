@@ -61,6 +61,16 @@ class UuController < ApplicationController
       if detail["small_images"] && detail["small_images"]["string"]
         imgs = detail["small_images"]["string"]
       end
+      coupon_money = 0
+      coupon_end_time = 0
+      if params[:need_coupon]
+        result = apply_high_commission(params[:item_id].to_i, $pid)
+        if result["coupon_info"]
+          coupon_money = result["coupon_info"].match(/减(\d+)元/)[1].to_i
+          dd = result["coupon_end_time"].split('-')
+          coupon_end_time = Time.new(dd[0].to_i, dd[1].to_i, dd[2].to_i).to_i
+        end
+      end
       render json: {status:{code: 1001, msg: "ok"}, result: {
         itemId: item_id.to_s,
         title: detail["title"],
@@ -78,8 +88,8 @@ class UuController < ApplicationController
         auctionImages: imgs,
         detailImages: [],
         couponUrl: "",
-        couponMoney: 0,
-        couponEndTime: 0 
+        couponMoney: coupon_money,
+        couponEndTime: coupon_end_time 
       }}
       return
     end
