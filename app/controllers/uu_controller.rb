@@ -77,7 +77,7 @@ class UuController < ApplicationController
         shortTitle: detail["title"],
         recommend: "",
         price: detail["reserve_price"].to_f,
-        nowPrice: detail["zk_final_price"].to_f,
+        nowPrice: detail["zk_final_price"].to_f - coupon_money,
         monthSales: detail["volume"].to_i,
         sales2h: detail["volume"].to_i,
         sellerName: detail["nick"],
