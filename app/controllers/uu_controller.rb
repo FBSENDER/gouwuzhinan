@@ -371,8 +371,8 @@ class UuController < ApplicationController
   def pcbuy
     begin
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
-      pid = params[:from] == "iquan" ? $pc_pid_1 : "mm_32854514_24420321_146604093"
-      result = apply_high_commission(params[:id], "mm_32854514_128550245_33281650238")
+      pid = params[:from] == "iquan" ? "mm_130328389_128600315_33716750445" : "mm_32854514_24420321_146604093"
+      result = apply_high_commission(params[:id], pid)
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
       redirect_to url, status: 302
