@@ -340,8 +340,8 @@ class UuController < ApplicationController
     end
   end
 
-  def apply_high_commission(product_id, pid)
-    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=28&pid=#{pid}&num_iid=#{product_id}"
+  def apply_high_commission(product_id, pid, glory = false)
+    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=#{glory ? "3638" : "28"}&pid=#{pid}&num_iid=#{product_id}"
     JSON.parse(Net::HTTP.get(URI(url)))
   end
 
@@ -372,7 +372,7 @@ class UuController < ApplicationController
     begin
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
       pid = params[:from] == "iquan" ? "mm_130328389_128600315_33716750445" : "mm_32854514_24420321_146604093"
-      result = apply_high_commission(params[:id], pid)
+      result = apply_high_commission(params[:id], pid, params[:from] == "iquan")
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
       redirect_to url, status: 302
