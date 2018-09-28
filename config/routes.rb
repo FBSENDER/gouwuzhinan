@@ -77,4 +77,9 @@ Rails.application.routes.draw do
   get "jduu/collection_list", to: "jd_uu#collection_list"
   get "jduu/collection/:id", to: "jd_uu#collection"
 
+  get "ddk/search", to: "ddk#search"
+  get "ddk/product", to: "ddk#goods_detail"
+  get "ddk/wx_qrcode", to: "ddk#get_wx_qrcode"
+  get "ddk/promotion_url", to: "ddk#get_promotion_url"
+
 end
