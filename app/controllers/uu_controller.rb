@@ -341,7 +341,7 @@ class UuController < ApplicationController
   end
 
   def apply_high_commission(product_id, pid, glory = false)
-    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=#{glory ? "3638" : "28"}&pid=#{pid}&num_iid=#{product_id}"
+    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5085&pid=#{pid}&num_iid=#{product_id}"
     JSON.parse(Net::HTTP.get(URI(url)))
   end
 
@@ -349,7 +349,7 @@ class UuController < ApplicationController
     begin
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
       #result = apply_high_commission(params[:id], $pid)
-      result = apply_high_commission(params[:id], "mm_32854514_128550245_33281650238")
+      result = apply_high_commission(params[:id], "mm_102517967_319650356_87590300086")
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       if params[:xcx]
         render plain: url
@@ -371,7 +371,7 @@ class UuController < ApplicationController
   def pcbuy
     begin
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
-      pid = params[:from] == "iquan" ? "mm_130328389_128600315_33716750445" : "mm_32854514_128550245_33281650238"
+      pid = params[:from] == "iquan" ? "mm_102517967_319650356_87590300086" : "mm_102517967_319650356_87590300086"
       result = apply_high_commission(params[:id], pid, params[:from] == "iquan")
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
