@@ -82,4 +82,13 @@ Rails.application.routes.draw do
   get "ddk/wx_qrcode", to: "ddk#get_wx_qrcode"
   get "ddk/promotion_url", to: "ddk#get_promotion_url"
 
+  post "lgd/jiaowu/wx_login", to: "lgd#wx_login"
+  post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"
+  post "lgd/jiaowu/jiaowu_logout", to: "lgd#jiaowu_logout"
+  get "lgd/jiaowu/jiaowu_user", to: "lgd#jiaowu_user"
+  get "lgd/jiaowu/scores", to: "lgd#jiaowu_scores"
+  get "lgd/jiaowu/cets", to: "lgd#jiaowu_cets"
+  get "lgd/jiaowu/exams", to: "lgd#jiaowu_exams"
+  get "lgd/jiaowu/classes", to: "lgd#jiaowu_classes"
+
 end
