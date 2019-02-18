@@ -3,8 +3,18 @@ require "lgd_jiaowu"
 class LgdController < ApplicationController
   skip_before_action :verify_authenticity_token
 
+  def jiaowu_sync
+    ju = LgdJiaowuUser.where(id: params[:id].to_i).take
+    if ju.nil?
+      render json: {status: 0}
+      return
+    end
+    ju.status = 2
+    ju.save
+    render json: {status: 1}
+  end
   def jiaowu_user
-    ju = LgdJiaowuUser.where(id: params[:id].to_i).take || LgdJiaowuUser.where(number: params[:id].to_i).take
+    ju = LgdJiaowuUser.where(id: params[:id].to_i).take
     if ju.nil?
       render json: {status: 0}
       return
@@ -32,7 +42,7 @@ class LgdController < ApplicationController
         return
       end
       ju = LgdJiaowuUser.where(number: user.last_jiaowu_number).take
-      render json: {status: 1, result: {id: user.id, last_jiaowu_number: user.last_jiaowu_number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name}}
+      render json: {status: 1, result: {id: user.id, last_jiaowu_number: user.last_jiaowu_number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name, jiaowu_id: ju.id}}
     end
   end
 
