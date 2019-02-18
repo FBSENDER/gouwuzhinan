@@ -84,7 +84,7 @@ Rails.application.routes.draw do
 
   post "lgd/jiaowu/wx_login", to: "lgd#wx_login"
   post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"
-  post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"
+  post "lgd/jiaowu/jiaowu_logout", to: "lgd#jiaowu_logout"
   post "lgd/jiaowu/jiaowu_sync", to: "lgd#jiaowu_sync"
   get "lgd/jiaowu/jiaowu_user", to: "lgd#jiaowu_user"
   get "lgd/jiaowu/scores", to: "lgd#jiaowu_scores"
