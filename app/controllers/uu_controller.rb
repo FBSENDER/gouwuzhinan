@@ -742,7 +742,7 @@ class UuController < ApplicationController
   end
 
   def shop
-    shop = Shop.where(source_id: params[:id].to_i).take
+    shop = Shop.where(nick: params[:name]).take
     if shop.nil?
       render json: {status: 0}
       return

@@ -70,7 +70,7 @@ Rails.application.routes.draw do
   get "uu/web_logout", to: "uu#web_logout"
   get "uu/video_list", to: "uu#video_list"
   get "uu/video", to: "uu#video"
-  get "uu/shop/:id", to: "uu#shop"
+  get "uu/shop", to: "uu#shop"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"
