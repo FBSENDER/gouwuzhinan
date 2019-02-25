@@ -77,3 +77,7 @@ end
 class VideoProduct < ApplicationRecord
   self.table_name = 'iquan_video_product_relations'
 end
+
+class Shop < ApplicationRecord
+  self.table_name = 'iquan_shops'
+end

@@ -741,4 +741,24 @@ class UuController < ApplicationController
     }}
   end
 
+  def shop
+    shop = Shop.where(source_id: params[:id].to_i).take
+    if shop.nil?
+      render json: {status: 0}
+      return
+    end
+    js = JSON.parse(shop.dsr_info)
+    render json: {status: 1, result: {
+      shop: {
+        title: shop.title,
+        place: shop.provcity,
+        shop_url: shop.shop_url,
+        pic_url: shop.pic_url,
+        source_id: shop.source_id,
+        keyword: shop.search_keyword,
+        type: JSON.parse(js["dsrStr"])["ind"]
+      }
+    }}
+  end
+
 end
