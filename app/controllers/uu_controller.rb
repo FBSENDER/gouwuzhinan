@@ -64,7 +64,7 @@ class UuController < ApplicationController
       coupon_money = 0
       coupon_end_time = 0
       if params[:need_coupon]
-        result = apply_high_commission(params[:item_id].to_i, $pid)
+        result = apply_high_commission(params[:item_id].to_i, "mm_102517967_319650356_87590300086")
         if result["coupon_info"]
           coupon_money = result["coupon_info"].match(/减(\d+)元/)[1].to_i
           dd = result["coupon_end_time"].split('-')
