@@ -81,3 +81,7 @@ end
 class Shop < ApplicationRecord
   self.table_name = 'iquan_shops'
 end
+
+class ShopHotItem < ApplicationRecord
+  self.table_name = 'iquan_shop_hot_items'
+end

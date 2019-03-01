@@ -417,6 +417,11 @@ class UuController < ApplicationController
     JSON.parse(tbk.taobao_tbk_item_info_get(item_ids, $taobao_app_id, $taobao_app_secret))
   end
 
+  def get_tbk_items_detail_json(item_ids)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_items_detail_get(item_ids, $taobao_app_id, $taobao_app_secret))
+  end
+
   def game_list
     page = params[:page] || 0
     page = page.to_i
@@ -759,6 +764,24 @@ class UuController < ApplicationController
         type: JSON.parse(js["dsrStr"])["ind"]
       }
     }}
+  end
+
+  def shop_hot_items
+    shop = ShopHotItem.where(shop_source_id: params[:shop_id]).take
+    if shop.nil? || shop.item_ids.empty?
+      render json: {status: 0}
+      return
+    end
+    ids = shop.item_ids.split(',')
+    item_result = get_tbk_item_info_json(ids)
+    if item_result && item_result["tbk_item_info_get_response"]["results"]  && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"] && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].size > 0
+      details = item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"]
+      if details.size > 0
+        render json: {status: 1, result: details}
+        return
+      end
+    end
+    render json: {status: 0}
   end
 
 end
