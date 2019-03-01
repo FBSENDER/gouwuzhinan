@@ -769,7 +769,7 @@ class UuController < ApplicationController
   def shop_hot_items
     shop = ShopHotItem.where(shop_source_id: params[:shop_id]).take
     if shop.nil? || shop.item_ids.empty?
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
       return
     end
     ids = shop.item_ids.split(',')
@@ -777,11 +777,11 @@ class UuController < ApplicationController
     if item_result && item_result["tbk_item_info_get_response"]["results"]  && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"] && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].size > 0
       details = item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"]
       if details.size > 0
-        render json: {status: 1, result: details}
+        render json: {status: 1, result: details}, callback: params[:callback]
         return
       end
     end
-    render json: {status: 0}
+    render json: {status: 0}, callback: params[:callback]
   end
 
 end
