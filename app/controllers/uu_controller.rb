@@ -341,8 +341,7 @@ class UuController < ApplicationController
   end
 
   def apply_high_commission(product_id, pid, glory = false)
-    #url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5085&pid=#{pid}&num_iid=#{product_id}"
-    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5969&pid=mm_324350007_343700229_101093750347&num_iid=#{product_id}"
+    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5085&pid=#{pid}&num_iid=#{product_id}"
     JSON.parse(Net::HTTP.get(URI(url)))
   end
 
