@@ -131,4 +131,18 @@ class LgdController < ApplicationController
       render json: cls.classes
     end
   end
+
+  def jiaowu_docs
+    docs = LgdDoc.select(:id,:title,:cate,:size,:updated_at).to_a
+    render json: docs
+  end
+
+  def jiaowu_doc
+    doc = LgdDoc.where(id: params[:id].to_i).select(:id, :file_id, :title, :cate, :size, :desc, :updated_at).take
+    if doc.nil?
+      render json: {status: 0}
+    else
+      render json: {status: 1, doc: doc}
+    end
+  end
 end

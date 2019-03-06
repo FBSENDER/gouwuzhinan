@@ -22,3 +22,6 @@ end
 class LgdClass < ApplicationRecord
   self.table_name = "lgd_jiaowu_classes"
 end
+class LgdDoc < ApplicationRecord
+  self.table_name = 'lgd_jiaowu_docs'
+end

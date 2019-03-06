@@ -93,5 +93,7 @@ Rails.application.routes.draw do
   get "lgd/jiaowu/cets", to: "lgd#jiaowu_cets"
   get "lgd/jiaowu/exams", to: "lgd#jiaowu_exams"
   get "lgd/jiaowu/classes", to: "lgd#jiaowu_classes"
+  get "lgd/jiaowu/docs", to: "lgd#jiaowu_docs"
+  get "lgd/jiaowu/doc", to: "lgd#jiaowu_doc"
 
 end
