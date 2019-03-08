@@ -64,7 +64,7 @@ class UuController < ApplicationController
       coupon_money = 0
       coupon_end_time = 0
       if params[:need_coupon]
-        result = apply_high_commission(params[:item_id].to_i, "mm_102517967_319650356_87590300086")
+        result = apply_high_commission(params[:item_id].to_i, $default_sid, $default_pid)
         if result["coupon_info"]
           coupon_money = result["coupon_info"].match(/减(\d+)元/)[1].to_i
           dd = result["coupon_end_time"].split('-')
@@ -340,16 +340,19 @@ class UuController < ApplicationController
     end
   end
 
-  def apply_high_commission(product_id, pid, glory = false)
-    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5085&pid=#{pid}&num_iid=#{product_id}"
+  def apply_high_commission(product_id, sid, pid)
+    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=#{sid}&pid=#{pid}&num_iid=#{product_id}"
     JSON.parse(Net::HTTP.get(URI(url)))
   end
 
   def buy
     begin
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
-      #result = apply_high_commission(params[:id], $pid)
-      result = apply_high_commission(params[:id], "mm_102517967_319650356_87590300086")
+      if channel = get_channel
+        result = apply_high_commission(params[:id], channel.sid, channel.pid)
+      else
+        result = apply_high_commission(params[:id], $default_sid, $default_pid)
+      end
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       if params[:xcx]
         render plain: url
@@ -357,32 +360,34 @@ class UuController < ApplicationController
       else
         redirect_to url, status: 302
       end
-      click = ProductClick.new
-      click.product_id = params[:id].to_i
-      click.activity_id = params[:activity_id]
-      click.commission_rate = result["max_commission_rate"].nil? ? 0 : result["max_commission_rate"].to_f
-      click.status =  click.commission_rate == 0 ? 0 : 1
-      click.referer = 'weixin'
-      click.save
     rescue
     end
   end
 
+  def get_channel
+    if params[:channel].nil?
+      return nil
+    end
+    if $uu_channels.nil? || ($uu_channels_update - Time.now.to_i) > 3600
+      $uu_channels = UuChannel.all.to_a
+      $uu_channels_update = Time.now.to_i
+    end
+    $uu_channels.each do |c|
+      return c if c.id == params[:channel].to_i
+    end
+    nil
+  end
   def pcbuy
     begin
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
-      pid = params[:from] == "iquan" ? "mm_102517967_319650356_87590300086" : "mm_102517967_319650356_87590300086"
-      result = apply_high_commission(params[:id], pid, params[:from] == "iquan")
+      if channel = get_channel
+        result = apply_high_commission(params[:id], channel.sid, channel.pid)
+      else
+        result = apply_high_commission(params[:id], $default_sid, $default_pid)
+      end
       url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
       url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
       redirect_to url, status: 302
-      click = ProductClick.new
-      click.product_id = params[:id].to_i
-      click.activity_id = params[:activity_id]
-      click.commission_rate = result["max_commission_rate"].nil? ? 0 : result["max_commission_rate"].to_f
-      click.status =  click.commission_rate == 0 ? 0 : 1
-      click.referer = 'uu_web_pc'
-      click.save
     rescue
     end
   end
