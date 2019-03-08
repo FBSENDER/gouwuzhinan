@@ -368,7 +368,7 @@ class UuController < ApplicationController
     if params[:channel].nil?
       return nil
     end
-    if $uu_channels.nil? || ($uu_channels_update - Time.now.to_i) > 3600
+    if $uu_channels.nil? || (Time.now.to_i - $uu_channels_update) > 3600
       $uu_channels = UuChannel.all.to_a
       $uu_channels_update = Time.now.to_i
     end
