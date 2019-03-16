@@ -347,6 +347,10 @@ class UuController < ApplicationController
 
   def buy
     begin
+      if params[:xcx] && params[:channel].to_i == 12
+        render plain: ''
+        return
+      end
       url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
       if channel = get_channel
         result = apply_high_commission(params[:id], channel.sid, channel.pid)
