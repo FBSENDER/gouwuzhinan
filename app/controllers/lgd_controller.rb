@@ -20,9 +20,9 @@ class LgdController < ApplicationController
       return
     end
     if ju.status == 1
-      render json: {status: 1, result: {jiaowu_id: ju.id, number: ju.number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name}}
+      render json: {status: 1, result: {jiaowu_id: ju.id, number: ju.number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name, point: ju.point}}
     elsif ju.status == 2
-      render json: {status: 2, result: {jiaowu_id: ju.id, number: ju.number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name}}
+      render json: {status: 2, result: {jiaowu_id: ju.id, number: ju.number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name, point: ju.point}}
     else
       render json: {status: 0}
     end
@@ -42,7 +42,7 @@ class LgdController < ApplicationController
         return
       end
       ju = LgdJiaowuUser.where(number: user.last_jiaowu_number).take
-      render json: {status: 1, result: {id: user.id, last_jiaowu_number: user.last_jiaowu_number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name, jiaowu_id: ju.id}}
+      render json: {status: 1, result: {id: user.id, last_jiaowu_number: user.last_jiaowu_number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name, jiaowu_id: ju.id, point: ju.point}}
     end
   end
 
@@ -61,7 +61,7 @@ class LgdController < ApplicationController
         relation.open_id = wx_user.open_id
         relation.number = jiaowu_user.number
         relation.save
-        render json: {status: 1, result: {jiaowu_id: jiaowu_user.id, number: jiaowu_user.number, name: jiaowu_user.name, jiaowu_status: jiaowu_user.status, pwd_status: jiaowu_user.password_status}}
+        render json: {status: 1, result: {jiaowu_id: jiaowu_user.id, number: jiaowu_user.number, name: jiaowu_user.name, jiaowu_status: jiaowu_user.status, pwd_status: jiaowu_user.password_status, point: jiaowu_user.point}}
       else
         st = LgdStudent.new
         st.number = params[:number].to_i
