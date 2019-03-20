@@ -145,4 +145,18 @@ class LgdController < ApplicationController
       render json: {status: 1, doc: doc}
     end
   end
+
+  def jiaowu_notices
+    notices = LgdNotice.where(status: 1).select(:id,:title,:updated_at).order("id desc").to_a
+    render json: notices
+  end
+
+  def jiaowu_notice
+    notice = LgdNotice.where(id: params[:id].to_i, status: 1).select(:id, :file_ids, :title, :source_url, :updated_at).take
+    if notice.nil?
+      render json: {status: 0}
+    else
+      render json: {status: 1, notice: notice}
+    end
+  end
 end
