@@ -112,7 +112,8 @@ class DdkController < ApplicationController
       goods_id_list:"[\"#{params[:id]}\"]",
       generate_short_url: true,
       multi_group: true,
-      generate_weapp_webview: true
+      generate_weapp_webview: true,
+      generate_we_app: true
     }
     qq = system_params("pdd.ddk.goods.promotion.url.generate").merge(action_params)
     my_sign = get_sign(qq)
