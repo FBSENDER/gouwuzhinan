@@ -83,6 +83,10 @@ Rails.application.routes.draw do
   get "ddk/product", to: "ddk#goods_detail"
   get "ddk/wx_qrcode", to: "ddk#get_wx_qrcode"
   get "ddk/promotion_url", to: "ddk#get_promotion_url"
+  get "ddk/hot_list", to: "ddk#hot_list"
+  get "ddk/rec_list", to: "ddk#rec_list"
+  get "ddk/theme_list", to: "ddk#theme_list"
+  get "ddk/theme_detail", to: "ddk#theme_detail"
 
   post "lgd/jiaowu/wx_login", to: "lgd#wx_login"
   post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"
