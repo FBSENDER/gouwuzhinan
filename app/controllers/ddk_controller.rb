@@ -1,6 +1,7 @@
 require "digest/md5"
 require "net/http"
 require "json"
+require 'ddk'
 
 class DdkController < ApplicationController
   skip_before_action :verify_authenticity_token
@@ -99,7 +100,7 @@ class DdkController < ApplicationController
     qq = system_params("pdd.ddk.weapp.qrcode.url.gen").merge(action_params)
     response = do_request(qq)
     qrcode = JSON.parse(response.body)["weapp_qrcode_generate_response"]["url"]
-    render json: {status: {code: 1001}, result: qrcode, callback: params[:callback]}
+    render json: {status: {code: 1001}, result: qrcode}, callback: params[:callback]
   end
 
   def get_promotion_url
@@ -116,12 +117,12 @@ class DdkController < ApplicationController
     result = JSON.parse(response.body)
     begin
       if urls = result["goods_promotion_url_generate_response"]["goods_promotion_url_list"][0]
-        render json: {status: 1, result: urls}
+        render json: {status: 1, result: urls}, callback: params[:callback]
       else
-        render json: {status: 0}
+        render json: {status: 0}, callback: params[:callback]
       end
     rescue
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
     end
   end
 
@@ -142,7 +143,7 @@ class DdkController < ApplicationController
       items = data["top_goods_list_get_response"]["list"].map{|item| convert_list_item(item)}
       render json: {status: {code: 1001}, result: items}, callback: params[:callback]
     rescue
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
     end
   end
 
@@ -165,7 +166,7 @@ class DdkController < ApplicationController
       items = data["goods_basic_detail_response"]["list"].map{|item| convert_list_item(item)}
       render json: {status: {code: 1001}, result: items}, callback: params[:callback]
     rescue
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
     end
   end
 
@@ -180,9 +181,9 @@ class DdkController < ApplicationController
     begin
       response = do_request(qq)
       data = JSON.parse(response.body)
-      render json: data
+      render json: data, callback: params[:callback]
     rescue
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
     end
   end
 
@@ -197,9 +198,57 @@ class DdkController < ApplicationController
       items = data["theme_list_get_response"]["goods_list"].map{|item| convert_list_item(item)}
       render json: {status: {code: 1001}, result: items}, callback: params[:callback]
     rescue
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
     end
   end
 
+  def mall_info
+    shop = DdkShop.where(mall_id: params[:id].to_i).take
+    if shop.nil?
+      render json: {status: 0}
+      return
+    end
+    s = {mall_id: shop.mall_id, mall_name: shop.mall_name, mall_type: shop.mall_type, cats: shop.cat_names, img_url: shop.img_url, quantity: shop.quantity}
+    coupon = DdkShopCoupon.where(mall_id: params[:id].to_i).take
+    if coupon
+      c = {discount: coupon.discount, min_order_amount: coupon.min_order_amount, max_discount_amount: coupon.max_discount_amount, total: coupon.total, left: coupon.left, start_time: coupon.start_time, end_time: coupon.end_time}
+      render json: {status: 1, result: {mall: s, coupon: c}}, callback: params[:callback]
+    else
+      render json: {status: 1, result: {mall: s, coupon: nil}}, callback: params[:callback]
+    end
+  end
+
+  def mall_products
+    action_params = {
+      mall_id: params[:id],
+      page: params[:page] || 1,
+      page_size: params[:page_size] || 20
+    }
+    qq = system_params("pdd.ddk.mall.goods.list.get").merge(action_params)
+    begin
+      response = do_request(qq)
+      data = JSON.parse(response.body)
+      items = data["goods_info_list_response"]["goods_list"].map{|item| convert_list_item(item)}
+      render json: {status: {code: 1001}, result: items}, callback: params[:callback]
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def mall_list
+    cid = params[:cid] || 5
+    page = params[:page] || 1
+    page_size = params[:page_size] || 20
+    only_qjd = params[:qjd] || 0
+    sort = params[:sort] || 0
+    os = (page.to_i - 1) * page_size.to_i
+    order = sort.to_i == 0 ? "quantity desc" : "discount"
+    if only_qjd && only_qjd.to_i > 0
+      shops = DdkShop.joins("left join ddk_shop_coupons c on c.mall_id = ddk_shops.mall_id").where(cat_ids: cid.to_s, mall_type: 3).select("img_url,ddk_shops.mall_id,c.discount / 10 as mall_rate, mall_name, mall_type, quantity, cat_names,ddk_shops.id").order(order).offset(os).limit(page_size.to_i)
+    else
+      shops = DdkShop.joins("left join ddk_shop_coupons c on c.mall_id = ddk_shops.mall_id").where(cat_ids: cid.to_s).select("img_url,ddk_shops.mall_id,c.discount / 10 as mall_rate, mall_name, mall_type, quantity, cat_names,ddk_shops.id").order(order).offset(os).limit(page_size.to_i)
+    end
+    render json: {status: 1, result: shops}, callback: params[:callback]
+  end
 
 end

@@ -87,6 +87,9 @@ Rails.application.routes.draw do
   get "ddk/rec_list", to: "ddk#rec_list"
   get "ddk/theme_list", to: "ddk#theme_list"
   get "ddk/theme_detail", to: "ddk#theme_detail"
+  get "ddk/mall_info", to: "ddk#mall_info"
+  get "ddk/mall_products", to: "ddk#mall_products"
+  get "ddk/mall_list", to: "ddk#mall_list"
 
   post "lgd/jiaowu/wx_login", to: "lgd#wx_login"
   post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"
