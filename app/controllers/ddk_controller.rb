@@ -126,6 +126,29 @@ class DdkController < ApplicationController
     end
   end
 
+  def get_mall_url
+    action_params = {
+      pid: "1781779_28462207",
+      mall_id: params[:id],
+      generate_short_url: true,
+      multi_group: true,
+      generate_weapp_webview: true,
+      generate_we_app: true
+    }
+    qq = system_params("pdd.ddk.mall.url.gen").merge(action_params)
+    response = do_request(qq)
+    result = JSON.parse(response.body)
+    begin
+      if urls = result["mall_coupon_generate_url_response"]["list"][0]
+        render json: {status: 1, result: urls}, callback: params[:callback]
+      else
+        render json: {status: 0}, callback: params[:callback]
+      end
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
   def hot_list
     sort = params[:type] == 2 ? 2 : 1
     page =  params[:page] || 1
@@ -221,7 +244,7 @@ class DdkController < ApplicationController
   def mall_products
     action_params = {
       mall_id: params[:id],
-      page: params[:page] || 1,
+      page_number: params[:page] || 1,
       page_size: params[:page_size] || 20
     }
     qq = system_params("pdd.ddk.mall.goods.list.get").merge(action_params)
