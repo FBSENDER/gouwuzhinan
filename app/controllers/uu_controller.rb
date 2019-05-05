@@ -138,6 +138,18 @@ class UuController < ApplicationController
     render json: {status: 0}, callback: params[:callback]
   end
 
+  def tb_goods_item_list
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    keyword = params[:keyword].gsub('+', '')
+    tb_result = get_tbk_search_json(keyword, page)
+    if tb_result && tb_result["tbk_item_get_response"]["total_results"] > 0
+      data = {status: 2, results: tb_result["tbk_item_get_response"]["results"]["n_tbk_item"]}
+      render json: data, callback: params[:callback]
+      return
+    end
+    render json: {status: 0}, callback: params[:callback]
+  end
+
   def tb_goods_recommend
     item_id = params[:item_id]
     tb_coupon_result = get_tbk_recommend_json(item_id)
