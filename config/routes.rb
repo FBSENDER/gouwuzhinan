@@ -107,4 +107,6 @@ Rails.application.routes.draw do
   get "lgd/jiaowu/notices", to: "lgd#jiaowu_notices"
   get "lgd/jiaowu/notice", to: "lgd#jiaowu_notice"
 
+  get "yealink/users", to: "yealink#users"
+
 end
