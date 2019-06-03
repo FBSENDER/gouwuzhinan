@@ -53,7 +53,25 @@ class UuController < ApplicationController
   end
 
   def product_tb
-    item_id = params[:item_id].to_i
+    begin
+      item_id = params[:item_id].to_i
+      need_coupon = params[:need_coupon] ? 1 : 0
+      key = Digest::MD5.hexdigest("tbitem_#{item_id}_#{need_coupon}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      Timeout::timeout(2){
+        data = product_tb_data(item_id, need_coupon)
+        render json: data, callback: params[:callback]
+        $dcl.set(key, data.to_json)
+      }
+    rescue Exception => ex
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def product_tb_data(item_id, need_coupon)
     item_result = get_tbk_item_info_json(item_id)
     if item_result && item_result["tbk_item_info_get_response"]["results"]  && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"] && item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].size > 0
       detail = item_result["tbk_item_info_get_response"]["results"]["n_tbk_item"].first
@@ -63,7 +81,7 @@ class UuController < ApplicationController
       end
       coupon_money = 0
       coupon_end_time = 0
-      if params[:need_coupon]
+      if need_coupon
         result = apply_high_commission(params[:item_id].to_i, $default_sid, $default_pid)
         if result["coupon_info"]
           coupon_money = result["coupon_info"].match(/减(\d+)元/)[1].to_i
@@ -71,7 +89,7 @@ class UuController < ApplicationController
           coupon_end_time = Time.new(dd[0].to_i, dd[1].to_i, dd[2].to_i).to_i
         end
       end
-      render json: {status:{code: 1001, msg: "ok"}, result: {
+      return {status:{code: 1001, msg: "ok"}, result: {
         itemId: item_id.to_s,
         title: detail["title"],
         shortTitle: detail["title"],
@@ -91,9 +109,8 @@ class UuController < ApplicationController
         couponMoney: coupon_money,
         couponEndTime: coupon_end_time 
       }}
-      return
     end
-    render json: {status: 0}
+    return {status: 0}
   end
 
   def product_tbs
@@ -121,21 +138,36 @@ class UuController < ApplicationController
   end
 
   def tb_goods_list
-    page = params[:page].nil? ? 1 : params[:page].to_i
-    keyword = params[:keyword].gsub('+', '')
+    begin
+      page = params[:page].nil? ? 1 : params[:page].to_i
+      keyword = params[:keyword].gsub('+', '')
+      key = Digest::MD5.hexdigest("tbgoodslist_#{keyword}_#{page}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      Timeout::timeout(2){
+        data = tb_goods_list_data(page, keyword)
+        render json: data, callback: params[:callback]
+        $dcl.set(key, data.to_json)
+      }
+    rescue Exception => ex
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def tb_goods_list_data(page, keyword)
     tb_coupon_result = get_tbk_coupon_search_json(keyword, 218532065, page)
     if tb_coupon_result && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]  && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"] && tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"].size > 0
       data = {status: 1, results: tb_coupon_result["tbk_dg_item_coupon_get_response"]["results"]["tbk_coupon"]}
-      render json: data, callback: params[:callback]
-      return 
+      return data
     end
     tb_result = get_tbk_search_json(keyword, page)
     if tb_result && tb_result["tbk_item_get_response"]["total_results"] > 0
       data = {status: 2, results: tb_result["tbk_item_get_response"]["results"]["n_tbk_item"]}
-      render json: data, callback: params[:callback]
-      return
+      return data
     end
-    render json: {status: 0}, callback: params[:callback]
+    return {status: 0}
   end
 
   def tb_goods_item_list
@@ -151,14 +183,30 @@ class UuController < ApplicationController
   end
 
   def tb_goods_recommend
-    item_id = params[:item_id]
+    begin
+      item_id = params[:item_id]
+      key = Digest::MD5.hexdigest("tbgoodsrecommend_#{item_id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      Timeout::timeout(2){
+        data = tb_goods_recommend_data(item_id)
+        render json: data, callback: params[:callback]
+        $dcl.set(key, data.to_json)
+      }
+    rescue Exception => ex
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def tb_goods_recommend_data(item_id)
     tb_coupon_result = get_tbk_recommend_json(item_id)
     if tb_coupon_result && tb_coupon_result["tbk_item_recommend_get_response"]["results"]  && tb_coupon_result["tbk_item_recommend_get_response"]["results"]["n_tbk_item"] && tb_coupon_result["tbk_item_recommend_get_response"]["results"]["n_tbk_item"].size > 0
       data = {status: 2, results: tb_coupon_result["tbk_item_recommend_get_response"]["results"]["n_tbk_item"]}
-      render json: data, callback: params[:callback]
-      return 
+      return data
     end
-    render json: {status: 0}, callback: params[:callback]
+    return {status: 0}
   end
 
   def tb_dg_list
