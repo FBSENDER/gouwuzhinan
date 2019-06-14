@@ -172,8 +172,13 @@ class UuController < ApplicationController
 
   def tb_goods_item_list
     page = params[:page].nil? ? 1 : params[:page].to_i
-    keyword = params[:keyword].gsub('+', '')
-    tb_result = get_tbk_search_json(keyword, page)
+    keyword = params[:keyword].nil? ? nil : params[:keyword].gsub('+', '')
+    cat = params[:cat]
+    is_tmall = params[:is_tmall]
+    sort = params[:sort]
+    start_price = params[:start_price].nil? ? 0 : params[:start_price]
+    end_price = params[:end_price].nil? ? 99999 : params[:end_price]
+    tb_result = get_tbk_search_json_new(keyword, page, cat, sort, is_tmall, start_price, end_price)
     if tb_result && tb_result["tbk_item_get_response"]["total_results"] > 0
       data = {status: 2, results: tb_result["tbk_item_get_response"]["results"]["n_tbk_item"]}
       render json: data, callback: params[:callback]
@@ -459,6 +464,11 @@ class UuController < ApplicationController
   def get_tbk_search_json(keyword, page_no)
     tbk = Tbkapi::Taobaoke.new
     JSON.parse(tbk.taobao_tbk_item_get(keyword, $taobao_app_id, $taobao_app_secret, page_no,50))
+  end
+
+  def get_tbk_search_json_new(keyword, page_no, cat = nil, sort = nil, is_tmall = nil, start_price = 0, end_price = 99999)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_item_get_new(keyword, cat, sort, is_tmall, start_price, end_price, $taobao_app_id, $taobao_app_secret, page_no,20))
   end
 
   def get_tbk_coupon_search_json(keyword, adzone, page_no)
