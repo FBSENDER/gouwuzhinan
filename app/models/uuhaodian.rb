@@ -89,3 +89,15 @@ end
 class UuChannel < ApplicationRecord
   self.table_name = 'uu_order_channels'
 end
+
+class TbKeyword < ApplicationRecord
+  self.table_name = 'tb_keywords'
+end
+
+class TbCategory < ApplicationRecord
+  self.table_name = 'tb_categories'
+end
+
+class TbKeywordSelector < ApplicationRecord
+  self.table_name = 'tb_keyword_selectors'
+end

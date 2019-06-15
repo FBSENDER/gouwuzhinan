@@ -73,6 +73,7 @@ Rails.application.routes.draw do
   get "uu/video", to: "uu#video"
   get "uu/shop", to: "uu#shop"
   get "uu/shop_hot_items", to: "uu#shop_hot_items"
+  get "uu/keyword_infos", to: "uu#keyword_infos"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"

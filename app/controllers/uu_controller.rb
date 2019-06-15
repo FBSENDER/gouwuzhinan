@@ -863,4 +863,52 @@ class UuController < ApplicationController
     render json: {status: 0}, callback: params[:callback]
   end
 
+  def keyword_infos
+    begin
+      keyword = params[:keyword]
+      if keyword.nil?
+        render json: {status: 0}, callback: params[:callback]
+        return
+      end
+      keyword = keyword.strip
+      key = Digest::MD5.hexdigest("keywordinfo_#{keyword}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      Timeout::timeout(2){
+        data = get_keyword_infos_data(keyword)
+        if data.nil?
+          render json: {status: 0}, callback: params[:callback]
+          return
+        end
+        render json: {status: 1, result: data}, callback: params[:callback]
+        $dcl.set(key, {status: 1, result: data}.to_json)
+      }
+    rescue Exception => ex
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def get_keyword_infos_data(keyword)
+    k = TbKeyword.where(keyword: keyword, status: 1).take
+    if k.nil?
+      return nil
+    end
+    r_k_ids = k.r_keywords1.split(',') + k.r_keywords2.split(',')
+    r_ks = TbKeyword.where(id: r_k_ids).pluck(:keyword)
+    r_cats = TbCategory.where(source_id: k.r_cats.split(',')).select(:id, :source_id, :name).to_a
+    selector = nil
+    if k.has_selector == 1
+      s = TbKeywordSelector.where(keyword: keyword).take
+      selector = JSON.parse(s.selector) unless s.nil?
+    end
+    return {
+      keyword: keyword,
+      r_keywords: r_ks,
+      r_cats: r_cats,
+      selector: selector
+    }
+  end
+
 end
