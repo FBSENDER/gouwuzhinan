@@ -152,7 +152,10 @@ class UuController < ApplicationController
         $dcl.set(key, data.to_json)
         return
       end
-      data = dg_goods_list_data(page, keyword, params[:cat], params[:sort], params[:is_tmall], params[:is_overseas], params[:has_coupon], params[:start_dsr], params[:start_tk_rate], params[:end_tk_rate], params[:start_price], params[:end_price])
+      is_tmall = params[:is_tmall] == "1" ? true : nil
+      is_overseas = params[:is_overseas] == "1" ? true : nil
+      has_coupon = params[:has_coupon] == "1" ? true : nil
+      data = dg_goods_list_data(page, keyword, params[:cat], params[:sort], is_tmall, is_overseas, has_coupon, params[:start_dsr], params[:start_tk_rate], params[:end_tk_rate], params[:start_price], params[:end_price])
       render json: data, callback: params[:callback]
     rescue Exception => ex
       render json: {status: 0}, callback: params[:callback]
