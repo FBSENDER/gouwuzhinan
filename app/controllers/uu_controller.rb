@@ -137,6 +137,47 @@ class UuController < ApplicationController
     render json: lanlan_search_coupon_list(keyword, sort, 0, page, 20), callback: params[:callback]
   end
 
+  def dg_goods_list
+    begin
+      page = params[:page].nil? ? 1 : params[:page].to_i
+      keyword = params[:keyword].gsub('+', '')
+      if params[:is_simple]
+        key = Digest::MD5.hexdigest("dggoodslist_#{keyword}_#{page}")
+        if result = $dcl.get(key)
+          render json: result, callback: params[:callback]
+          return
+        end
+        data = dg_goods_list_data(page, keyword, nil, "tk_total_commi_des", nil, nil, nil, nil, nil, nil, nil, nil)
+        render json: data, callback: params[:callback]
+        $dcl.set(key, data.to_json)
+        return
+      end
+      data = dg_goods_list_data(page, keyword, params[:cat], params[:sort], params[:is_tmall], params[:is_overseas], params[:has_coupon], params[:start_dsr], params[:start_tk_rate], params[:end_tk_rate], params[:start_price], params[:end_price])
+      render json: data, callback: params[:callback]
+    rescue Exception => ex
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+  
+  def dg_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
+    dg_material_result = get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
+    if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
+      result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
+        item.delete("item_url")
+        item.delete("url")
+        item.delete("num_iid")
+        item.delete("small_images")
+        item.delete("coupon_share_url")
+        item.delete("info_dxjh")
+        item.delete("include_mkt")
+        item.delete("include_dxjh")
+        item
+      end
+      return {status: 1, results: result}
+    end
+    return {status: 0}
+  end
+
   def tb_goods_list
     begin
       page = params[:page].nil? ? 1 : params[:page].to_i
@@ -459,6 +500,11 @@ class UuController < ApplicationController
       redirect_to url, status: 302
     rescue
     end
+  end
+
+  def get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material, $taobao_app_secret_material, $taobao_adzone_id_material, page_no, 20 ))
   end
 
   def get_tbk_search_json(keyword, page_no)
