@@ -101,3 +101,7 @@ end
 class TbKeywordSelector < ApplicationRecord
   self.table_name = 'tb_keyword_selectors'
 end
+
+class SwanFav < ApplicationRecord
+  self.table_name = 'swan_favs'
+end

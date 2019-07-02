@@ -960,4 +960,34 @@ class UuController < ApplicationController
     }
   end
 
+  def swan_fav_add
+    begin
+      fav = SwanFav.where(swan_id: params[:swan_id], item_id: params[:item_id].to_i).take || SwanFav.new
+      fav.swan_id = params[:swan_id]
+      fav.item_id = params[:item_id].to_i
+      fav.fav_price = params[:fav_price]
+      fav.coupon_money = params[:fav_coupon]
+      fav.status = 1
+      fav.save
+      render json: {status: 1}
+    rescue
+      render json: {status: 0}
+    end
+  end
+
+  def swan_fav_del
+    begin
+      fav = SwanFav.where(swan_id: params[:swan_id], item_id: params[:item_id].to_i).take
+      if fav.nil?
+        render json: {status: 0}
+        return
+      end
+      fav.status = 0
+      fav.save
+      render json: {status: 1}
+    rescue
+      render json: {status: 0}
+    end
+  end
+
 end
