@@ -967,6 +967,9 @@ class UuController < ApplicationController
       fav.item_id = params[:item_id].to_i
       fav.fav_price = params[:fav_price]
       fav.coupon_money = params[:fav_coupon]
+      if params[:form_id]
+        fav.form_id = params[:form_id]
+      end
       fav.status = 1
       fav.save
       render json: {status: 1}
