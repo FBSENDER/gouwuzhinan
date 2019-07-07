@@ -441,6 +441,7 @@ class UuController < ApplicationController
     redirect_to "http://wap.uuhaodian.com/saber/detail?itemId=#{params[:id]}&pid=mm_32854514_34792441_314020343&forCms=1&super=1", status: 302
   end
 
+
   def inreview
     begin
       render json: {in_review: params[:version] == '1.5.0'}
@@ -993,4 +994,29 @@ class UuController < ApplicationController
     end
   end
 
+  def swan_uu_login
+    if params[:swan_id].nil? || params[:code].nil?
+      render json: {status: 0}
+      return
+    end
+    if SwanUuUser.exists?(swan_id: params[:swan_id])
+      render json: {status: 1}
+      return
+    end
+    begin
+      url = "https://spapi.baidu.com/oauth/jscode2sessionkey?client_id=#{$swan_uu_id}&sk=#{$swan_uu_sk}&code=#{params[:code]}"
+      uri = URI(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      request = Net::HTTP::Post.new(uri.request_uri)
+      response = http.request(request)
+      u = SwanUuUser.new
+      u.swan_id = params[:swan_id]
+      u.open_id = JSON.parse(response.body)["openid"]
+      u.save
+      render json: {status: 1}
+    rescue
+      render json: {status: 0}
+    end
+  end
 end

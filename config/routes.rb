@@ -77,6 +77,7 @@ Rails.application.routes.draw do
   get "uu/keyword_infos", to: "uu#keyword_infos"
   get "uu/swan_fav_add", to: "uu#swan_fav_add"
   get "uu/swan_fav_del", to: "uu#swan_fav_del"
+  get "uu/swan_uu_login", to: "uu#swan_uu_login"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"
