@@ -140,7 +140,7 @@ class UuController < ApplicationController
   def dg_goods_list
     begin
       page = params[:page].nil? ? 1 : params[:page].to_i
-      keyword = params[:keyword].gsub('+', '')
+      keyword = params[:keyword].gsub('+', '') if params[:keyword]
       if params[:is_simple]
         key = Digest::MD5.hexdigest("dggoodslist_#{keyword}_#{page}")
         if result = $dcl.get(key)
