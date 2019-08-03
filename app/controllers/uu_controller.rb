@@ -1019,4 +1019,10 @@ class UuController < ApplicationController
       render json: {status: 0}
     end
   end
+
+  def xcx_kmap
+    page = params[:page].nil? ? 0 : params[:page].to_i
+    ks = TbKeyword.select(:keyword).order("id").offset(500 * page).limit(500).pluck(:keyword)
+    render json: {status: 1, keywords: ks}
+  end
 end
