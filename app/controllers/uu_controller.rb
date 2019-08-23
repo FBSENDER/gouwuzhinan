@@ -431,7 +431,7 @@ class UuController < ApplicationController
     key = Digest::SHA1.hexdigest(tmp_str)
     puts params[:signature]
     if key == params[:signature]
-      render plain: params[:echostr]
+      render plain: params[:echostr] || params[:echoStr]
     else
       render plain: "fail"
     end
