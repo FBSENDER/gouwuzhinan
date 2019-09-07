@@ -994,6 +994,22 @@ class UuController < ApplicationController
     end
   end
 
+  def swan_kefu_click
+    begin
+      if params[:swan_id].nil? || params[:item_id].nil? || params[:swan_id].empty? || params[:item_id].to_i.zero?
+        render json: {status: 0}
+        return
+      end
+      c = SwanKefuClick.new
+      c.swan_id = params[:swan_id]
+      c.item_id = params[:item_id].to_i
+      c.save
+      render json: {status: 1}
+    rescue
+      render json: {status: 0}
+    end
+  end
+
   def swan_uu_login
     if params[:swan_id].nil? || params[:code].nil?
       render json: {status: 0}

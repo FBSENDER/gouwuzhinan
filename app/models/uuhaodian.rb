@@ -109,3 +109,7 @@ end
 class SwanUuUser < ApplicationRecord
   self.table_name = 'swan_uu_users'
 end
+
+class SwanKefuClick < ApplicationRecord
+  self.table_name = 'swan_kefu_clicks'
+end
