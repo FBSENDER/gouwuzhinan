@@ -1015,10 +1015,6 @@ class UuController < ApplicationController
       render json: {status: 0}
       return
     end
-    if SwanUuUser.exists?(swan_id: params[:swan_id])
-      render json: {status: 1}
-      return
-    end
     begin
       url = "https://spapi.baidu.com/oauth/jscode2sessionkey?client_id=#{$swan_uu_id}&sk=#{$swan_uu_sk}&code=#{params[:code]}"
       uri = URI(url)
@@ -1026,7 +1022,7 @@ class UuController < ApplicationController
       http.use_ssl = true
       request = Net::HTTP::Post.new(uri.request_uri)
       response = http.request(request)
-      u = SwanUuUser.new
+      u = SwanUuUser.where(swan_id: params[:swan_id]).take || SwanUuUser.new
       u.swan_id = params[:swan_id]
       u.open_id = JSON.parse(response.body)["openid"]
       u.save
