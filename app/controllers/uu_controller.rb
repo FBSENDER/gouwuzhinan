@@ -1003,6 +1003,7 @@ class UuController < ApplicationController
       c = SwanKefuClick.new
       c.swan_id = params[:swan_id]
       c.item_id = params[:item_id].to_i
+      c.kouling = params[:kouling]
       c.save
       render json: {status: 1}
     rescue
