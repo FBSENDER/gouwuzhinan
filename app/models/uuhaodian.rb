@@ -113,3 +113,7 @@ end
 class SwanKefuClick < ApplicationRecord
   self.table_name = 'swan_kefu_clicks'
 end
+
+class QixiuProduct < ApplicationRecord
+  self.table_name = 'qixiu_products'
+end
