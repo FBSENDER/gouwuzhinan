@@ -81,6 +81,7 @@ Rails.application.routes.draw do
   get "uu/swan_fav_del", to: "uu#swan_fav_del"
   get "uu/swan_uu_login", to: "uu#swan_uu_login"
   get "uu/swan_kefu_click", to: "uu#swan_kefu_click"
+  get "uu/g/:id", to: "uu#swan_kefu_go"
   get "uu/xcx_kmap", to: "uu#xcx_kmap"
 
   get "love/user_login", to: "love#user_login"

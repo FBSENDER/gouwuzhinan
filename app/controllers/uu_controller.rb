@@ -1048,10 +1048,20 @@ class UuController < ApplicationController
       c.swan_id = params[:swan_id]
       c.item_id = params[:item_id].to_i
       c.kouling = params[:kouling]
+      c.taobao_url = params[:taobao_url]
       c.save
       render json: {status: 1}
     rescue
       render json: {status: 0}
+    end
+  end
+
+  def swan_kefu_go
+    g = SwanKefuClick.where(id: params[:id]).take
+    if g && g.taobao_url
+      redirect_to g.taobao_url
+    else
+      redirect_to "http://uuu.uuhaodian.com"
     end
   end
 
