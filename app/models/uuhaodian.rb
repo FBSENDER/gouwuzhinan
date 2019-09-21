@@ -117,3 +117,9 @@ end
 class QixiuProduct < ApplicationRecord
   self.table_name = 'qixiu_products'
 end
+class MeizhuangProduct < ApplicationRecord
+  self.table_name = 'meizhuang_products'
+end
+class PeishiProduct < ApplicationRecord
+  self.table_name = 'peishi_products'
+end
