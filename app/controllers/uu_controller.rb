@@ -138,6 +138,7 @@ class UuController < ApplicationController
       render json: {status: 0}
     end
   end
+
   def product_peishi
     begin
       id = params[:id].to_i
@@ -152,6 +153,50 @@ class UuController < ApplicationController
         return
       end
       ps = PeishiProduct.where("id > ?", product.id).select(:id, :title, :price, :pict_url).order("id").limit(20).to_a
+      data = {status: 1, result: {
+        itemId: product.item_id.to_s,
+        title: product.title,
+        shortTitle: product.title,
+        keywords: product.keywords,
+        recommend: "",
+        provcity: product.provcity,
+        nick: product.nick,
+        price: product.o_price,
+        nowPrice: product.price,
+        monthSales: product.volume,
+        sales2h: product.volume,
+        sellerName: product.nick,
+        sellerId: product.seller_id,
+        shopType: product.is_tmall == 1 ? "tmall" : "taobao",
+        coverImage: product.pict_url,
+        auctionImages: JSON.parse(product.pics),
+        detailImages: [],
+        couponUrl: "",
+        couponMoney: 0,
+        couponEndTime: 0,
+        related: ps
+      }}
+      render json: data
+      $dcl.set(key, data.to_json)
+    rescue
+      render json: {status: 0}
+    end
+  end
+
+  def product_yumaoqiu
+    begin
+      id = params[:id].to_i
+      key = Digest::MD5.hexdigest("ymqproduct_#{id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      product = YmqProduct.where(id: id).take
+      if product.nil?
+        render json: {status: 0}
+        return
+      end
+      ps = YmqProduct.where("id > ?", product.id).select(:id, :title, :price, :pict_url).order("id").limit(20).to_a
       data = {status: 1, result: {
         itemId: product.item_id.to_s,
         title: product.title,

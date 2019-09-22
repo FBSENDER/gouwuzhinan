@@ -123,3 +123,6 @@ end
 class PeishiProduct < ApplicationRecord
   self.table_name = 'peishi_products'
 end
+class YmqProduct < ApplicationRecord
+  self.table_name = 'ymq_products'
+end

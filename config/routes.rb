@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get "uu/product_qixiu", to: "uu#product_qixiu"
   get "uu/product_meizhuang", to: "uu#product_meizhuang"
   get "uu/product_peishi", to: "uu#product_peishi"
+  get "uu/product_yumaoqiu", to: "uu#product_yumaoqiu"
   get "uu/goods_list", to: "uu#goods_list"
   get "uu/dg_goods_list", to: "uu#dg_goods_list"
   get "uu/tb_goods_list", to: "uu#tb_goods_list"
