@@ -342,7 +342,6 @@ class UuController < ApplicationController
     if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
       result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
         item.delete("item_url")
-        item.delete("url")
         item.delete("num_iid")
         item.delete("small_images")
         item.delete("coupon_share_url")
