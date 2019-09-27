@@ -1252,4 +1252,18 @@ class UuController < ApplicationController
     ks = TbKeyword.select(:keyword).order("id").offset(500 * page).limit(500).pluck(:keyword)
     render json: {status: 1, keywords: ks}
   end
+
+  def swan_jump
+    x = params[:x].nil? ? 0 : params[:x].to_i
+    s = SwanJumpSetting.where(source_id: params[:s].to_i).select(:id, :to_app, :to_path, :sort, :x).order("sort desc").to_a
+    if s.size.zero?
+      render json: []
+      return
+    end
+    if in_shenhe = s.select{|j| j.x == x}[0]
+      render json: [in_shenhe]
+    else
+      render json: s
+    end
+  end
 end

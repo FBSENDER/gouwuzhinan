@@ -126,3 +126,7 @@ end
 class YmqProduct < ApplicationRecord
   self.table_name = 'ymq_products'
 end
+
+class SwanJumpSetting < ApplicationRecord
+  self.table_name = 'swan_jump_settings'
+end

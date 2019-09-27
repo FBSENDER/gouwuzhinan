@@ -87,6 +87,7 @@ Rails.application.routes.draw do
   get "uu/swan_kefu_click", to: "uu#swan_kefu_click"
   get "uu/g/:id", to: "uu#swan_kefu_go"
   get "uu/xcx_kmap", to: "uu#xcx_kmap"
+  get "uu/swan_jump", to: "uu#swan_jump"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"
