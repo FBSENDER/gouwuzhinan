@@ -344,7 +344,6 @@ class UuController < ApplicationController
         item.delete("item_url")
         item.delete("num_iid")
         item.delete("small_images")
-        item.delete("coupon_share_url")
         item.delete("info_dxjh")
         item.delete("include_mkt")
         item.delete("include_dxjh")
@@ -353,6 +352,18 @@ class UuController < ApplicationController
       return {status: 1, results: result}
     end
     return {status: 0}
+  end
+
+  def item_channel_url_data(title, item_id, aid)
+    dg_material_result = get_tbk_dg_material_json(title, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 1, aid)
+    if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
+      result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
+        if item["item_id"].to_i == item_id.to_i
+          return item["coupon_share_url"] || item["url"]
+        end
+      end
+    end
+    return ""
   end
 
   def tb_goods_list
@@ -629,6 +640,25 @@ class UuController < ApplicationController
     JSON.parse(Net::HTTP.get(URI(url)))
   end
 
+  def newbuy
+      result = ""
+      if channel = get_channel
+        result = item_channel_url_data(params[:title], params[:id], channel.aid)
+      else
+        result = item_channel_url_data(params[:title], params[:id], $default_aid)
+      end
+      if result.empty?
+        redirect_to "/uu/buy?id=#{params[:id]}&xcx=#{params[:xcx]}&channel=#{channel}"
+        return
+      end
+      if params[:xcx]
+        render plain: result
+        return
+      else
+        redirect_to result, status: 302
+      end
+  end
+
   def buy
     begin
       if params[:xcx] && params[:channel].to_i == 12
@@ -680,9 +710,9 @@ class UuController < ApplicationController
     end
   end
 
-  def get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no)
+  def get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no, aid = $taobao_adzone_id_material)
     tbk = Tbkapi::Taobaoke.new
-    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material, $taobao_app_secret_material, $taobao_adzone_id_material, page_no, 20 ))
+    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material, $taobao_app_secret_material, aid, page_no, 20 ))
   end
 
   def get_tbk_search_json(keyword, page_no)
