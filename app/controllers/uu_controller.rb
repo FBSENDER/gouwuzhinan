@@ -786,6 +786,10 @@ class UuController < ApplicationController
   end
 
   def create_tbwd
+    if is_robot?
+      render json: {status: 0}
+      return
+    end
     tbk = Tbkapi::Taobaoke.new
     result = JSON.parse(tbk.taobao_tbk_tpwd_create(params[:url],params[:content].gsub('+',' '), $taobao_app_id, $taobao_app_secret, params[:logo], params[:user_id]))
     if result["tbk_tpwd_create_response"] && result["tbk_tpwd_create_response"]["data"] && result["tbk_tpwd_create_response"]["data"]["model"]
