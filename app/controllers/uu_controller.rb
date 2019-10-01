@@ -343,6 +343,7 @@ class UuController < ApplicationController
       result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
         item.delete("item_url")
         item.delete("num_iid")
+        item.delete("coupon_share_url")
         item.delete("small_images")
         item.delete("info_dxjh")
         item.delete("include_mkt")
