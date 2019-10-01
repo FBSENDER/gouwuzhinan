@@ -641,6 +641,10 @@ class UuController < ApplicationController
   end
 
   def newbuy
+      if is_robot?
+        render plain: "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+        return
+      end
       result = ""
       if channel = get_channel
         result = item_channel_url_data(params[:title], params[:id], channel.aid)
@@ -661,6 +665,10 @@ class UuController < ApplicationController
 
   def buy
     begin
+      if is_robot?
+        render plain: "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+        return
+      end
       if params[:xcx] && params[:channel].to_i == 12
         render plain: ''
         return
