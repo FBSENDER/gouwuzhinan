@@ -1267,6 +1267,10 @@ class UuController < ApplicationController
   end
 
   def swan_jump
+    if is_robot?
+      render json: []
+      return
+    end
     x = params[:x].nil? ? 0 : params[:x].to_i
     s = SwanJumpSetting.where(source_id: params[:s].to_i).select(:id, :to_app, :to_path, :sort, :x).order("sort desc").to_a
     if s.size.zero?
