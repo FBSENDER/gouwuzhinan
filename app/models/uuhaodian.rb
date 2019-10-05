@@ -130,3 +130,11 @@ end
 class SwanJumpSetting < ApplicationRecord
   self.table_name = 'swan_jump_settings'
 end
+
+class SwanApp < ApplicationRecord
+  self.table_name = 'swan_apps'
+end
+
+class SwanShenheIp < ApplicationRecord
+  self.table_name = 'swan_shenhe_ips'
+end

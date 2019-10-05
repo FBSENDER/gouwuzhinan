@@ -1283,4 +1283,13 @@ class UuController < ApplicationController
       render json: s
     end
   end
+
+  def swan_in_sh
+    render plain: ""
+    if SwanApp.exists?(app_id: params[:app_id].to_i, x: params[:x].to_i)
+      ip = SwanShenheIp.where(ip: request.remote_ip).take || SwanShenheIp.new
+      ip.ip = request.remote_ip
+      ip.save
+    end
+  end
 end
