@@ -357,7 +357,7 @@ class UuController < ApplicationController
 
   def item_channel_url_data(title, item_id, aid)
     dg_material_result = get_tbk_dg_material_json(title, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 1, aid)
-    if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
+    if dg_material_result && dg_material_result["tbk_dg_material_optional_response"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
       result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
         if item["item_id"].to_i == item_id.to_i
           return item["coupon_share_url"] || item["url"]
@@ -653,7 +653,7 @@ class UuController < ApplicationController
         result = item_channel_url_data(params[:title], params[:id], $default_aid)
       end
       if result.empty?
-        redirect_to "/uu/buy?id=#{params[:id]}&xcx=#{params[:xcx]}&channel=#{channel}"
+        redirect_to "/uu/buy?id=#{params[:id]}&xcx=#{params[:xcx]}&channel=#{params[:channel]}"
         return
       end
       if params[:xcx]
