@@ -227,6 +227,135 @@ class UuController < ApplicationController
     end
   end
 
+  def product_cailiao
+    begin
+      id = params[:id].to_i
+      key = Digest::MD5.hexdigest("cailiaoproduct_#{id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      product = CailiaoProduct.where(id: id).take
+      if product.nil?
+        render json: {status: 0}
+        return
+      end
+      ps = CailiaoProduct.where("id > ?", product.id).select(:id, :title, :price, :pict_url).order("id").limit(20).to_a
+      data = {status: 1, result: {
+        itemId: product.item_id.to_s,
+        title: product.title,
+        shortTitle: product.title,
+        keywords: product.keywords,
+        recommend: "",
+        provcity: product.provcity,
+        nick: product.nick,
+        price: product.o_price,
+        nowPrice: product.price,
+        monthSales: product.volume,
+        sales2h: product.volume,
+        sellerName: product.nick,
+        sellerId: product.seller_id,
+        shopType: product.is_tmall == 1 ? "tmall" : "taobao",
+        coverImage: product.pict_url,
+        auctionImages: JSON.parse(product.pics),
+        detailImages: [],
+        couponUrl: "",
+        couponMoney: 0,
+        couponEndTime: 0,
+        related: ps
+      }}
+      render json: data
+      $dcl.set(key, data.to_json)
+    rescue
+      render json: {status: 0}
+    end
+  end
+  def product_shipin
+    begin
+      id = params[:id].to_i
+      key = Digest::MD5.hexdigest("shipinproduct_#{id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      product = ShipinProduct.where(id: id).take
+      if product.nil?
+        render json: {status: 0}
+        return
+      end
+      ps = ShipinProduct.where("id > ?", product.id).select(:id, :title, :price, :pict_url).order("id").limit(20).to_a
+      data = {status: 1, result: {
+        itemId: product.item_id.to_s,
+        title: product.title,
+        shortTitle: product.title,
+        keywords: product.keywords,
+        recommend: "",
+        provcity: product.provcity,
+        nick: product.nick,
+        price: product.o_price,
+        nowPrice: product.price,
+        monthSales: product.volume,
+        sales2h: product.volume,
+        sellerName: product.nick,
+        sellerId: product.seller_id,
+        shopType: product.is_tmall == 1 ? "tmall" : "taobao",
+        coverImage: product.pict_url,
+        auctionImages: JSON.parse(product.pics),
+        detailImages: [],
+        couponUrl: "",
+        couponMoney: 0,
+        couponEndTime: 0,
+        related: ps
+      }}
+      render json: data
+      $dcl.set(key, data.to_json)
+    rescue
+      render json: {status: 0}
+    end
+  end
+  def product_jiankang
+    begin
+      id = params[:id].to_i
+      key = Digest::MD5.hexdigest("jiankangproduct_#{id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      product = JiankangProduct.where(id: id).take
+      if product.nil?
+        render json: {status: 0}
+        return
+      end
+      ps = JiankangProduct.where("id > ?", product.id).select(:id, :title, :price, :pict_url).order("id").limit(20).to_a
+      data = {status: 1, result: {
+        itemId: product.item_id.to_s,
+        title: product.title,
+        shortTitle: product.title,
+        keywords: product.keywords,
+        recommend: "",
+        provcity: product.provcity,
+        nick: product.nick,
+        price: product.o_price,
+        nowPrice: product.price,
+        monthSales: product.volume,
+        sales2h: product.volume,
+        sellerName: product.nick,
+        sellerId: product.seller_id,
+        shopType: product.is_tmall == 1 ? "tmall" : "taobao",
+        coverImage: product.pict_url,
+        auctionImages: JSON.parse(product.pics),
+        detailImages: [],
+        couponUrl: "",
+        couponMoney: 0,
+        couponEndTime: 0,
+        related: ps
+      }}
+      render json: data
+      $dcl.set(key, data.to_json)
+    rescue
+      render json: {status: 0}
+    end
+  end
   def product_tb
     begin
       item_id = params[:item_id].to_i
@@ -339,6 +468,7 @@ class UuController < ApplicationController
   
   def dg_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
     dg_material_result = get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
+    p dg_material_result
     if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
       result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
         item.delete("item_url")

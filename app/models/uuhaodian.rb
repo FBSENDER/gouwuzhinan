@@ -126,6 +126,15 @@ end
 class YmqProduct < ApplicationRecord
   self.table_name = 'ymq_products'
 end
+class CailiaoProduct < ApplicationRecord
+  self.table_name = 'cailiao_products'
+end
+class JiankangProduct < ApplicationRecord
+  self.table_name = 'jiankang_products'
+end
+class ShipinProduct < ApplicationRecord
+  self.table_name = 'shipin_products'
+end
 
 class SwanJumpSetting < ApplicationRecord
   self.table_name = 'swan_jump_settings'
