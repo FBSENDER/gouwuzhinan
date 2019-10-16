@@ -468,7 +468,6 @@ class UuController < ApplicationController
   
   def dg_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
     dg_material_result = get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
-    p dg_material_result
     if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
       result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
         item.delete("item_url")
