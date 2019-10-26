@@ -467,7 +467,7 @@ class UuController < ApplicationController
   end
   
   def dg_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
-    dg_material_result = get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
+    dg_material_result = get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
     if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
       result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
         item.delete("item_url")
@@ -851,6 +851,11 @@ class UuController < ApplicationController
   def get_tbk_dg_material_json(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no, aid = $taobao_adzone_id_material)
     tbk = Tbkapi::Taobaoke.new
     JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material, $taobao_app_secret_material, aid, page_no, 20 ))
+  end
+
+  def get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no, aid = $taobao_adzone_id_material_only_search_1)
+    tbk = Tbkapi::Taobaoke.new
+    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material_only_search_1, $taobao_app_secret_material_only_search_1, aid, page_no, 20 ))
   end
 
   def get_tbk_search_json(keyword, page_no)
