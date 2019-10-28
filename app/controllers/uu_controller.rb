@@ -853,9 +853,18 @@ class UuController < ApplicationController
     JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material, $taobao_app_secret_material, aid, page_no, 20 ))
   end
 
-  def get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no, aid = $taobao_adzone_id_material_only_search_1)
+  def get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no)
     tbk = Tbkapi::Taobaoke.new
-    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material_only_search_1, $taobao_app_secret_material_only_search_1, aid, page_no, 20 ))
+    if keyword && keyword.size % 2 == 1
+      app_id = $taobao_app_id_material_only_search_1
+      app_secret = $taobao_app_secret_material_only_search_1
+      aid = $taobao_adzone_id_material_only_search_1
+    else
+      app_id = $taobao_app_id_material_only_search_2
+      app_secret = $taobao_app_secret_material_only_search_2
+      aid = $taobao_adzone_id_material_only_search_2
+    end
+    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', app_id, app_secret, aid, page_no, 20 ))
   end
 
   def get_tbk_search_json(keyword, page_no)
