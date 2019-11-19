@@ -128,4 +128,8 @@ Rails.application.routes.draw do
 
   get "yealink/users", to: "yealink#users"
 
+  get "content/sh/home_list", to: "content#sh_home_list"
+  get "content/sh/new_list", to: "content#sh_new_list"
+  get "content/sh/related_list", to: "content#sh_related_list"
+
 end
