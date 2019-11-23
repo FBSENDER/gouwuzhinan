@@ -1435,4 +1435,13 @@ class UuController < ApplicationController
       ip.save
     end
   end
+
+  def qixiu_good_keyword
+    k = QixiuGoodKeyword.where(keyword: params[:keyword]).take || QixiuGoodKeyword.new
+    k.keyword = params[:keyword]
+    k.clicks += 1
+    k.save
+    render plain: 1
+  end
+
 end

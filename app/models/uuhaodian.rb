@@ -147,3 +147,6 @@ end
 class SwanShenheIp < ApplicationRecord
   self.table_name = 'swan_shenhe_ips'
 end
+class QixiuGoodKeyword < ApplicationRecord
+  self.table_name = 'qixiu_good_keywords'
+end
