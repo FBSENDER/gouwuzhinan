@@ -92,6 +92,7 @@ Rails.application.routes.draw do
   get "uu/xcx_kmap", to: "uu#xcx_kmap"
   get "uu/swan_jump", to: "uu#swan_jump"
   get "uu/swan_in_sh", to: "uu#swan_in_sh"
+  get "uu/swan_is_in_sh", to: "uu#swan_is_in_sh"
   get "uu/qixiu_good_keyword", to: "uu#qixiu_good_keyword"
 
   get "love/user_login", to: "love#user_login"

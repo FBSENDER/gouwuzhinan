@@ -1429,10 +1429,25 @@ class UuController < ApplicationController
 
   def swan_in_sh
     render plain: ""
+    if is_robot?
+      return
+    end
     if SwanApp.exists?(app_id: params[:app_id].to_i, x: params[:x].to_i)
       ip = SwanShenheIp.where(ip: request.remote_ip).take || SwanShenheIp.new
       ip.ip = request.remote_ip
       ip.save
+    end
+  end
+
+  def swan_is_in_sh
+    if is_robot?
+      render json: {status: -1}
+      return
+    end
+    if SwanShenheIp.where(ip: request.remote_ip).take
+      render json: {status: 1}
+    else
+      render json: {status: 0}
     end
   end
 
