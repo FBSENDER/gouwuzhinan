@@ -1466,13 +1466,10 @@ class UuController < ApplicationController
   def dtk_topic_goods
     page = params[:page].nil? ? 1 : params[:page].to_i
     topic_id = params[:topic_id].nil? ? 0 : params[:topic_id].to_i
-    p page
-    p topic_id
     if topic_id.zero? || page.zero?
       render json: {code: -1}
       return
     end
-    puts "12312"
     render json: dataoke_get_topic_goods(topic_id, page), callback: params[:callback]
   end
 
