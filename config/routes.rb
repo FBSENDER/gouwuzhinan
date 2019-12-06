@@ -95,6 +95,10 @@ Rails.application.routes.draw do
   get "uu/swan_is_in_sh", to: "uu#swan_is_in_sh"
   get "uu/qixiu_good_keyword", to: "uu#qixiu_good_keyword"
 
+  #dtk
+  get "uu/dtk_topics", to: "uu#dtk_topics"
+  get "uu/dtk_topic_goods", to: "uu#dtk_topic_goods"
+
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"
 
