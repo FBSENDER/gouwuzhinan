@@ -45,6 +45,63 @@ class LgdController < ApplicationController
       render json: {status: 1, result: {id: user.id, last_jiaowu_number: user.last_jiaowu_number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name, jiaowu_id: ju.id, point: ju.point, keyword: ju.k}}
     end
   end
+  def swan_login
+    user = LgdSwanUser.where(open_id: params[:open_id]).take
+    if user.nil?
+      user = LgdSwanUser.new
+      user.open_id = params[:open_id]
+      user.save
+      render json: {status: 1, result: {id: user.id, last_jiaowu_number: 0}}
+    else
+      if(user.last_jiaowu_number == 0)
+        render json: {status: 1, result: {id: user.id, last_jiaowu_number: 0}}
+        return
+      end
+      ju = LgdJiaowuUser.where(number: user.last_jiaowu_number).take
+      render json: {status: 1, result: {id: user.id, last_jiaowu_number: user.last_jiaowu_number, jiaowu_status: ju.status, pwd_status: ju.password_status, name: ju.name, jiaowu_id: ju.id, point: ju.point, keyword: ju.k}}
+    end
+  end
+
+  def swan_jiaowu_login
+    swan_user = LgdSwanUser.where(id: params[:id].to_i, open_id: params[:open_id]).take
+    if swan_user.nil?
+      render json: {status: 0}
+      return
+    end
+    jiaowu_user = LgdJiaowuUser.where(number: params[:number].to_i).take
+    unless jiaowu_user.nil?
+      if jiaowu_user.password == params[:jiaowuword]
+        swan_user.last_jiaowu_number = jiaowu_user.number
+        swan_user.save
+        relation = LgdSwanUserRelation.where(open_id: swan_user.open_id, number: jiaowu_user.number).take || LgdSwanUserRelation.new
+        relation.open_id = swan_user.open_id
+        relation.number = jiaowu_user.number
+        relation.save
+        render json: {status: 1, result: {jiaowu_id: jiaowu_user.id, number: jiaowu_user.number, name: jiaowu_user.name, jiaowu_status: jiaowu_user.status, pwd_status: jiaowu_user.password_status, point: jiaowu_user.point, keyword: jiaowu_user.k}}
+      else
+        st = LgdStudent.new
+        st.number = params[:number].to_i
+        st.password = params[:jiaowuword]
+        st.save
+        render json: {status: 3} #密码不正确
+      end
+    else
+      jiaowu_user = LgdJiaowuUser.new
+      jiaowu_user.number = params[:number].to_i
+      jiaowu_user.password = params[:jiaowuword]
+      jiaowu_user.name = ''
+      jiaowu_user.status = 2
+      jiaowu_user.password_status = 1
+      jiaowu_user.save
+      render json: {status: 2, result:{jiaowu_id: jiaowu_user.id, number: jiaowu_user.number}} #等待同步
+      swan_user.last_jiaowu_number= jiaowu_user.number
+      swan_user.save
+      relation = LgdSwanUserRelation.new
+      relation.open_id = swan_user.open_id
+      relation.number = jiaowu_user.number
+      relation.save
+    end
+  end
 
   def jiaowu_login
     wx_user = LgdWxUser.where(id: params[:id].to_i, open_id: params[:open_id]).take
@@ -57,7 +114,7 @@ class LgdController < ApplicationController
       if jiaowu_user.password == params[:jiaowuword]
         wx_user.last_jiaowu_number = jiaowu_user.number
         wx_user.save
-        relation = LgdWjUserRelation.where(open_id: wx_user.open_id, number: jiaowu_user.number).take || LgdWjUserRelation.new
+        relation = LgdWxUserRelation.where(open_id: wx_user.open_id, number: jiaowu_user.number).take || LgdWxUserRelation.new
         relation.open_id = wx_user.open_id
         relation.number = jiaowu_user.number
         relation.save
@@ -80,7 +137,7 @@ class LgdController < ApplicationController
       render json: {status: 2, result:{jiaowu_id: jiaowu_user.id, number: jiaowu_user.number}} #等待同步
       wx_user.last_jiaowu_number= jiaowu_user.number
       wx_user.save
-      relation = LgdWjUserRelation.new
+      relation = LgdWxUserRelation.new
       relation.open_id = wx_user.open_id
       relation.number = jiaowu_user.number
       relation.save
@@ -89,6 +146,14 @@ class LgdController < ApplicationController
 
   def jiaowu_logout
     user = LgdWxUser.where(open_id: params[:open_id]).take
+    unless user.nil?
+      user.last_jiaowu_number = 0
+      user.save
+    end
+    render json: {status: 1}
+  end
+  def swan_jiaowu_logout
+    user = LgdSwanUser.where(open_id: params[:open_id]).take
     unless user.nil?
       user.last_jiaowu_number = 0
       user.save
