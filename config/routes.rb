@@ -96,8 +96,14 @@ Rails.application.routes.draw do
   get "uu/qixiu_good_keyword", to: "uu#qixiu_good_keyword"
 
   #dtk
+  get "uu/dtk_categories", to: "uu#dtk_categories"
+  get "uu/dtk_category_goods", to: "uu#dtk_category_goods"
   get "uu/dtk_topics", to: "uu#dtk_topics"
   get "uu/dtk_topic_goods", to: "uu#dtk_topic_goods"
+  get "uu/dtk_brands", to: "uu#dtk_brands"
+  get "uu/dtk_brand_detail", to: "uu#dtk_brand_detail"
+  get "uu/dtk_brand_goods", to: "uu#dtk_brand_goods"
+  get "uu/dtk_product", to: "uu#dtk_product"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"

@@ -150,3 +150,19 @@ end
 class QixiuGoodKeyword < ApplicationRecord
   self.table_name = 'qixiu_good_keywords'
 end
+
+class DtkBrand < ApplicationRecord
+  self.table_name = 'dataoke_brands'
+end
+
+class DtkBrandProduct < ApplicationRecord
+  self.table_name = 'dataoke_brand_products'
+end
+
+class DtkCategory < ApplicationRecord
+  self.table_name = 'dataoke_categories'
+end
+
+class DtkBcr < ApplicationRecord
+  self.table_name = 'dataoke_brand_category_relations'
+end

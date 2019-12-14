@@ -1459,10 +1459,107 @@ class UuController < ApplicationController
     render plain: 1
   end
 
+  def dtk_brands
+    begin
+      page = params[:page].nil? ? 0 : params[:page].to_i
+      cid = params[:cid].nil? ? 0 : params[:cid].to_i
+      key = Digest::MD5.hexdigest("dataoke_brand_#{cid}_#{page}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      brands = cid.zero? ? DtkBrand.where("has_product = 1 and max_quan > 0 and discount < 10").select(:id,:brand_name,:logo,:sales,:max_quan, :discount,:items).order("score desc").order("id").offset(20 * page).limit(20) : DtkBrand.joins("join dataoke_brand_category_relations r on r.bid = dataoke_brands.id").where("r.cid = ? and has_product = 1 and max_quan > 0 and discount < 10", cid).select(:id,:brand_name,:logo,:sales,:max_quan,:discount,:items).order("score desc").order("dataoke_brands.id").offset(20 * page).limit(10)
+      data = {code: 0, data: brands.map{|b| {
+        id: b.id,
+        name: b.brand_name,
+        logo: b.logo,
+        sales: b.sales,
+        max_quan: b.max_quan,
+        discount: b.discount,
+        items: JSON.parse(b.items)
+      }}}
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data.to_json)
+    rescue
+      render json: {code: -1}
+    end
+  end
+
+  def dtk_brand_detail
+    begin
+      bid = params[:id].nil? ? 0 : params[:id].to_i
+      if bid.zero?
+        render json: {code: -1}
+        return
+      end
+      key = Digest::MD5.hexdigest("dataoke_brand_detail_#{bid}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      brand = DtkBrand.where(id: bid, has_product: 1).select(:id,:brand_id, :brand_name, :logo, :desc, :label, :fans, :sales, :items).take
+      if brand.nil?
+        render json: {code: -1}
+        return
+      end
+      bps = DtkBrandProduct.where(bid: brand.id, status: 1).select(:item_id, :title, :pic, :price, :now_price, :coupon_price, :discount, :sales, :act_type, :shop_type, :chaoshi).limit(20)
+      data = {code: 0, data:{
+        id: brand.id,
+        source_id: brand.brand_id,
+        name: brand.brand_name,
+        logo: brand.logo,
+        desc: brand.desc,
+        label: brand.label,
+        fans: brand.fans,
+        sales: brand.sales,
+        items: JSON.parse(brand.items),
+        goods: bps.map{|b| {
+          goodsId: b.item_id,
+          dtitle: b.title,
+          originalPrice: b.price,
+          actualPrice: b.now_price,
+          shopType: b.shop_type,
+          monthSales: b.sales,
+          couponPrice: b.coupon_price,
+          activityType: b.act_type,
+          mainPic: b.pic,
+          discounts: b.discount,
+          tchaoshi: b.chaoshi
+        }}
+      }}
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data.to_json)
+    rescue
+      render json: {code: -1}
+    end
+  end
+
+  def dtk_brand_goods
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    brand_id = params[:brand_id].nil? ? 0 : params[:brand_id].to_i
+    if brand_id.zero? || page.zero?
+      render json: {code: -1}
+      return
+    end
+    render json: dataoke_get_brand_goods(brand_id, page), callback: params[:callback]
+  end
+
+  def dtk_categories
+    render json: dataoke_get_categories, callback: params[:callback]
+  end
   def dtk_topics
     render json: dataoke_get_topics, callback: params[:callback]
   end
 
+  def dtk_category_goods
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    category_id = params[:cid].nil? ? 0 : params[:cid].to_i
+    if category_id.zero? || page.zero?
+      render json: {code: -1}
+      return
+    end
+    render json: dataoke_get_category_goods(category_id, page), callback: params[:callback]
+  end
   def dtk_topic_goods
     page = params[:page].nil? ? 1 : params[:page].to_i
     topic_id = params[:topic_id].nil? ? 0 : params[:topic_id].to_i
@@ -1471,6 +1568,15 @@ class UuController < ApplicationController
       return
     end
     render json: dataoke_get_topic_goods(topic_id, page), callback: params[:callback]
+  end
+
+  def dtk_product
+    item_id = params[:item_id].nil? ? 0 : params[:item_id].to_i
+    if item_id.zero?
+      render json: {code: -1}
+      return
+    end
+    render json: dataoke_get_product_detail(item_id), callback: params[:callback]
   end
 
 end
