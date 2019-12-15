@@ -1579,4 +1579,14 @@ class UuController < ApplicationController
     render json: dataoke_get_product_detail(item_id), callback: params[:callback]
   end
 
+  def dtk_search_normal
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    keyword = params[:h].nil? ? '' : params[:h].strip
+    if page <= 0 || keyword.empty?
+      render json: {code: -1}
+      return
+    end
+    render json: dataoke_search_normal(keyword, page), callback: params[:callback]
+  end
+
 end
