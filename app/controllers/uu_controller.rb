@@ -441,6 +441,22 @@ class UuController < ApplicationController
     render json: lanlan_search_coupon_list(keyword, sort, 0, page, 20), callback: params[:callback]
   end
 
+  def dg_seo_goods_list
+    begin
+      keyword = params[:keyword].gsub('+', '') if params[:keyword]
+      key = Digest::MD5.hexdigest("dgseogoodslist_#{keyword}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      data = dg_seo_goods_list_data(1, keyword, nil, "tk_total_commi_des", nil, nil, nil, nil, nil, nil, nil, nil)
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data.to_json)
+    rescue Exception => ex
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+  
   def dg_goods_list
     begin
       page = params[:page].nil? ? 1 : params[:page].to_i
@@ -466,6 +482,37 @@ class UuController < ApplicationController
     end
   end
   
+  def dg_seo_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
+    dg_material_result = get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page, 40)
+    if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
+      result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
+        item.delete("commission_rate")
+        item.delete("commission_type")
+        item.delete("coupon_id")
+        item.delete("level_one_category_id")
+        item.delete("real_post_fee")
+        item.delete("coupon_start_time")
+        item.delete("coupon_remain_count")
+        item.delete("coupon_start_fee")
+        item.delete("coupon_total_count")
+        item.delete("shop_dsr")
+        item.delete("category_id")
+        item.delete("coupon_end_time")
+        item.delete("url")
+        item.delete("white_image")
+        item.delete("item_url")
+        item.delete("num_iid")
+        item.delete("coupon_share_url")
+        item.delete("small_images")
+        item.delete("info_dxjh")
+        item.delete("include_mkt")
+        item.delete("include_dxjh")
+        item
+      end
+      return {status: 1, results: result}
+    end
+    return {status: 0}
+  end
   def dg_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
     dg_material_result = get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
     if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
@@ -853,7 +900,7 @@ class UuController < ApplicationController
     JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', $taobao_app_id_material, $taobao_app_secret_material, aid, page_no, 20 ))
   end
 
-  def get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no)
+  def get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page_no, page_size = 20)
     tbk = Tbkapi::Taobaoke.new
     if keyword && keyword.size % 2 == 1
       app_id = $taobao_app_id_material_only_search_1
@@ -864,7 +911,7 @@ class UuController < ApplicationController
       app_secret = $taobao_app_secret_material_only_search_2
       aid = $taobao_adzone_id_material_only_search_2
     end
-    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', app_id, app_secret, aid, page_no, 20 ))
+    JSON.parse(tbk.taobao_tbk_dg_material_optional(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, '6707', app_id, app_secret, aid, page_no, page_size ))
   end
 
   def get_tbk_search_json(keyword, page_no)
@@ -1577,6 +1624,17 @@ class UuController < ApplicationController
       return
     end
     render json: dataoke_get_product_detail(item_id), callback: params[:callback]
+  end
+
+  def dtk_static_product
+    id = params[:id].nil?  ? 0 : params[:id].to_i
+    item = DtkProduct.where(id: id).select(:id, :source_id, :goodsId, :title, :dtitle, :desc, :mainPic, :originalPrice, :actualPrice, :discounts, :couponEndTime, :couponStartTime, :couponPrice, :monthSales, :brand, :brandId, :brandName, :tchaoshi, :activityType, :shopType, :sellerId, :shopName, :yunfeixian, :shopLogo, :descScore, :shipScore, :serviceScore).take
+    if item.nil?
+      render json: {code: -1}
+      return
+    end
+    related = DtkProduct.where("id > ?", item.id).select(:id, :dtitle, :mainPic).order("id").limit(20).to_a
+    render json: {code: 0, data: {product: item, related: related}}
   end
 
   def dtk_search_normal

@@ -166,3 +166,7 @@ end
 class DtkBcr < ApplicationRecord
   self.table_name = 'dataoke_brand_category_relations'
 end
+
+class DtkProduct < ApplicationRecord
+  self.table_name = 'dataoke_products'
+end

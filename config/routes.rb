@@ -37,6 +37,7 @@ Rails.application.routes.draw do
   get "uu/product_jiankang", to: "uu#product_jiankang"
   get "uu/goods_list", to: "uu#goods_list"
   get "uu/dg_goods_list", to: "uu#dg_goods_list"
+  get "uu/dg_seo_goods_list", to: "uu#dg_seo_goods_list"
   get "uu/tb_goods_list", to: "uu#tb_goods_list"
   get "uu/tb_goods_item_list", to: "uu#tb_goods_item_list"
   get "uu/tb_goods_recommend", to: "uu#tb_goods_recommend"
@@ -104,6 +105,7 @@ Rails.application.routes.draw do
   get "uu/dtk_brand_detail", to: "uu#dtk_brand_detail"
   get "uu/dtk_brand_goods", to: "uu#dtk_brand_goods"
   get "uu/dtk_product", to: "uu#dtk_product"
+  get "uu/dtk_static_product", to: "uu#dtk_static_product"
   get "uu/dtk_search_normal", to: "uu#dtk_search_normal"
 
   get "love/user_login", to: "love#user_login"
