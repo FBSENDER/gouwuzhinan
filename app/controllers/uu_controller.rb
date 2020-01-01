@@ -1319,6 +1319,17 @@ class UuController < ApplicationController
     end
     render json: {status: 0}, callback: params[:callback]
   end
+  
+  def jishi_keywords
+    keyword = params[:keyword]
+    k = JishiKeyword.where(keyword: keyword, status: 1).take
+    if k.nil?
+      render json: {status: 0}
+      return
+    end
+    ks = JishiKeyword.where("id > ? and status = 1", k.id).order("id").limit(20).pluck(:keyword)
+    render json: {status: 1, data: ks}
+  end
 
   def keyword_infos
     begin

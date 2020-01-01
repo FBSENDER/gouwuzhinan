@@ -170,3 +170,7 @@ end
 class DtkProduct < ApplicationRecord
   self.table_name = 'dataoke_products'
 end
+
+class JishiKeyword < ApplicationRecord
+  self.table_name = 'jishi_keywords'
+end

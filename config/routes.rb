@@ -85,6 +85,7 @@ Rails.application.routes.draw do
   get "uu/shop", to: "uu#shop"
   get "uu/shop_hot_items", to: "uu#shop_hot_items"
   get "uu/keyword_infos", to: "uu#keyword_infos"
+  get "uu/jishi_keywords", to: "uu#jishi_keywords"
   get "uu/swan_fav_add", to: "uu#swan_fav_add"
   get "uu/swan_fav_del", to: "uu#swan_fav_del"
   get "uu/swan_uu_login", to: "uu#swan_uu_login"
