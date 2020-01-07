@@ -13,6 +13,12 @@ end
 class LgdSwanUserRelation < ApplicationRecord
   self.table_name = 'lgd_swan_jiaowu_user_relations'
 end
+class LgdQqUser < ApplicationRecord
+  self.table_name = 'lgd_qq_users'
+end
+class LgdQqUserRelation < ApplicationRecord
+  self.table_name = 'lgd_qq_jiaowu_user_relations'
+end
 class LgdStudent < ApplicationRecord
   self.table_name = 'lgd_students'
 end
