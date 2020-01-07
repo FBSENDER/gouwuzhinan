@@ -89,7 +89,7 @@ class LgdController < ApplicationController
       if jiaowu_user.password == params[:jiaowuword]
         qq_user.last_jiaowu_number = jiaowu_user.number
         qq_user.save
-        relation = LgdQqUserRelation.where(open_id: qq_user.open_id, number: jiaowu_user.number).take || LgdSwanUserRelation.new
+        relation = LgdQqUserRelation.where(open_id: qq_user.open_id, number: jiaowu_user.number).take || LgdQqUserRelation.new
         relation.open_id = qq_user.open_id
         relation.number = jiaowu_user.number
         relation.save
