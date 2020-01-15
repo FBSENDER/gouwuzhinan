@@ -155,4 +155,16 @@ Rails.application.routes.draw do
   get "content/sh/new_list", to: "content#sh_new_list"
   get "content/sh/related_list", to: "content#sh_related_list"
 
+  #lovechecker 
+  post "lovechecker/qq_login", to: "lovechecker#qq_login"
+  post "lovechecker/set_gender", to: "lovechecker#set_gender"
+  post "lovechecker/update_user_detail", to: "lovechecker#update_user_detail"
+  post "lovechecker/send_checker", to: "lovechecker#send_checker"
+  post "lovechecker/delete_checker", to: "lovechecker#delete_checker"
+  post "lovechecker/reply_checker", to: "lovechecker#reply_checker"
+  get "lovechecker/get_checker", to: "lovechecker#get_checker"
+  get "lovechecker/get_man_checker", to: "lovechecker#get_man_checker"
+  post "lovechecker/check_status", to: "lovechecker#check_status"
+  get "lovechecker/checker_need_reply", to: "lovechecker#checker_need_reply"
+  
 end
