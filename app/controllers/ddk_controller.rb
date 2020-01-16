@@ -104,13 +104,15 @@ class DdkController < ApplicationController
   end
 
   def get_promotion_url
+    ddkid = params[:pid] || "1781779_28462207"
     action_params = {
-      p_id: "1781779_28462207",
+      p_id: ddkid,
       goods_id_list:"[\"#{params[:id]}\"]",
       generate_short_url: true,
       multi_group: true,
       generate_weapp_webview: true,
-      generate_we_app: true
+      generate_we_app: true,
+      generate_qq_app: true
     }
     qq = system_params("pdd.ddk.goods.promotion.url.generate").merge(action_params)
     response = do_request(qq)
