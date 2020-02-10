@@ -106,6 +106,7 @@ Rails.application.routes.draw do
   get "uu/dtk_brand_detail", to: "uu#dtk_brand_detail"
   get "uu/dtk_brand_goods", to: "uu#dtk_brand_goods"
   get "uu/dtk_product", to: "uu#dtk_product"
+  get "uu/dtk_product_sitemap", to: "uu#dtk_product_sitemap"
   get "uu/dtk_static_product", to: "uu#dtk_static_product"
   get "uu/dtk_search_normal", to: "uu#dtk_search_normal"
 

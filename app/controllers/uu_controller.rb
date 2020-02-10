@@ -1637,6 +1637,12 @@ class UuController < ApplicationController
     render json: dataoke_get_product_detail(item_id), callback: params[:callback]
   end
 
+  def dtk_product_sitemap
+    page = params[:page].nil? ? 0 : params[:page].to_i - 1
+    items = DtkProduct.select(:id, :dtitle).order(:id).offset(page * 100).limit(100)
+    render json: {code: 0, data: items}
+  end
+
   def dtk_static_product
     id = params[:id].nil?  ? 0 : params[:id].to_i
     item = DtkProduct.where(id: id).select(:id, :source_id, :goodsId, :title, :dtitle, :desc, :mainPic, :originalPrice, :actualPrice, :discounts, :couponEndTime, :couponStartTime, :couponPrice, :monthSales, :brand, :brandId, :brandName, :tchaoshi, :activityType, :shopType, :sellerId, :shopName, :yunfeixian, :shopLogo, :descScore, :shipScore, :serviceScore).take
