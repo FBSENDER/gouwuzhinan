@@ -167,5 +167,23 @@ Rails.application.routes.draw do
   get "lovechecker/get_man_checker", to: "lovechecker#get_man_checker"
   post "lovechecker/check_status", to: "lovechecker#check_status"
   get "lovechecker/checker_need_reply", to: "lovechecker#checker_need_reply"
+
+  #wxgroup
+  post "wxgroup/user_login", to: "wxgroup#user_login"
+  post "wxgroup/update_user_detail", to: "wxgroup#update_user_detail"
+  post "wxgroup/add_group", to: "wxgroup#add_group"
+  post "wxgroup/group_register", to: "wxgroup#group_register"
+  post "wxgroup/group_register_remove", to: "wxgroup#group_register_remove"
+  get "wxgroup/group_list", to: "wxgroup#group_list"
+  get "wxgroup/group_users", to: "wxgroup#group_users"
+  post "wxgroup/add_task", to: "wxgroup#add_task"
+  post "wxgroup/end_task", to: "wxgroup#end_task"
+  get "wxgroup/task_list", to: "wxgroup#task_list"
+  get "wxgroup/task_users", to: "wxgroup#task_users"
+  get "wxgroup/task_detail", to: "wxgroup#task_detail"
+  get "wxgroup/is_user_in_task", to: "wxgroup#is_user_in_task"
+  post "wxgroup/user_in_task", to: "wxgroup#user_in_task"
+  post "wxgroup/user_done_task", to: "wxgroup#user_done_task"
+  post "wxgroup/user_share_task", to: "wxgroup#user_share_task"
   
 end

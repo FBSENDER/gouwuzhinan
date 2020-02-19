@@ -1,0 +1,23 @@
+class WxgroupUser < ApplicationRecord
+  self.table_name = 'wxgroup_users'
+end
+
+class WxgroupUserDetail < ApplicationRecord
+  self.table_name = 'wxgroup_user_details'
+end
+
+class Wxgroup < ApplicationRecord
+  self.table_name = 'wxgroup_groups'
+end
+
+class WxgroupRegister < ApplicationRecord
+  self.table_name = 'wxgroup_registers'
+end
+
+class WxgroupTask < ApplicationRecord
+  self.table_name = 'wxgroup_tasks'
+end
+
+class WxgroupTaskUser < ApplicationRecord
+  self.table_name = 'wxgroup_task_users'
+end
