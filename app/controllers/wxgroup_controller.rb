@@ -188,7 +188,7 @@ class WxgroupController < ApplicationController
     WxgroupTaskUser.connection.execute("select d.user_id,d.nickName,d.avatarUrl,tu.status
 from wxgroup_task_users tu
 join wxgroup_user_details d on tu.user_id = d.user_id
-where tu.id = #{task.id} order by tu.status").to_a.each do |row|
+where tu.task_id = #{task.id} order by tu.status").to_a.each do |row|
       users << {
         user_id: row[0],
         nickName: row[1],
