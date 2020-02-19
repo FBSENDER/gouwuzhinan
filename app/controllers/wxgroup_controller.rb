@@ -237,19 +237,20 @@ where tu.task_id = #{task.id} order by tu.status").to_a.each do |row|
       render json: {status: 0}
       return
     end
-    register = WxgroupRegister.where(user_id: params[:user_id].to_i).take
-    if register.nil?
-      render json: {status: 0}
-      return
-    end
     task = WxgroupTask.where(id: params[:task_id].to_i).take
     if task.nil?
       render json: {status: 0}
       return
     end
     group = Wxgroup.where(id: task.group_id).take
-    if group.nil? || group.group_id != register.group_id
+    if group.nil? 
       render json: {status: 0}
+      return
+    end
+    register = WxgroupRegister.where(user_id: params[:user_id].to_i, group_id: group.group_id).take
+    if register.nil?
+      render json: {status: 0}
+      return
     end
     tu = WxgroupTaskUser.where(user_id: params[:user_id].to_i, task_id: params[:task_id].to_i).take || WxgroupTaskUser.new
     tu.task_id = params[:task_id].to_i
