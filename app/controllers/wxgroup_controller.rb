@@ -197,7 +197,7 @@ where tu.task_id = #{task.id} order by tu.status").to_a.each do |row|
       }
     end
     sum = users.size
-    sum_done = users.count{|u| u["status"] == 1}
+    sum_done = users.count{|u| u[:status] == 1}
     render json: {status: 1, task: task, users: users, sum: sum, sum_done: sum_done}
   end
 
