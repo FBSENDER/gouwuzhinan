@@ -14,10 +14,10 @@ class WxgroupController < ApplicationController
       data = JSON.parse(result)
       user = WxgroupUser.where(open_id: data["openid"]).take
       if user.nil?
-        render json: {status: 1, openId: data["openid"], userId: user.id, userInfo: nil}
         u = WxgroupUser.new
         u.open_id = data["openid"]
         u.save
+        render json: {status: 1, openId: data["openid"], userId: u.id, userInfo: nil}
         return
       else
         info = WxgroupUserDetail.where(user_id: user.id).select(:user_id, :nickName, :avatarUrl).take
