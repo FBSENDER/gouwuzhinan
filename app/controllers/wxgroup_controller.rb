@@ -49,15 +49,29 @@ class WxgroupController < ApplicationController
 
   def add_group
     begin
-      if params[:group_id].nil? || params[:group_id].empty?
+      if params[:group_id].nil? || params[:group_id].empty? || params[:user_id].nil? || params[:user_id].to_i.zero?
         render json: {status: 0}
         return
       end
-      group = Wxgroup.where(group_id: params[:group_id]).take || Wxgroup.new
-      group.group_id = params[:group_id]
-      group.group_name = params[:group_name]
-      group.save
-      render json: {status: 1}
+      group = Wxgroup.where(group_id: params[:group_id]).take
+      if group
+        if group.owner_id == params[:user_id].to_i
+          group.group_name = params[:group_name]
+          group.save
+          render json: {status: 1}
+          return
+        else
+          render json: {status: 0}
+          return
+        end
+      else
+        group = Wxgroup.new
+        group.group_id = params[:group_id]
+        group.group_name = params[:group_name]
+        group.owner_id = params[:user_id].to_i
+        group.save
+        render json: {status: 1}
+      end
     rescue
       render json: {status: 0}
     end
@@ -111,7 +125,11 @@ class WxgroupController < ApplicationController
   end
 
   def group_list
-    groups = Wxgroup.order(:id).select(:id, :group_name).to_a
+    if params[:user_id].nil?
+      render json: {status: 0}
+      return
+    end
+    groups = Wxgroup.where(owner_id: params[:user_id].to_i).order(:id).select(:id, :group_name).to_a
     render json: {status: 1, data: groups}
   end
 
@@ -179,7 +197,7 @@ class WxgroupController < ApplicationController
       render json: {status: 0}
       return
     end
-    task = WxgroupTask.where(id: params[:task_id].to_i).select(:id, :status, :page_views, :ad_views).take
+    task = WxgroupTask.where(id: params[:task_id].to_i).select(:id, :status, :page_views, :ad_views, :money).take
     if task.nil?
       render json: {status: 0}
       return
@@ -217,6 +235,31 @@ where tu.task_id = #{task.id} order by tu.status").to_a.each do |row|
       return
     end
     render json: {status: 1, task: task, group: group}
+  end
+
+  def task_refresh_money
+    if params[:task_id].nil?
+      render json: {status: 0}
+      return
+    end
+    task = WxgroupTask.where(id: params[:task_id].to_i).take
+    if task.nil?
+      render json: {status: 0}
+      return
+    end
+    # do refresh
+    done_users = WxgroupTaskUser.where(task_id: params[:task_id].to_i, status: 1)
+    if done_users.size < 5
+      task.money = 5
+    elsif done_users.size < 20
+      task.money = done_users.size * 0.5
+    elsif done_users.size < 50
+      task.money = done_users.size * 0.4
+    else
+      task.money = 25
+    end
+    task.save
+    render json: {status: 1, money: task.money}
   end
 
   def is_user_in_task

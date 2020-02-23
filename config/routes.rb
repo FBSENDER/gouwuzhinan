@@ -181,6 +181,7 @@ Rails.application.routes.draw do
   get "wxgroup/task_list", to: "wxgroup#task_list"
   get "wxgroup/task_users", to: "wxgroup#task_users"
   get "wxgroup/task_detail", to: "wxgroup#task_detail"
+  get "wxgroup/task_refresh_money", to: "wxgroup#task_refresh_money"
   get "wxgroup/is_user_in_task", to: "wxgroup#is_user_in_task"
   post "wxgroup/user_in_task", to: "wxgroup#user_in_task"
   post "wxgroup/user_done_task", to: "wxgroup#user_done_task"
