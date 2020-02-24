@@ -268,7 +268,6 @@ where lc.reply_user_id = #{user.id} and status = 1").to_a.each do |row|
       request.body = msg.to_json
       response = http.request(request)
     rescue
-      puts "ERROR: post_message #{item_id}"
     end
   end
 end
