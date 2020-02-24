@@ -84,6 +84,7 @@ class LovecheckerController < ApplicationController
     c.uniq_id = params[:uniq_id]
     c.user_id = user.id
     c.message = params[:message]
+    c.form_id = params[:form_id]
     c.reply = ''
     c.reply_status = 0
     c.reply_user_id = 0
@@ -120,6 +121,14 @@ class LovecheckerController < ApplicationController
     lg.operation = 2
     lg.save
     render json: {status: 1}
+    if c.form_id
+      send_user = LoveQqUser.where(id: c.user_id).take
+      if send_user
+        reply_user = LoveQqUserDetail.where(user_id: user.id).take
+        name = reply_user.nil? ? '已回复' : reply_user.nickName
+        form_post_message(send_user.open_id, c.form_id, c.message, name, c.reply) 
+      end
+    end
   end
 
   def delete_checker
@@ -237,4 +246,29 @@ where lc.reply_user_id = #{user.id} and status = 1").to_a.each do |row|
     render json: {status: 1, user_name: detail.nickName, user_avatar: detail.avatarUrl, message: checker.message, send_time: (checker.send_time + 28800).strftime("%F %T")}
   end
 
+  def form_post_message(user_id, form_id, k1, k2, k3)
+    begin
+      token = LovecheckerToken.where(id: 5).take.token
+      url = "https://api.q.qq.com/api/json/template/send?access_token=#{token}"
+      msg = {
+        "appid" => "1110124833",
+        "touser" => user_id,
+        "template_id" => "9300ef3a870d1869a0ceaa03bc7565c0",
+        "form_id" => form_id,
+        "data" => {
+          "keyword1" => {"value" => k1},
+          "keyword2" => {"value" => k2},
+          "keyword3" => {"value" => k3}
+        }
+      }
+      uri = URI(url)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+      request.body = msg.to_json
+      response = http.request(request)
+    rescue
+      puts "ERROR: post_message #{item_id}"
+    end
+  end
 end

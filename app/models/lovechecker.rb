@@ -13,3 +13,7 @@ end
 class LovecheckerLog < ActiveRecord::Base
   self.table_name = 'lovechecker_checker_logs'
 end
+
+class LovecheckeToken < ActiveRecord::Base
+  self.table_name = 'uu_tokens'
+end
