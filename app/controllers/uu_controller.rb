@@ -3,6 +3,9 @@ require 'lanlan_api'
 require 'uuhaodian'
 class UuController < ApplicationController
   skip_before_action :verify_authenticity_token
+  def home
+    render json: {status: 1}
+  end
   def hot_keywords
     render json: lanlan_hot_search_keywords
   end
