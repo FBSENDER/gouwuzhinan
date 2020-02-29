@@ -187,5 +187,12 @@ Rails.application.routes.draw do
   post "wxgroup/user_in_task", to: "wxgroup#user_in_task"
   post "wxgroup/user_done_task", to: "wxgroup#user_done_task"
   post "wxgroup/user_share_task", to: "wxgroup#user_share_task"
+
+  #fahuo
+  post "fahuo/swan_user_login", to: "fahuo#swan_user_login"
+  post "fahuo/swan_user_detail", to: "fahuo#swan_user_detail"
+  post "fahuo/new_review", to: "fahuo#new_review"
+  get "fahuo/shop_reviews", to: "fahuo#shop_reviews"
+  get "fahuo/shop_list", to: "fahuo#shop_list"
   
 end
