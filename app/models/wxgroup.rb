@@ -21,3 +21,7 @@ end
 class WxgroupTaskUser < ApplicationRecord
   self.table_name = 'wxgroup_task_users'
 end
+
+class WxgroupShareLog < ApplicationRecord
+  self.table_name = 'wxgroup_share_logs'
+end

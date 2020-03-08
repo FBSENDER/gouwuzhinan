@@ -156,6 +156,7 @@ class WxgroupController < ApplicationController
       task.ad_views = params[:ad_views].to_i
       task.page_share = params[:page_share].to_i
       task.haibao_share = params[:haibao_share].to_i
+      task.has_bang = 1 if params[:bang] && params[:bang].to_i > 0
       task.status = 0
       task.save
       render json: {status: 1}
@@ -203,15 +204,16 @@ class WxgroupController < ApplicationController
       return
     end
     users = []
-    WxgroupTaskUser.connection.execute("select d.user_id,d.nickName,d.avatarUrl,tu.status
+    WxgroupTaskUser.connection.execute("select d.user_id,d.nickName,d.avatarUrl,tu.status, tu.uv 
 from wxgroup_task_users tu
 join wxgroup_user_details d on tu.user_id = d.user_id
-where tu.task_id = #{task.id} order by tu.status").to_a.each do |row|
+where tu.task_id = #{task.id} order by tu.status desc,tu.uv desc").to_a.each do |row|
       users << {
         user_id: row[0],
         nickName: row[1],
         avatarUrl: row[2],
-        status: row[3]
+        status: row[3],
+        uv: row[4]
       }
     end
     sum = users.size
@@ -260,6 +262,24 @@ where tu.task_id = #{task.id} order by tu.status").to_a.each do |row|
     end
     task.save
     render json: {status: 1, money: task.money}
+  end
+
+  def task_refresh_bang
+    if params[:task_id].nil?
+      render json: {status: 0}
+      return
+    end
+    logs = WxgroupShareLog.where(task_id: params[:task_id].to_i).select(:user_id, :visit_id).to_a
+    logs.map{|lg| lg.user_id}.uniq.each do |user_id|
+      visitor = logs.select{|l| l.user_id == user_id}.map{|g| g.visit_id}
+      u = WxgroupTaskUser.where(user_id: user_id, task_id: params[:task_id].to_i).take
+      if u
+        u.uv = visitor.uniq.size
+        u.pv = visitor.size
+        u.save
+      end
+    end
+    render json: {status: 1}
   end
 
   def is_user_in_task
@@ -331,11 +351,18 @@ where tu.task_id = #{task.id} order by tu.status").to_a.each do |row|
       tu.page_share += 1
       tu.save
       render json: {status: 1}
-    elsif params[:type].to_i == 2
+    #elsif params[:type].to_i == 2
+    else
       tu.haibao_share += 1
       tu.save
       render json: {status: 1}
     end
-    render json: {status: 0}
+    if params[:visit_user] && params[:visit_user].to_i > 0
+      lg = WxgroupShareLog.new
+      lg.task_id = params[:task_id].to_i
+      lg.user_id = params[:user_id].to_i
+      lg.visit_id = params[:visit_user].to_i
+      lg.save
+    end
   end
 end
