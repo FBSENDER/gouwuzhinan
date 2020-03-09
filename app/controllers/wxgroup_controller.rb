@@ -365,4 +365,17 @@ where tu.task_id = #{task.id} order by tu.status desc,tu.uv desc").to_a.each do 
       lg.save
     end
   end
+
+  def add_group_product
+    if params[:group_id].nil? || params[:user_id].nil? || params[:product_id].nil?
+      render json: {status: 0}
+      return
+    end
+    gp = WxgroupPddProduct.new
+    gp.group_id = params[:group_id].to_i
+    gp.user_id = params[:user_id].to_i
+    gp.product_id = params[:product_id].to_i
+    gp.save
+    render json: {status: 1}
+  end
 end

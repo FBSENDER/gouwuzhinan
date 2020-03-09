@@ -130,6 +130,7 @@ Rails.application.routes.draw do
   get "ddk/theme_detail", to: "ddk#theme_detail"
   get "ddk/mall_info", to: "ddk#mall_info"
   get "ddk/mall_products", to: "ddk#mall_products"
+  get "ddk/group_products", to: "ddk#group_products"
   get "ddk/mall_list", to: "ddk#mall_list"
   get "ddk/opt_list", to: "ddk#get_opt_list"
   get "ddk/opt_products", to: "ddk#get_opt_products"
@@ -192,6 +193,7 @@ Rails.application.routes.draw do
   post "wxgroup/user_in_task", to: "wxgroup#user_in_task"
   post "wxgroup/user_done_task", to: "wxgroup#user_done_task"
   post "wxgroup/user_share_task", to: "wxgroup#user_share_task"
+  post "wxgroup/add_group_product", to: "wxgroup#add_group_product"
 
   #fahuo
   post "fahuo/swan_user_login", to: "fahuo#swan_user_login"

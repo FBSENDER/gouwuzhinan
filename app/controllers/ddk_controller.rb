@@ -424,6 +424,34 @@ class DdkController < ApplicationController
     end
   end
 
+  def group_products
+    begin
+      group_id = params[:id].to_i
+      key = Digest::MD5.hexdigest("ddkgroupproducts_#{group_id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      ids = DdkGroupProduct.where(group_id: group_id).order("id desc").limit(40).pluck(:product_id).uniq
+      if ids.size.zero?
+        render json: {status: 0}, callback: params[:callback]
+        return
+      end
+      action_params = {
+        goods_id_list: '[' + ids.join(',') + ']'
+      }
+      qq = system_params("pdd.ddk.goods.search").merge(action_params)
+      response = do_request(qq)
+      data = JSON.parse(response.body)
+      items = data["goods_search_response"]["goods_list"].map{|item| convert_list_item(item)}
+      d_data = {status: {code: 1001}, result: items}
+      render json: d_data, callback: params[:callback]
+      $dcl.set(key, d_data.to_json)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
   def get_opt_list
     data = {status: 1, result: [{"opt_name":"食品","opt_id":1},{"opt_name":"女装","opt_id":14},{"opt_name":"水果","opt_id":13},{"opt_name":"男装","opt_id":743},{"opt_name":"百货","opt_id":15},{"opt_name":"美妆","opt_id":16},{"opt_name":"生活个护","opt_id":2946},{"opt_name":"母婴","opt_id":4},{"opt_name":"家纺","opt_id":818},{"parent_opt_id":0,"level":1,"opt_name":"鞋包","opt_id":1281},{"opt_name":"内衣","opt_id":1282},{"opt_name":"运动","opt_id":1451},{"opt_name":"手机","opt_id":1543},{"opt_name":"家装","opt_id":1917},{"opt_name":"汽摩","opt_id":2048},{"opt_name":"大家电","opt_id":2964},{"opt_name":"电器","opt_id":18},{"opt_name":"电脑","opt_id":2478}]}
     render json: data, callback: params[:callback]

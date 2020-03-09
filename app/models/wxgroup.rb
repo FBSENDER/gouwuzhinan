@@ -25,3 +25,7 @@ end
 class WxgroupShareLog < ApplicationRecord
   self.table_name = 'wxgroup_share_logs'
 end
+
+class WxgroupPddProduct < ApplicationRecord
+  self.table_name = 'wxgroup_pdd_products'
+end

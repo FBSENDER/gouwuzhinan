@@ -13,3 +13,7 @@ end
 class Ddk < ApplicationRecord
   self.table_name = 'ddk_order_channels'
 end
+
+class DdkGroupProduct < ApplicationRecord
+  self.table_name = 'wxgroup_pdd_products'
+end
