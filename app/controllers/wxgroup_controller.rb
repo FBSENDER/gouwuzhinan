@@ -347,15 +347,19 @@ where tu.task_id = #{task.id} order by tu.status desc,tu.uv desc").to_a.each do 
       render json: {status: 0}
       return
     end
+    task = WxgroupTask.where(id: params[:task_id].to_i).take
+    if task.nil?
+      render json: {status: 0}
+      return
+    end
     if params[:type].to_i == 1
       tu.page_share += 1
       tu.save
-      render json: {status: 1}
-    #elsif params[:type].to_i == 2
+      render json: {status: 1, group_id: task.group_id}
     else
       tu.haibao_share += 1
       tu.save
-      render json: {status: 1}
+      render json: {status: 1, group_id: task.group_id}
     end
     if params[:visit_user] && params[:visit_user].to_i > 0
       lg = WxgroupShareLog.new
