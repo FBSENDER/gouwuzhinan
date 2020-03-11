@@ -75,6 +75,32 @@ class DdkController < ApplicationController
     end
   end
 
+  def search_2
+    begin
+      action_params = {
+        keyword: params[:keyword],
+        sort_type: params[:sort_type] || 0,
+        page: params[:page] || 1,
+        page_size: params[:page_size] || 20,
+        with_coupon: params[:has_coupon].nil? ? false : params[:has_coupon]
+      }
+      key = Digest::MD5.hexdigest("ddksearch_#{action_params[:keyword]}_#{action_params[:sort_type]}_#{action_params[:with_coupon]}_#{action_params[:page]}_#{action_params[:page_size]}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      qq = system_params("pdd.ddk.goods.search").merge(action_params)
+      response = do_request(qq)
+      data = JSON.parse(response.body)
+      items = data["goods_search_response"]["goods_list"].map{|item| convert_list_item(item)}
+      d_data = {status: {code: 1001}, result: items}
+      render json: d_data, callback: params[:callback]
+      $dcl.set(key, d_data.to_json)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
   def get_opt_products
     begin
       atags = params[:activity].nil? ? '[]' : '[' + params[:activity] + ']'
