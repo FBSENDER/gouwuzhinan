@@ -118,6 +118,7 @@ Rails.application.routes.draw do
   get "jduu/collection/:id", to: "jd_uu#collection"
 
   get "ddk/search", to: "ddk#search"
+  get "ddk/search_2", to: "ddk#search_2"
   get "ddk/product", to: "ddk#goods_detail"
   get "ddk/wx_qrcode", to: "ddk#get_wx_qrcode"
   get "ddk/wx_qrcode_new", to: "ddk#get_wx_qrcode_new"
