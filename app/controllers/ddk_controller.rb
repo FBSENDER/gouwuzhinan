@@ -513,4 +513,192 @@ class DdkController < ApplicationController
     nil
   end
 
+  def jd_search
+    begin
+      if params[:is_hot] && params[:is_hot].to_i == 1 
+        is_hot = 1
+      else
+        is_hot = 0
+      end
+      if params[:owner] == 'p' || params[:owner] == 'g'
+        owner = params[:owner]
+      else
+        owner = ''
+      end
+      # sort_type 1 销量 2 单价 降序 3 单价升序
+      if params[:sort_type] && params[:sort_type].to_i == 1
+        sort_type = 1
+      elsif params[:sort_type] && params[:sort_type].to_i == 2
+        sort_type = 2
+      elsif params[:sort_type] && params[:sort_type].to_i == 3 
+        sort_type = 3
+      else
+        sort_type = 0
+      end
+      action_params = {
+        apikey: $mayi_key,
+        keyword: params[:keyword],
+        pageindex: params[:page] || 1,
+        pagesize: params[:page_size] || 20,
+        iscoupon: params[:has_coupon] && params[:has_coupon].to_i == 1 ? 1 : 0
+      }
+      if is_hot == 1
+        action_params[:ishot] = 1
+      end
+      if owner != ''
+        action_params[:owner] = owner
+      end
+      if sort_type == 1
+        action_params[:sortname] = 4
+      elsif sort_type == 2
+        action_params[:sortname] = 1
+      elsif sort_type == 3
+        action_params[:sortname] = 1
+        action_params[:sort] = 'asc'
+      end
+      key = Digest::MD5.hexdigest("jdsearch_#{action_params[:keyword]}_#{sort_type}_#{owner}_#{is_hot}_#{action_params[:iscoupon]}_#{action_params[:pageindex]}_#{action_params[:pagesize]}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      uri = URI("http://api-gw.haojingke.com/index.php/v1/api/jd/goodslist")
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+      request.body = action_params.to_json
+      response = http.request(request)
+      data = response.body
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def jd_mall_products
+    begin
+      action_params = {
+        apikey: $mayi_key,
+        shopid: params[:id].to_i
+      }
+      key = Digest::MD5.hexdigest("jdmallproducts_#{action_params[:shopid]}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      uri = URI("http://api-gw.haojingke.com/index.php/v1/api/jd/goodslist")
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+      request.body = action_params.to_json
+      response = http.request(request)
+      data = response.body
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def jd_product
+    begin
+      id = params[:id].to_i
+      key = Digest::MD5.hexdigest("jdproductdetail_#{id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      action_params = {
+        apikey: $mayi_key,
+        goods_id: id
+      }
+      uri = URI("http://api-gw.haojingke.com/index.php/v1/api/jd/goodsdetail")
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+      request.body = action_params.to_json
+      response = http.request(request)
+      data = response.body
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def jd_product_url
+    begin
+      id = params[:id].to_i
+      key = Digest::MD5.hexdigest("jdproductdetailurl_#{id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      action_params = {
+        apikey: $mayi_key,
+        goods_id: id,
+        positionid: 2046071856,
+        type: 1
+      }
+      uri = URI("http://api-gw.haojingke.com/index.php/v1/api/jd/getunionurl")
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+      request.body = action_params.to_json
+      response = http.request(request)
+      data = response.body
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def jd_cat_products
+    begin
+      if params[:is_hot] && params[:is_hot].to_i == 1 
+        is_hot = 1
+      else
+        is_hot = 0
+      end
+      if params[:owner] == 'p' || params[:owner] == 'g'
+        owner = params[:owner]
+      else
+        owner = ''
+      end
+      if params[:id]
+        cid1 = params[:id].to_i
+      else
+        cid1 = 0
+      end
+      action_params = {
+        apikey: $mayi_key,
+        pageindex: params[:page] || 1,
+        pagesize: params[:page_size] || 20,
+        sortname: 4,
+        iscoupon: params[:has_coupon] && params[:has_coupon].to_i == 1 ? 1 : 0
+      }
+      if cid1 > 0
+        action_params[:cid1] = cid1
+      end
+      if is_hot == 1
+        action_params[:ishot] = 1
+      end
+      if owner != ''
+        action_params[:owner] = owner
+      end
+      key = Digest::MD5.hexdigest("jdsearch_#{cid1}_#{owner}_#{is_hot}_#{action_params[:iscoupon]}_#{action_params[:pageindex]}_#{action_params[:pagesize]}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      uri = URI("http://api-gw.haojingke.com/index.php/v1/api/jd/goodslist")
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+      request.body = action_params.to_json
+      response = http.request(request)
+      data = response.body
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
 end

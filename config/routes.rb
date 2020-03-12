@@ -135,6 +135,11 @@ Rails.application.routes.draw do
   get "ddk/mall_list", to: "ddk#mall_list"
   get "ddk/opt_list", to: "ddk#get_opt_list"
   get "ddk/opt_products", to: "ddk#get_opt_products"
+  get "ddk/jd_search", to: "ddk#jd_search"
+  get "ddk/jd_cat_products", to: "ddk#jd_cat_products"
+  get "ddk/jd_mall_products", to: "ddk#jd_mall_products"
+  get "ddk/jd_product", to: "ddk#jd_product"
+  get "ddk/jd_product_url", to: "ddk#jd_product_url"
 
   post "lgd/jiaowu/wx_login", to: "lgd#wx_login"
   post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"
