@@ -637,6 +637,9 @@ class DdkController < ApplicationController
         positionid: 2046071856,
         type: 1
       }
+      if params[:coupon]
+        action_params[:couponurl] = params[:coupon]
+      end
       uri = URI("http://api-gw.haojingke.com/index.php/v1/api/jd/getunionurl")
       http = Net::HTTP.new(uri.host, uri.port)
       request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
