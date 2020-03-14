@@ -470,7 +470,7 @@ class UuController < ApplicationController
           render json: result, callback: params[:callback]
           return
         end
-        data = dg_goods_list_data(page, keyword, nil, "tk_total_commi_des", nil, nil, nil, nil, nil, nil, nil, nil)
+        data = dg_goods_list_data(page, keyword, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
         render json: data, callback: params[:callback]
         $dcl.set(key, data.to_json)
         return
