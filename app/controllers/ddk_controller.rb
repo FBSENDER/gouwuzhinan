@@ -77,14 +77,16 @@ class DdkController < ApplicationController
 
   def search_2
     begin
+      atags = params[:activity].nil? ? '[]' : '[' + params[:activity] + ']'
       action_params = {
         keyword: params[:keyword],
         sort_type: params[:sort_type] || 0,
         page: params[:page] || 1,
         page_size: params[:page_size] || 20,
+        activity_tags: atags,
         with_coupon: params[:has_coupon].nil? ? false : params[:has_coupon]
       }
-      key = Digest::MD5.hexdigest("ddksearch_#{action_params[:keyword]}_#{action_params[:sort_type]}_#{action_params[:with_coupon]}_#{action_params[:page]}_#{action_params[:page_size]}")
+      key = Digest::MD5.hexdigest("ddksearch_#{action_params[:keyword]}_#{action_params[:sort_type]}_#{atags}_#{action_params[:with_coupon]}_#{action_params[:page]}_#{action_params[:page_size]}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
