@@ -17,3 +17,7 @@ end
 class DdkGroupProduct < ApplicationRecord
   self.table_name = 'wxgroup_pdd_products'
 end
+
+class JdCoupon < ApplicationRecord
+  self.table_name = 'jd_coupons'
+end

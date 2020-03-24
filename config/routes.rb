@@ -140,6 +140,7 @@ Rails.application.routes.draw do
   get "ddk/jd_mall_products", to: "ddk#jd_mall_products"
   get "ddk/jd_product", to: "ddk#jd_product"
   get "ddk/jd_product_url", to: "ddk#jd_product_url"
+  get "ddk/jd_coupons", to: "ddk#jd_coupons"
 
   post "lgd/jiaowu/wx_login", to: "lgd#wx_login"
   post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"

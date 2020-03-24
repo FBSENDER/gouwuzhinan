@@ -706,4 +706,22 @@ class DdkController < ApplicationController
     end
   end
 
+  def jd_coupons
+    begin
+      page = params[:page].to_i
+      cid = params[:cid].to_i
+      key = Digest::MD5.hexdigest("jdcoupons_#{cid}_#{page}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      coupons = JdCoupon.where(cat: cid, status: 1).select(:mall_name, :product_id, :pic_url, :coupon_url, :quota, :discount, :id).order(:id).offset(page * 30).limit(30)
+      data = {status: 1, result: coupons}
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data) if coupons.size > 0
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
 end
