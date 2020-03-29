@@ -29,3 +29,7 @@ end
 class WxgroupPddProduct < ApplicationRecord
   self.table_name = 'wxgroup_pdd_products'
 end
+
+class WxgroupShareRecord < ApplicationRecord
+  self.table_name = 'wxgroup_share_records'
+end

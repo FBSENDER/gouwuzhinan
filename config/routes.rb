@@ -97,6 +97,7 @@ Rails.application.routes.draw do
   get "uu/swan_in_sh", to: "uu#swan_in_sh"
   get "uu/swan_is_in_sh", to: "uu#swan_is_in_sh"
   get "uu/qixiu_good_keyword", to: "uu#qixiu_good_keyword"
+  get "uu/group_products", to: "uu#group_products"
 
   #dtk
   get "uu/dtk_categories", to: "uu#dtk_categories"
@@ -201,6 +202,7 @@ Rails.application.routes.draw do
   post "wxgroup/user_done_task", to: "wxgroup#user_done_task"
   post "wxgroup/user_share_task", to: "wxgroup#user_share_task"
   post "wxgroup/add_group_product", to: "wxgroup#add_group_product"
+  post "wxgroup/add_share_record", to: "wxgroup#add_share_record"
 
   #fahuo
   post "fahuo/swan_user_login", to: "fahuo#swan_user_login"

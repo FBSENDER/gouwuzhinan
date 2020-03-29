@@ -174,3 +174,8 @@ end
 class JishiKeyword < ApplicationRecord
   self.table_name = 'jishi_keywords'
 end
+
+class WxgroupShareProduct < ApplicationRecord
+  self.table_name = 'wxgroup_share_products'
+end
+

@@ -1667,4 +1667,47 @@ class UuController < ApplicationController
     render json: dataoke_search_normal(keyword, page), callback: params[:callback]
   end
 
+  def group_products
+    begin
+      page = params[:page].nil? ? 0 : params[:page].to_i
+      key = Digest::MD5.hexdigest("groupproducts_#{page}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      products = WxgroupShareProduct.where(status: 1).order("id desc").select(:id, :product_id, :platform, :title, :price, :tags, :coupon_money, :pic_url, :platform_name, :sales).offset(page * 20).limit(20).to_a
+      if products.size.zero?
+        render json: {status: 0}, callback: params[:callback]
+        return
+      end
+      data = products.map{|pp| {
+        id: pp.id,
+        product_id: pp.product_id,
+        platform: pp.platform,
+        title: pp.title,
+        price: pp.price,
+        tags: pp.tags,
+        coupon_money: pp.coupon_money,
+        pic_url: pp.pic_url,
+        platform_name: pp.platform_name,
+        sales: pp.sales,
+        users: []
+      }}
+      WxgroupShareProduct.connection.execute("select pu.product_id,d.avatarUrl,d.nickName
+from wxgroup_user_details d
+join wxgroup_share_product_user_relations pu on d.user_id = pu.user_id
+where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |row|
+        pr = data.select{|pp| pp[:id] == row[0]}.first
+        pr[:users] << {
+          avatarUrl: row[1]
+        } if pr[:users].size < 4
+      end
+      d_data = {status: 1, data: data}
+      render json: {status: 1, data: data}, callback: params[:callback]
+      $dcl.set(key, d_data.to_json)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
 end

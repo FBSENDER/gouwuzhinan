@@ -382,4 +382,20 @@ where tu.task_id = #{task.id} order by tu.status desc,tu.uv desc").to_a.each do 
     gp.save
     render json: {status: 1}
   end
+
+  def add_share_record
+    if params[:group_id].nil?
+      render json: {status: 0}
+      return
+    end
+    r = WxgroupShareRecord.new
+    r.group_id = params[:group_id]
+    r.share_user_id = params[:share_user_id].to_i || 0
+    r.visit_user_id = params[:visit_user_id].to_i || 0
+    r.product_id = params[:product_id].to_i || 0
+    r.platform = params[:platform].to_i || 0
+    r.topic_id = params[:topic_id].to_i || 0
+    r.save
+    render json: {status: 1}
+  end
 end
