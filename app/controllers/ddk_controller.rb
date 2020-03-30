@@ -715,7 +715,7 @@ class DdkController < ApplicationController
         render json: result, callback: params[:callback]
         return
       end
-      coupons = JdCoupon.where(cat: cid, status: 1).select(:mall_name, :product_id, :pic_url, :coupon_url, :quota, :discount, :id).order(:id).offset(page * 30).limit(30)
+      coupons = JdCoupon.where(cat: cid, status: 1).select(:mall_name, :product_id, :pic_url, :coupon_url, :quota, :discount, :id).order("mall_id,quota desc").offset(page * 30).limit(30)
       data = {status: 1, result: coupons}
       render json: data, callback: params[:callback]
       $dcl.set(key, data) if coupons.size > 0
