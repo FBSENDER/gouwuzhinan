@@ -21,3 +21,7 @@ end
 class JdCoupon < ApplicationRecord
   self.table_name = 'jd_coupons'
 end
+
+class JdChannel < ApplicationRecord
+  self.table_name = 'jd_order_channels'
+end

@@ -628,15 +628,20 @@ class DdkController < ApplicationController
   def jd_product_url
     begin
       id = params[:id].to_i
-      key = Digest::MD5.hexdigest("jdproductdetailurl_#{id}")
+      jd_channel = params[:jd_channel].nil? ? 0 : params[:jd_channel].to_i
+      key = Digest::MD5.hexdigest("jdproductdetailurl_#{id}_#{jd_channel}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
+      positionid = $default_jd_position_id
+      if c = get_jd_channel
+        positionid = c.source_id
+      end
       action_params = {
         apikey: $mayi_key,
         goods_id: id,
-        positionid: 2046071856,
+        positionid: positionid,
         type: 1
       }
       if params[:coupon]
@@ -722,6 +727,20 @@ class DdkController < ApplicationController
     rescue
       render json: {status: 0}, callback: params[:callback]
     end
+  end
+
+  def get_jd_channel
+    if params[:jd_channel].nil?
+      return nil
+    end
+    if $jd_channels.nil? || (Time.now.to_i - $jd_channels_update) > 3600
+      $jd_channels = JdChannel.all.to_a
+      $jd_channels_update = Time.now.to_i
+    end
+    $jd_channels.each do |c|
+      return c if c.id == params[:jd_channel].to_i
+    end
+    nil
   end
 
 end
