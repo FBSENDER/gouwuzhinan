@@ -743,4 +743,37 @@ class DdkController < ApplicationController
     nil
   end
 
+  def jd_miaosha
+    begin
+      action_params = {
+        apikey: $mayi_key,
+        cid3: params[:cid] || 655,
+        sortName: "inOrderCount30Days",
+        isBeginSecKill: 0,
+        pageSize: 30
+      }
+      if params[:owner] == 'p' || params[:owner] == 'g'
+        owner = params[:owner]
+        action_params[:owner] = params[:owner]
+      else
+        owner = ''
+      end
+      key = Digest::MD5.hexdigest("jdmiaosha_#{action_params[:cid3]}_#{owner}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      uri = URI("http://api-gw.haojingke.com/index.php/v1/api/jd/getseckill")
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Post.new(uri.request_uri, 'Content-Type' => 'application/json')
+      request.body = action_params.to_json
+      response = http.request(request)
+      data = response.body
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
 end
