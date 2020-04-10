@@ -580,7 +580,8 @@ class DdkController < ApplicationController
     begin
       action_params = {
         apikey: $mayi_key,
-        shopid: params[:id].to_i
+        shopid: params[:id].to_i,
+        iscoupon: 0
       }
       key = Digest::MD5.hexdigest("jdmallproducts_#{action_params[:shopid]}")
       if result = $dcl.get(key)
