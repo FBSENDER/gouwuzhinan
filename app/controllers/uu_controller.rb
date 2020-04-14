@@ -1003,6 +1003,23 @@ class UuController < ApplicationController
     end
   end
 
+  def query_suggest
+    begin
+      kw = params[:kw]
+      key = Digest::MD5.hexdigest("uuquerysuggest_#{kw}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      url = "http://m.uuhaodian.com/index.php?r=index/kwarr&kw=#{URI.encode_www_form_component(kw)}"
+      result = Net::HTTP.get(URI(url))
+      render json: result, callback: params[:callback]
+      $dcl.set(key, result)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
   def check_product_liked
     if cookies[:session_key].nil? || cookies[:session_key].empty?
       render json: {status: 0}, callback: params[:callback]

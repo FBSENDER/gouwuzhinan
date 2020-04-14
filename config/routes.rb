@@ -98,6 +98,7 @@ Rails.application.routes.draw do
   get "uu/swan_is_in_sh", to: "uu#swan_is_in_sh"
   get "uu/qixiu_good_keyword", to: "uu#qixiu_good_keyword"
   get "uu/group_products", to: "uu#group_products"
+  get "uu/query_suggest", to: "uu#query_suggest"
 
   #dtk
   get "uu/dtk_categories", to: "uu#dtk_categories"
