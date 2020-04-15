@@ -368,6 +368,10 @@ where tu.task_id = #{task.id} order by tu.status desc,tu.uv desc").to_a.each do 
       lg.visit_id = params[:visit_user].to_i
       lg.save
     end
+    if tu.page_share >= task.page_share && tu.haibao_share >= task.page_share && tu.status == 0
+      tu.status = 1
+      tu.save
+    end
   end
 
   def add_group_product
