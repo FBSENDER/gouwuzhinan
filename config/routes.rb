@@ -118,6 +118,7 @@ Rails.application.routes.draw do
 
   get "jduu/collection_list", to: "jd_uu#collection_list"
   get "jduu/collection/:id", to: "jd_uu#collection"
+  get "jduu/core_keyword", to: "jd_uu#core_keyword"
 
   get "ddk/search", to: "ddk#search"
   get "ddk/search_2", to: "ddk#search_2"
