@@ -5,7 +5,7 @@ def jdk_system_params(method, api_key)
     method: method,
     app_key: api_key,
     access_token: "",
-    timestamp: Time.now.localtime.strftime("%F %T"),
+    timestamp: Time.at(Time.now + 28800).strftime("%F %T"),
     format: "json",
     v: "1.0",
     sign_method: "md5"
