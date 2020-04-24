@@ -73,14 +73,15 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       end
       id = [params[:id].to_i]
       key = Digest::MD5.hexdigest("jduuproduct_#{params[:id].to_i}")
-      if result = $dcl.get(key)
-        render json: result
-        return
-      end
+      #if result = $dcl.get(key)
+      #  render json: result
+      #  return
+      #end
       r = jd_union_open_goods_query(1, 20, nil, nil, nil, nil, id, nil, nil, nil, nil, nil, nil, nil, nil)
-      data = do_with_search_result_product(JSON.parse(r))
-      render json: data
-      $dcl.set(key, data.to_json) if data[:status] == 200
+      render json: r
+      #data = do_with_search_result_product(JSON.parse(r))
+      #render json: data
+      #$dcl.set(key, data.to_json) if data[:status] == 200
     #rescue
     #  render json: {status: 0}
     #end
