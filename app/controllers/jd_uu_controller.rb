@@ -1,5 +1,7 @@
-require 'ddk'
+require "digest/md5"
 require 'net/http'
+require "json"
+require 'ddk'
 require 'lanlan_api' 
 require 'jdk_api'
 require 'jd_media'
@@ -64,7 +66,7 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
   end
 
   def product
-    begin
+    #begin
       if params[:id].nil? || params[:id].to_i <= 0
         render json: {status: 0}
         return 
@@ -79,9 +81,9 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       data = do_with_search_result_product(JSON.parse(r))
       render json: data
       $dcl.set(key, data.to_json) if data[:status] == 200
-    rescue
-      render json: {status: 0}
-    end
+    #rescue
+    #  render json: {status: 0}
+    #end
   end
 
   def search_by_cat1
