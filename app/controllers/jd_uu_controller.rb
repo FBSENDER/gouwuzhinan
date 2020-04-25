@@ -278,6 +278,7 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
             shop_title: d["shopInfo"]["shopName"],
             is_hot: d["isHot"],
             owner: d["owner"],
+            spuid: d["spuid"],
             brand_code: d["brandCode"],
             brand_name: d["brandName"],
             cid1: d["categoryInfo"]["cid1"],
