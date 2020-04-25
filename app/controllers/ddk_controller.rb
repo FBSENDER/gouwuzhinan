@@ -578,12 +578,20 @@ class DdkController < ApplicationController
 
   def jd_mall_products
     begin
+      cid3 = params[:cid3]
+      has_coupon = params[:has_coupon]
       action_params = {
         apikey: $mayi_key,
         shopid: params[:id].to_i,
         iscoupon: 0
       }
-      key = Digest::MD5.hexdigest("jdmallproducts_#{action_params[:shopid]}")
+      if cid3
+        action_params[:cid3] = cid3
+      end
+      if has_coupon && has_coupon.to_i == 1
+        action_params[:iscoupon] = 1
+      end
+      key = Digest::MD5.hexdigest("jdmallproducts_#{action_params[:shopid]}_#{action_params[:iscoupon]}_#{cid3}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
