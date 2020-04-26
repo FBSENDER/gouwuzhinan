@@ -454,4 +454,69 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       render json: {status: 0}, callback: params[:callback]
     end
   end
+
+  def jd_home_items
+    begin
+      key = Digest::MD5.hexdigest("jduujdhomeitems")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      items = JdHomeItem.select(:id, :name, :sort).order(:sort).to_a
+      data = {status: 1, results: items}
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data.to_json) if data[:status] == 200
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def jd_home_json
+    if params[:id].nil?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
+    begin
+      item_id = params[:id].to_i
+      sort = params[:page].nil? ? 1 : params[:page].to_i
+      key = Digest::MD5.hexdigest("jdhomejson_#{item_id}_#{sort}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      data = JdHomeJson.where(item_id: item_id, sort: sort).take
+      if data.nil?
+        render json: {status: 0}, callback: params[:callback]
+        return
+      end
+      render json: data.content, callback: params[:callback]
+      $dcl.set(key, data.content)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def jd_home_coupons
+    begin
+      page = params[:page].to_i
+      item_id = params[:id].to_i
+      key = Digest::MD5.hexdigest("jdhomecoupons_#{item_id}_#{page}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      coupon_ids = JdHomeItem.connection.execute("select sc.coupon_id
+from jd_home_item_children c
+join jd_home_item_children_shops s on s.parent_id = c.id
+join jd_home_item_children_shop_coupons sc on sc.shop_id = s.id
+where c.item_id = #{item_id}").to_a.map{|row| row[0]}
+
+      coupons = JdCoupon.where(id: coupon_ids, status: 1).select(:mall_name, :product_id, :pic_url, :coupon_url, :quota, :discount, :id, :num, :remain).order("quota desc").offset(page * 30).limit(30)
+      data = {status: 1, result: coupons}
+      render json: data, callback: params[:callback]
+      $dcl.set(key, data) if coupons.size > 0
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
 end

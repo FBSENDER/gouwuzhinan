@@ -128,6 +128,9 @@ Rails.application.routes.draw do
   get "jduu/product", to: "jd_uu#product"
   get "jduu/product_url", to: "jd_uu#product_url"
   get "jduu/trans_diy_url", to: "jd_uu#trans_diy_url"
+  get "jduu/jd_home_items", to: "jd_uu#jd_home_items"
+  get "jduu/jd_home_json", to: "jd_uu#jd_home_json"
+  get "jduu/jd_home_coupons", to: "jd_uu#jd_home_coupons"
 
   get "ddk/search", to: "ddk#search"
   get "ddk/search_2", to: "ddk#search_2"

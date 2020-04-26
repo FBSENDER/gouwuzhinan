@@ -21,3 +21,11 @@ end
 class JdShop < ApplicationRecord
   self.table_name = 'jd_shops'
 end
+
+class JdHomeItem < ApplicationRecord
+  self.table_name = 'jd_home_items'
+end
+
+class JdHomeJson < ApplicationRecord
+  self.table_name = 'jd_home_jsons'
+end
