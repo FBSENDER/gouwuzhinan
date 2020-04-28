@@ -29,3 +29,7 @@ end
 class JdHomeJson < ApplicationRecord
   self.table_name = 'jd_home_jsons'
 end
+
+class JdShopJson < ApplicationRecord
+  self.table_name = 'jd_shop_jsons'
+end
