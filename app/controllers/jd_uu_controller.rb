@@ -102,12 +102,13 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       end
       is_hot = params[:is_hot]
       is_coupon = params[:has_coupon]
-      key = Digest::MD5.hexdigest("jduusearchbycat1_#{cid1}_#{page}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}")
+      is_pg = params[:is_pg]
+      key = Digest::MD5.hexdigest("jduusearchbycat1_#{cid1}_#{page}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}_#{is_pg}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, cid1, nil, nil, nil, owner, sort_name, sort, is_coupon, nil, is_hot, nil, nil)
+      r = jd_union_open_goods_query(page, 20, nil, cid1, nil, nil, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
       data = do_with_search_result_query(JSON.parse(r))
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
@@ -132,12 +133,13 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       end
       is_hot = params[:is_hot]
       is_coupon = params[:has_coupon]
-      key = Digest::MD5.hexdigest("jduusearchbycat3_#{cid3}_#{page}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}")
+      is_pg = params[:is_pg]
+      key = Digest::MD5.hexdigest("jduusearchbycat3_#{cid3}_#{page}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}_#{is_pg}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, nil, is_hot, nil, nil)
+      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
       data = do_with_search_result_query(JSON.parse(r))
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
@@ -163,12 +165,13 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       end
       is_hot = params[:is_hot]
       is_coupon = params[:has_coupon]
-      key = Digest::MD5.hexdigest("jduusearchbyshop_#{shop_id}_#{page}_#{cid3}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}")
+      is_pg = params[:is_pg]
+      key = Digest::MD5.hexdigest("jduusearchbyshop_#{shop_id}_#{page}_#{cid3}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}_#{is_pg}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, nil, is_hot, shop_id, nil)
+      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, shop_id, nil)
       data = do_with_search_result_query(JSON.parse(r))
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
@@ -194,12 +197,13 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       end
       is_hot = params[:is_hot]
       is_coupon = params[:has_coupon]
-      key = Digest::MD5.hexdigest("jduusearchbybrand_#{brand_id}_#{page}_#{cid3}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}")
+      is_pg = params[:is_pg]
+      key = Digest::MD5.hexdigest("jduusearchbybrand_#{brand_id}_#{page}_#{cid3}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}_#{is_pg}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, nil, is_hot, nil, brand_id)
+      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, brand_id)
       data = do_with_search_result_query(JSON.parse(r))
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
@@ -242,13 +246,14 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       end
       is_hot = params[:is_hot]
       is_coupon = params[:has_coupon]
-      key = Digest::MD5.hexdigest("jduusearchbykeyword_#{keyword}_#{page}_#{cid3}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}")
+      is_pg = params[:is_pg]
+      key = Digest::MD5.hexdigest("jduusearchbykeyword_#{keyword}_#{page}_#{cid3}_#{owner}_#{sort_name}_#{sort}_#{is_hot}_#{is_coupon}_#{is_pg}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
       #(page, page_size, keyword, cid1, cid2, cid3, sku_ids, owner, sort_name, sort, is_coupon, is_pg, is_hot, shop_id, brand_code)
-      r = jd_union_open_goods_query(page, 20, keyword, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, nil, is_hot, nil, nil)
+      r = jd_union_open_goods_query(page, 20, keyword, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
       data = do_with_search_result_query(JSON.parse(r))
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
