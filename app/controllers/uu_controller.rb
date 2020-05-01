@@ -1475,7 +1475,7 @@ class UuController < ApplicationController
       u.swan_id = params[:swan_id]
       u.open_id = JSON.parse(response.body)["openid"]
       u.save
-      render json: {status: 1}
+      render json: {status: 1, user_id: u.id, open_id: u.open_id}
     rescue
       render json: {status: 0}
     end
