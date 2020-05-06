@@ -1322,6 +1322,34 @@ class UuController < ApplicationController
     }}
   end
 
+  def shop_go
+    if is_robot?
+      render plain: "禁止访问", status: 403
+      return
+    end
+    if params[:shop_id].to_i <= 0 
+      render plain: "未找到相应网址", status: 404
+      return
+    end
+    s = ShopUrl.where(shop_source_id: params[:shop_id].to_i).take
+    if s.nil?
+      s = ShopUrl.new
+      s.shop_source_id = params[:shop_id].to_i
+      s.short_url = ''
+      s.save
+    end
+    if s.short_url != ''
+      redirect_to s.short_url
+      return
+    end
+    shop = Shop.where(source_id: params[:shop_id].to_i).select(:id, :shop_url).take
+    if shop.nil?
+      render plain: "未找到相应网址", status: 404
+    else
+      redirect_to shop.shop_url
+    end
+  end
+
   def shop_hot_items
     shop = ShopHotItem.where(shop_source_id: params[:shop_id]).take
     if shop.nil? || shop.item_ids.empty?

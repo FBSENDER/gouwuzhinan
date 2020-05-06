@@ -84,6 +84,7 @@ Rails.application.routes.draw do
   get "uu/video_list", to: "uu#video_list"
   get "uu/video", to: "uu#video"
   get "uu/shop", to: "uu#shop"
+  get "uu/shop_go", to: "uu#shop_go"
   get "uu/shop_hot_items", to: "uu#shop_hot_items"
   get "uu/keyword_infos", to: "uu#keyword_infos"
   get "uu/jishi_keywords", to: "uu#jishi_keywords"
