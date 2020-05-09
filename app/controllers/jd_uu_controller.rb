@@ -467,7 +467,7 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         render json: result, callback: params[:callback]
         return
       end
-      items = JdHomeItem.select(:id, :name, :sort).order(:sort).to_a
+      items = JdHomeItem.select(:id, :name, :sort, :filter_code).order(:sort).to_a
       data = {status: 1, results: items}
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
