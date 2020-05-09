@@ -1323,7 +1323,7 @@ class UuController < ApplicationController
   end
 
   def shop_go
-    if is_robot?
+    if is_robot? || params[:sgo].nil?
       render plain: "禁止访问", status: 403
       return
     end
