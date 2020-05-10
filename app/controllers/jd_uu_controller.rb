@@ -5,6 +5,7 @@ require 'ddk'
 require 'lanlan_api' 
 require 'jdk_api'
 require 'jd_media'
+require 'uuhaodian'
 
 class JdUuController < ApplicationController
   skip_before_action :verify_authenticity_token
@@ -547,5 +548,57 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     rescue
       render json: {status: 0}, callback: params[:callback]
     end
+  end
+
+  def home_page_json
+    key = Digest::MD5.hexdigest("jduuhomepagejson")
+    if result = $dcl.get(key)
+      render json: result, callback: params[:callback]
+      return
+    end
+    dtks = []
+    DtkProduct.select(:dtitle, :id, :shopType, :shopName, :mainPic, :originalPrice, :actualPrice, :couponPrice, :monthSales).order(:id).offset((rand() * 1000).to_i * 20).limit(20).each do |dtk|
+      d = {
+        url: "/dtk/#{dtk.id}/",
+        title: dtk.dtitle,
+        pict_url: dtk.mainPic,
+        tags: [],
+        price: dtk.actualPrice,
+        o_price: dtk.originalPrice,
+        coupon: dtk.couponPrice,
+        sales: dtk.monthSales > 10000 ? "#{(dtk.monthSales / 10000.0).round(1)}万" : dtk.monthSales
+      }
+      d[:tags] << (dtk.shopType == 1 ? '天猫' : '淘宝')
+      d[:tags] << '旗舰店' if dtk.shopName.include?('旗舰店')
+      dtks << d
+    end
+    coupons = []
+    JdCoupon.where(cat: 1, status: 1).select(:mall_name, :product_id,:pic_url,:coupon_url,:quota,:discount).limit(6).each do |c|
+      coupons << {
+        item_id: c.product_id,
+        discount: c.discount,
+        quota: c.quota,
+        pict_url: c.pic_url,
+        shop: c.mall_name,
+        url: "/jd/buy/#{c.product_id}/?coupon=#{URI.encode_www_form_component(c.coupon_url)}"
+      }
+    end
+    jd_shops = []
+    JdShopJson.select(:id, :shop_id, :shop_name).order(:id).offset((rand() * 6).to_i * 10).limit(10).each do |s|
+      jd_shops << {
+        name: s.shop_name,
+        url: "/jdshop/#{s.shop_id}/"
+      }
+    end
+    cores = []
+    JdCoreKeyword.select(:id, :keyword).order(:id).offset((rand() * 163).to_i * 10).limit(10).each do |k|
+      cores << {
+        k: k.keyword,
+        url: "/core_2_#{k.id}/"
+      }
+    end
+    data = {status: 1, result:{dtk: dtks, coupons: coupons, jd_shops: jd_shops, cores: cores}}.to_json
+    render json: data
+    $dcl.set(key, data)
   end
 end
