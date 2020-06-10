@@ -228,5 +228,12 @@ Rails.application.routes.draw do
   post "fahuo/new_review", to: "fahuo#new_review"
   get "fahuo/shop_reviews", to: "fahuo#shop_reviews"
   get "fahuo/shop_list", to: "fahuo#shop_list"
+
+  #guancha
+  get "guancha/t1", to: "guancha#table_style_1"
+
+  #twitter
+  get "twitter/jianguo", to: "twitter#jianguo"
+  get "twitter/jianguo_search", to: "twitter#jianguo_search"
   
 end
