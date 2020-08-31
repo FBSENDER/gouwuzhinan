@@ -134,6 +134,8 @@ Rails.application.routes.draw do
   get "jduu/jd_home_coupons", to: "jd_uu#jd_home_coupons"
   get "jduu/jd_shop_json", to: "jd_uu#jd_shop_json"
   get "jduu/home_page_json", to: "jd_uu#home_page_json"
+  get "jduu/zhinan_jd_static_products", to: "jd_uu#zhinan_jd_static_products"
+  post "jduu/zhinan_jd_static_product_like", to: "jd_uu#zhinan_jd_static_product_like"
 
   get "ddk/search", to: "ddk#search"
   get "ddk/search_2", to: "ddk#search_2"

@@ -75,15 +75,15 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       id = [params[:id].to_i]
       key = Digest::MD5.hexdigest("jduuproduct_#{params[:id].to_i}")
       if result = $dcl.get(key)
-        render json: result
+        render json: result, callback: params[:callback]
         return
       end
       r = jd_union_open_goods_query(1, 20, nil, nil, nil, nil, id, nil, nil, nil, nil, nil, nil, nil, nil)
       data = do_with_search_result_product(JSON.parse(r))
-      render json: data
+      render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
-      render json: {status: 0}
+      render json: {status: 0}, callback: params[:callback]
     end
   end
 
@@ -601,4 +601,32 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     render json: data
     $dcl.set(key, data)
   end
+
+  def zhinan_jd_static_products
+    key = Digest::MD5.hexdigest("zhinanjdstaticproduct_#{params[:id].to_i}")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    sp = ZhinanJdStaticProduct.where(id: params[:id].to_i).select(:info, :related, :liked).take
+    if sp
+      data = {status: 1, liked: sp.liked, info: JSON.parse(sp.info), related: JSON.parse(sp.related) }
+      render json: data
+      $dcl.set(key, data)
+    else
+      render json: {status: 0}
+    end
+  end
+
+  def zhinan_jd_static_product_like
+    sp = ZhinanJdStaticProduct.where(id: params[:id].to_i).select(:id, :liked).take
+    if sp
+      sp.liked += 1
+      sp.save
+      render json: {status: 1}
+    else
+      render json: {status: 0}
+    end
+  end
+
 end

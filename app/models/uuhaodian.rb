@@ -183,3 +183,6 @@ class WxgroupShareProduct < ApplicationRecord
   self.table_name = 'wxgroup_share_products'
 end
 
+class ZhinanJdStaticProduct < ApplicationRecord
+  self.table_name = 'zhinan_jd_static_products'
+end
