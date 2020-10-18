@@ -618,6 +618,22 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     end
   end
 
+  def zhinan_jd_static_en_products
+    key = Digest::MD5.hexdigest("zhinanjdstaticenproduct_#{params[:id].to_i}")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    sp = ZhinanJdStaticEnProduct.where(id: params[:id].to_i).select(:info, :related, :liked).take
+    if sp
+      data = {status: 1, liked: sp.liked, info: JSON.parse(sp.info), related: JSON.parse(sp.related) }
+      render json: data
+      $dcl.set(key, data)
+    else
+      render json: {status: 0}
+    end
+  end
+
   def zhinan_jd_static_product_like
     sp = ZhinanJdStaticProduct.where(id: params[:id].to_i).select(:id, :liked).take
     if sp
@@ -627,6 +643,68 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     else
       render json: {status: 0}
     end
+  end
+
+  def zhinan_jd_en_keyword_1
+    k = ZhinanJdEnKeyword.where(keyword: params[:keyword]).take
+    if k.nil? || k.product_num < 10
+      render json: {status: 0}
+      return
+    end
+    key = Digest::MD5.hexdigest("zhinanjdenkeyword1_#{k.id}")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    ks = ZhinanJdEnKeyword.where("id > ? and product_num >= 10", k.id).order(:id).limit(10).pluck(:keyword)
+    products = []
+    ids = ZhinanJdEnKpRelation.where(keyword_id: k.id).order(:id).limit(10).pluck(:product_id)
+    ZhinanJdStaticEnProduct.connection.execute("select s.id, s.title, s.price_info, s.pic_url, p.disc 
+from zhinan_jd_static_en_products s
+join zhinan_jd_fxhh_en_products p on s.source_id = p.source_id
+where s.id in (#{ids.join(',')})").to_a.each do |row|
+      products << {
+        id: row[0],
+        title: row[1],
+        price_info: row[2],
+        pic_url: row[3],
+        disc: row[4]
+      }
+    end
+    data = {status: 1, keyword: k.keyword, num: k.product_num, ks: ks, data: products}
+    render json: data
+    $dcl.set(key, data)
+  end
+
+  def zhinan_jd_en_keyword_2
+    k = ZhinanJdEnKeyword.where(keyword: params[:keyword]).take
+    if k.nil? || k.product_num < 20
+      render json: {status: 0}
+      return
+    end
+    key = Digest::MD5.hexdigest("zhinanjdenkeyword2_#{k.id}")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    products = []
+    ks = ZhinanJdEnKeyword.where("id > ? and product_num >= 20", k.id).order(:id).limit(10).pluck(:keyword)
+    ids = ZhinanJdEnKpRelation.where(keyword_id: k.id).order("id desc").limit(10).pluck(:product_id)
+    ZhinanJdStaticEnProduct.connection.execute("select s.id, s.title, s.price_info, s.pic_url, p.disc 
+from zhinan_jd_static_en_products s
+join zhinan_jd_fxhh_en_products p on s.source_id = p.source_id
+where s.id in (#{ids.join(',')})").to_a.each do |row|
+      products << {
+        id: row[0],
+        title: row[1],
+        price_info: row[2],
+        pic_url: row[3],
+        disc: row[4]
+      }
+    end
+    data = {status: 1, keyword: k.keyword, num: k.product_num, ks: ks, data: products}
+    render json: data
+    $dcl.set(key, data)
   end
 
 end

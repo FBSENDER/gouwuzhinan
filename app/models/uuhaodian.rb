@@ -186,3 +186,20 @@ end
 class ZhinanJdStaticProduct < ApplicationRecord
   self.table_name = 'zhinan_jd_static_products'
 end
+
+class ZhinanJdStaticEnProduct < ApplicationRecord
+  self.table_name = 'zhinan_jd_static_en_products'
+end
+
+class ZhinanJdEnKeyword < ApplicationRecord
+  self.table_name = 'zhinan_jd_en_keywords'
+end
+
+class ZhinanJdFxhhEnProduct < ApplicationRecord
+  self.table_name = 'zhinan_jd_fxhh_en_products'
+end
+
+class ZhinanJdEnKpRelation < ApplicationRecord
+  self.table_name = 'zhinan_jd_en_keyword_product_relations'
+end
+
