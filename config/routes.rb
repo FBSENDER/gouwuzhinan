@@ -101,6 +101,9 @@ Rails.application.routes.draw do
   get "uu/group_products", to: "uu#group_products"
   get "uu/query_suggest", to: "uu#query_suggest"
 
+  #uu_article
+  get "uu/article", to: "uu#article"
+
   #dtk
   get "uu/dtk_categories", to: "uu#dtk_categories"
   get "uu/dtk_category_goods", to: "uu#dtk_category_goods"
@@ -139,6 +142,7 @@ Rails.application.routes.draw do
   get "jduu/zhinan_jd_static_en_products", to: "jd_uu#zhinan_jd_static_en_products"
   get "jduu/zhinan_jd_en_keyword_1", to: "jd_uu#zhinan_jd_en_keyword_1"
   get "jduu/zhinan_jd_en_keyword_2", to: "jd_uu#zhinan_jd_en_keyword_2"
+  get "jduu/jd_seo_data", to: "jd_uu#jd_seo_data"
 
   get "ddk/search", to: "ddk#search"
   get "ddk/search_2", to: "ddk#search_2"

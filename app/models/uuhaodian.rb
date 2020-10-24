@@ -203,3 +203,14 @@ class ZhinanJdEnKpRelation < ApplicationRecord
   self.table_name = 'zhinan_jd_en_keyword_product_relations'
 end
 
+class UuArticle < ApplicationRecord
+  self.table_name = 'uu_articles'
+end
+
+class UuArticleTag < ApplicationRecord
+  self.table_name = 'uu_article_tags'
+end
+
+class UuArticleTagRelation < ApplicationRecord
+  self.table_name = 'uu_article_tag_relations'
+end

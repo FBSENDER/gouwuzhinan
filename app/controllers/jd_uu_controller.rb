@@ -707,4 +707,21 @@ where s.id in (#{ids.join(',')})").to_a.each do |row|
     $dcl.set(key, data)
   end
 
+  def jd_seo_data
+    key = Digest::MD5.hexdigest("jdseodata")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    ids = (1..1655).to_a.sample(10)
+    core = JdCoreKeyword.where(id: ids).select(:id, :keyword).to_a
+    ids = (1..67).to_a.sample(10)
+    shop = JdShopJson.where(id: ids).select(:shop_id, :shop_name).to_a
+    ids = (1..1000).to_a.sample(10)
+    pro = ZhinanJdStaticProduct.where(id: ids).select(:id, :title).to_a
+    data = {status: 1, cores: core, shops: shop, products: pro}
+    render json: data
+    $dcl.set(key, data)
+  end
+
 end

@@ -1755,4 +1755,23 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
     end
   end
 
+  def article
+    id = params[:id].to_i
+    key = Digest::MD5.hexdigest("uuarticle_#{id}")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    article = UuArticle.where(id: params[:id].to_i, status: 1).select(:id, :title, :tags, :info).take
+    if article.nil?
+      render json: {status: 0}
+      return
+    end
+    json = JSON.parse(article.info)
+    more = UuArticle.where("id <> ?", article.id).select(:id, :title).to_a
+    data = {status: 1, id: article.id, title: article.title, k: json["keywords"], d: json["description"], tags: article.tags, more: more}
+    render json: data
+    $dcl.set(key, data.to_json)
+  end
+
 end
