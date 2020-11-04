@@ -52,7 +52,9 @@ body,html {
     background-color: #fff;
     font: normal 12px/20px PingFang SC,Hiragino Sans GB,STHeiti,Microsoft YaHei,Microsoft JhengHei,Source Han Sans SC,Noto Sans CJK SC,Source Han Sans CN,Noto Sans SC,Source Han Sans TC,Noto Sans CJK TC,WenQuanYi Micro Hei,SimSun,sans-serif;
     word-break: break-word;
-    -webkit-tap-highlight-color: transparent
+    -webkit-tap-highlight-color: transparent;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .sno{
@@ -181,6 +183,7 @@ body,html {
     }
     .img-area{
       padding: 20px 0 20px 0;
+      display: flex;
       img{
         width: 32%;
         margin: 0 3px 0 3px;
