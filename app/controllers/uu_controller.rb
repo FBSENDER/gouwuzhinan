@@ -1768,10 +1768,51 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
       return
     end
     json = JSON.parse(article.info)
-    more = UuArticle.where("id <> ?", article.id).select(:id, :title).to_a
+    more = UuArticle.where("id > ?", article.id).select(:id, :title, :tags, :img_url, :updated_at).limit(10).map{|a|
+      {
+        id: a.id,
+        title: a.title,
+        tags: a.tags,
+        img_url: a.img_url,
+        updated_at: a.updated_at.strftime("%F %T")
+      }
+    }
     data = {status: 1, id: article.id, title: article.title, k: json["keywords"], d: json["description"], tags: article.tags, more: more}
     render json: data
     $dcl.set(key, data.to_json)
   end
 
+  def article_list
+    page = params[:page].nil? ? 0 : params[:page].to_i
+    tag = params[:tag]
+    if tag
+      ids = UuArticleTagRelation.where(tag: tag).order("id desc").offset(20 * page).limit(20).pluck(:article_id)
+      if ids.size.zero?
+        render json: {status: 0}
+        return
+      end
+      articles = UuArticle.where(id: ids, status: 1).order("id desc").select(:id, :title, :tags, :img_url, :updated_at).map{|a|
+        {
+          id: a.id,
+          title: a.title,
+          tags: a.tags,
+          img_url: a.img_url,
+          updated_at: a.updated_at.strftime("%F %T")
+        }
+      }
+      render json: {status: 1, result: articles}, callback: params[:callback]
+      return
+    else
+      articles = UuArticle.where(status: 1).order("id desc").select(:id, :title, :tags, :img_url, :updated_at).offset(20 * page).limit(20).map{|a|
+        {
+          id: a.id,
+          title: a.title,
+          tags: a.tags,
+          img_url: a.img_url,
+          updated_at: a.updated_at.strftime("%F %T")
+        }
+      }
+      render json: {status: 1, result: articles}, callback: params[:callback]
+    end
+  end
 end

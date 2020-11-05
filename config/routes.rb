@@ -103,6 +103,7 @@ Rails.application.routes.draw do
 
   #uu_article
   get "uu/article", to: "uu#article"
+  get "uu/article_list", to: "uu#article_list"
 
   #dtk
   get "uu/dtk_categories", to: "uu#dtk_categories"
