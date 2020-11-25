@@ -1332,10 +1332,16 @@ class UuController < ApplicationController
       return
     end
     s = ShopUrl.where(shop_source_id: params[:shop_id].to_i).take
-    if s.nil?
-      s = ShopUrl.new
+    if s.nil? || s.short_url.empty?
+      s = s || ShopUrl.new
       s.shop_source_id = params[:shop_id].to_i
-      s.short_url = ''
+      r = dataoke_shop_convert(params[:shop_id].to_i, '店铺')
+      json = JSON.parse(r)
+      if json["code"] == 0 && json["data"]["shopLinks"]
+        s.short_url = json["data"]["shopLinks"]
+      else
+        s.short_url = ''
+      end
       s.save
     end
     if s.short_url != ''
@@ -1710,6 +1716,10 @@ class UuController < ApplicationController
       return
     end
     render json: dataoke_search_normal(keyword, page), callback: params[:callback]
+  end
+
+  def dtk_shop_convert
+    render json: dataoke_shop_convert(params[:seller_id], params[:shop_name]), callback: params[:callback]
   end
 
   def group_products
