@@ -832,7 +832,11 @@ class UuController < ApplicationController
         result = item_channel_url_data(params[:title], params[:id], $default_aid)
       end
       if result.empty?
-        redirect_to "/uu/buy?id=#{params[:id]}&xcx=#{params[:xcx]}&channel=#{params[:channel]}"
+        if params[:xcx]
+          redirect_to "/uu/buy?id=#{params[:id]}&xcx=#{params[:xcx]}&channel=#{params[:channel]}"
+        else
+          redirect_to "/uu/buy?id=#{params[:id]}&channel=#{params[:channel]}"
+        end
         return
       end
       if params[:xcx]
