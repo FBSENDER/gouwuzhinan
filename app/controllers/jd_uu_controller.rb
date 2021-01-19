@@ -724,4 +724,48 @@ where s.id in (#{ids.join(',')})").to_a.each do |row|
     $dcl.set(key, data)
   end
 
+  def jd_open_search
+    if is_robot?
+      render json: {status: 0}
+      return
+    end
+    page = params[:page].to_i
+    page = page <= 0 ? 0 : page
+    keyword = params[:keyword]
+    if keyword.nil? || keyword.empty?
+      render json: {status: 0}
+      return
+    end
+    keyword = keyword.strip
+    q = "query=default:\'#{keyword}\'&&config=start:#{page * 20},hit:20,format:json"
+    f = URI.encode_www_form_component("id;source_id;title;price_info;pic_url")
+    u = "/v3/openapi/apps/150043517/search?fetch_fields=#{f}&query=#{URI.encode_www_form_component(q)}"
+    url = "http://opensearch-cn-shanghai.aliyuncs.com#{u}"
+    time = Time.now.utc.to_s.gsub(" UTC", "Z").gsub(" ", "T")
+    nonce = (Time.now.to_f.round(3) * 1000).to_i.to_s + (1000..9999).to_a.sample.to_s
+    sign = opensearch_signature(u, nonce, time)
+    uri = URI(url)
+    req = Net::HTTP::Get.new(uri)
+    req["Content-MD5"] = ""
+    req["Content-Type"] = "application/json"
+    req["Authorization"] = "OPENSEARCH #{$ali_open_search_key}:#{sign}"
+    req["X-Opensearch-Nonce"] = nonce
+    req["Date"] = time
+    res = Net::HTTP.start(uri.hostname, uri.port) {|http|
+      http.request(req)
+    }
+    render json: res.body
+  end
+
+  def opensearch_signature(query_str, nonce, time)
+    str = ["GET", "", "application/json", time, "x-opensearch-nonce:#{nonce}", query_str]
+
+    Base64.encode64(
+      OpenSSL::HMAC.digest(
+        OpenSSL::Digest.new("sha1"),
+        $ali_open_search_secret,
+        str.join("\n")
+      )
+    ).strip
+  end
 end
