@@ -550,6 +550,30 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     end
   end
 
+  def jd_shop_seo_json
+    if params[:shop_id].nil?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
+    begin
+      shop_id = params[:shop_id].to_i
+      key = Digest::MD5.hexdigest("jdshopseojson_#{shop_id}")
+      if result = $dcl.get(key)
+        render json: result, callback: params[:callback]
+        return
+      end
+      data = JdShopJson.where(shop_id: shop_id).take
+      if data.nil?
+        render json: {status: 0}, callback: params[:callback]
+        return
+      end
+      render json: data.content, callback: params[:callback]
+      $dcl.set(key, data.content)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
   def home_page_json
     key = Digest::MD5.hexdigest("jduuhomepagejson")
     if result = $dcl.get(key)

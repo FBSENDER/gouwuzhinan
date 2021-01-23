@@ -33,3 +33,7 @@ end
 class JdShopJson < ApplicationRecord
   self.table_name = 'jd_shop_jsons'
 end
+
+class JdShopSeoJson < ApplicationRecord
+  self.table_name = 'jd_shop_seo_jsons'
+end
