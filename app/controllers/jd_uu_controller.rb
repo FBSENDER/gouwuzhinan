@@ -562,7 +562,7 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
         render json: result, callback: params[:callback]
         return
       end
-      data = JdShopJson.where(shop_id: shop_id).take
+      data = JdShopSeoJson.where(shop_id: shop_id).take
       if data.nil?
         render json: {status: 0}, callback: params[:callback]
         return
