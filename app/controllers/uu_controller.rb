@@ -1703,7 +1703,7 @@ class UuController < ApplicationController
 
   def dtk_static_product
     id = params[:id].nil?  ? 0 : params[:id].to_i
-    item = DtkProduct.where(id: id).select(:id, :source_id, :goodsId, :title, :dtitle, :desc, :mainPic, :originalPrice, :actualPrice, :discounts, :couponEndTime, :couponStartTime, :couponPrice, :monthSales, :brand, :brandId, :brandName, :tchaoshi, :activityType, :shopType, :sellerId, :shopName, :yunfeixian, :shopLogo, :descScore, :shipScore, :serviceScore).take
+    item = DtkProduct.where(id: id).select(:id, :source_id, :goodsId, :title, :dtitle, :desc, :mainPic, :originalPrice, :actualPrice, :discounts, :couponEndTime, :couponStartTime, :couponPrice, :monthSales, :brand, :brandId, :brandName, :tchaoshi, :activityType, :shopType, :sellerId, :shopName, :yunfeixian, :shopLogo, :descScore, :shipScore, :serviceScore, :cnames).take
     if item.nil?
       render json: {code: -1}
       return
