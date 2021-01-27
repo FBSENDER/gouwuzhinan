@@ -118,6 +118,7 @@ Rails.application.routes.draw do
   get "uu/dtk_static_product", to: "uu#dtk_static_product"
   get "uu/dtk_search_normal", to: "uu#dtk_search_normal"
   get "uu/dtk_shop_convert", to: "uu#dtk_shop_convert"
+  get "uu/dtk_shop_seo", to: "uu#dtk_shop_seo"
 
   get "love/user_login", to: "love#user_login"
   post "love/user_info", to: "love#user_info"

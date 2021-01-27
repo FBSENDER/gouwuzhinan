@@ -175,6 +175,10 @@ class DtkProduct < ApplicationRecord
   self.table_name = 'dataoke_products'
 end
 
+class DtkShopSeo < ApplicationRecord
+  self.table_name = 'dataoke_shop_seo_jsons'
+end
+
 class JishiKeyword < ApplicationRecord
   self.table_name = 'jishi_keywords'
 end

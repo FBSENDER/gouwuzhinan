@@ -1769,6 +1769,24 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
     end
   end
 
+  def dtk_shop_seo
+    if is_robot?
+      render json: {status: 0}
+      return
+    end
+    shop_id = params[:shop_id].to_i
+    if shop_id <= 0
+      render json: {status: 0}
+      return
+    end
+    s = DtkShopSeo.where(shop_id: shop_id).take
+    if s.nil?
+      render json: {status: 0}
+    else
+      render json: s.content
+    end
+  end
+
   def article
     id = params[:id].to_i
     key = Digest::MD5.hexdigest("uuarticle_#{id}")
