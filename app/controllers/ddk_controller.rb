@@ -306,7 +306,7 @@ class DdkController < ApplicationController
 
   def hot_list
     begin
-      sort = params[:type] == 2 ? 2 : 1
+      sort = params[:type] == 2 ? 7 : 5
       page =  params[:page] || 1
       page_size = params[:page_size] || 20
       key = Digest::MD5.hexdigest("ddkhotlist_#{sort}_#{page}_#{page_size}")
@@ -316,14 +316,14 @@ class DdkController < ApplicationController
       end
       offset = (page.to_i - 1) * page_size.to_i
       action_params = {
-        sort_type: sort,
+        channel_type: sort,
         offset: offset,
         limit: page_size
       }
-      qq = system_params("pdd.ddk.top.goods.list.query").merge(action_params)
+      qq = system_params("pdd.ddk.goods.recommend.get").merge(action_params)
       response = do_request(qq)
       data = JSON.parse(response.body)
-      items = data["top_goods_list_get_response"]["list"].map{|item| convert_list_item(item)}
+      items = data["goods_basic_detail_response"]["list"].map{|item| convert_list_item(item)}
       d_data = {status: {code: 1001}, result: items}
       render json: d_data, callback: params[:callback]
       $dcl.set(key, d_data.to_json)
