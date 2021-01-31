@@ -309,6 +309,7 @@ class DdkController < ApplicationController
       sort = params[:type] == 2 ? 7 : 5
       page =  params[:page] || 1
       page_size = params[:page_size] || 20
+      page = 6 if page.to_i > 6
       key = Digest::MD5.hexdigest("ddkhotlist_#{sort}_#{page}_#{page_size}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
