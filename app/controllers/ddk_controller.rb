@@ -33,7 +33,8 @@ class DdkController < ApplicationController
   
   def convert_list_item(item)
     {
-      itemId: item["goods_id"], 
+      #itemId: item["goods_id"], 
+      itemId: item["goods_sign"], 
       title: item["goods_name"],
       shortTitle: item["goods_name"],
       price: ((item["min_group_price"] / 100).to_s + "." + (item["min_group_price"] % 100).to_s).to_f,
@@ -134,20 +135,20 @@ class DdkController < ApplicationController
 
   def goods_detail
     begin
-      id = params[:id].to_i
+      id = params[:id]
       key = Digest::MD5.hexdigest("ddkgoodsdetail_#{id}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
       action_params = {
-        goods_id_list: "[#{id}]"
+        goods_sign: id
       }
       qq = system_params("pdd.ddk.goods.detail").merge(action_params)
       rsp = do_request(qq)
       data = JSON.parse(rsp.body)["goods_detail_response"]["goods_details"][0]
       d_data = {status: {code: 1001}, result: {
-        itemId: data["goods_id"],
+        itemId: data["goods_sign"],
         title: data["goods_name"],
         shortTitle: data["goods_name"],
         recommend: data["goods_desc"],
