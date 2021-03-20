@@ -239,7 +239,7 @@ class DdkController < ApplicationController
 
   def get_promotion_url_new
     begin
-      goods_id = params[:id].to_i
+      goods_id = params[:id]
       channel = get_channel
       pid = channel.nil? ? $ddk_default_pid : channel.pid
       key = Digest::MD5.hexdigest("ddkpromotionurl_#{goods_id}_#{pid}")
@@ -249,7 +249,7 @@ class DdkController < ApplicationController
       end
       action_params = {
         p_id: pid,
-        goods_id_list:"[\"#{goods_id}\"]",
+        goods_sign_list:"[\"#{goods_id}\"]",
         generate_short_url: true,
         multi_group: true,
         generate_weapp_webview: true,
