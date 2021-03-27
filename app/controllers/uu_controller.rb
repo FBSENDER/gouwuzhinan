@@ -1708,7 +1708,7 @@ class UuController < ApplicationController
       render json: {code: -1}
       return
     end
-    related = DtkProduct.where("id > ?", item.id).select(:id, :dtitle, :mainPic).order("id").limit(20).to_a
+    related = DtkProduct.where("id > ?", item.id).select(:id, :dtitle, :mainPic, :sellerId, :shopName).order("id").limit(20).to_a
     render json: {code: 0, data: {product: item, related: related}}
   end
 
