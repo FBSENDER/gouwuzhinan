@@ -1335,29 +1335,17 @@ class UuController < ApplicationController
       render plain: "未找到相应网址", status: 404
       return
     end
-    s = ShopUrl.where(shop_source_id: params[:shop_id].to_i).take
-    if s.nil? || s.short_url.empty?
-      s = s || ShopUrl.new
-      s.shop_source_id = params[:shop_id].to_i
-      r = dataoke_shop_convert(params[:shop_id].to_i, '店铺')
-      json = JSON.parse(r)
-      if json["code"] == 0 && json["data"]["shopLinks"]
-        s.short_url = json["data"]["shopLinks"]
-      else
-        s.short_url = ''
-      end
-      s.save
+    short_url = ''
+    r = dataoke_shop_convert(params[:shop_id].to_i, '好店优惠推荐')
+    json = JSON.parse(r)
+    if json["code"] == 0 && json["data"]["shopLinks"]
+      short_url = json["data"]["shopLinks"]
     end
-    if s.short_url != ''
-      redirect_to s.short_url
+    if short_url != ''
+      redirect_to short_url
       return
     end
-    shop = Shop.where(source_id: params[:shop_id].to_i).select(:id, :shop_url).take
-    if shop.nil?
-      render plain: "未找到相应网址", status: 404
-    else
-      redirect_to shop.shop_url
-    end
+    redirect_to "https://s.click.taobao.com/t?union_lens=lensId%3AOPT%401616844304%4021049e52_0776_178736e2f4b_4033%4001%3BeventPageId%3A20150318020000462&e=m%3D2%26s%3D%2BgkzLKbT18dw4vFB6t2Z2iperVdZeJviPI5Rhak06vZnX1vWUft3ZcYzBEKnA1WL4YYuISUQWrhbpT2wyJKzO7iLflRgTHZMOPaMItHzeo2wAFmJajq53Q%2FJ%2FXLWkHrAAGIx0oe2X2hZfJ7ZQxC1%2FQ6kWflWMEF%2FEBnEBk3xaGzdzP6Rx%2BOOxBVe%2Fk1xV3ExkeMqUwSQcLTyHL0%2Bek76ZylX3woTW%2FepI%2BVo4ZbOXiT5ek8Osb14aCQqvDUBSTbHVD3%2FjZDUlvCKXhhuvZ5M%2BMLXcLizgwqdqxq4PTJNerAR2cbDLktPLiIOenYkFIXaR6oMUWdurybzU49nTczyymRsSsXPAUZ0"
   end
 
   def shop_hot_items
