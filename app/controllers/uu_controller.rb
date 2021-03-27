@@ -1345,7 +1345,12 @@ class UuController < ApplicationController
       redirect_to short_url
       return
     end
-    redirect_to "https://s.click.taobao.com/t?union_lens=lensId%3AOPT%401616844304%4021049e52_0776_178736e2f4b_4033%4001%3BeventPageId%3A20150318020000462&e=m%3D2%26s%3D%2BgkzLKbT18dw4vFB6t2Z2iperVdZeJviPI5Rhak06vZnX1vWUft3ZcYzBEKnA1WL4YYuISUQWrhbpT2wyJKzO7iLflRgTHZMOPaMItHzeo2wAFmJajq53Q%2FJ%2FXLWkHrAAGIx0oe2X2hZfJ7ZQxC1%2FQ6kWflWMEF%2FEBnEBk3xaGzdzP6Rx%2BOOxBVe%2Fk1xV3ExkeMqUwSQcLTyHL0%2Bek76ZylX3woTW%2FepI%2BVo4ZbOXiT5ek8Osb14aCQqvDUBSTbHVD3%2FjZDUlvCKXhhuvZ5M%2BMLXcLizgwqdqxq4PTJNerAR2cbDLktPLiIOenYkFIXaR6oMUWdurybzU49nTczyymRsSsXPAUZ0"
+    s = Shop.where(source_id: params[:shop_id].to_i).select(:id, :shop_url).take
+    if s
+      redirect_to s.shop_url
+    else
+      redirect_to "https://s.click.taobao.com/t?union_lens=lensId%3AOPT%401616844304%4021049e52_0776_178736e2f4b_4033%4001%3BeventPageId%3A20150318020000462&e=m%3D2%26s%3D%2BgkzLKbT18dw4vFB6t2Z2iperVdZeJviPI5Rhak06vZnX1vWUft3ZcYzBEKnA1WL4YYuISUQWrhbpT2wyJKzO7iLflRgTHZMOPaMItHzeo2wAFmJajq53Q%2FJ%2FXLWkHrAAGIx0oe2X2hZfJ7ZQxC1%2FQ6kWflWMEF%2FEBnEBk3xaGzdzP6Rx%2BOOxBVe%2Fk1xV3ExkeMqUwSQcLTyHL0%2Bek76ZylX3woTW%2FepI%2BVo4ZbOXiT5ek8Osb14aCQqvDUBSTbHVD3%2FjZDUlvCKXhhuvZ5M%2BMLXcLizgwqdqxq4PTJNerAR2cbDLktPLiIOenYkFIXaR6oMUWdurybzU49nTczyymRsSsXPAUZ0"
+    end
   end
 
   def shop_hot_items
