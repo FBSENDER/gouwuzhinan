@@ -749,10 +749,10 @@ where s.id in (#{ids.join(',')})").to_a.each do |row|
   end
 
   def jd_open_search
-    if is_robot?
-      render json: {status: 0}
-      return
-    end
+    #if is_robot?
+    #  render json: {status: 0}
+    #  return
+    #end
     page = params[:page].to_i
     page = page <= 0 ? 0 : page
     keyword = params[:keyword]
