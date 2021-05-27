@@ -550,6 +550,18 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     end
   end
 
+  def new_jd_shop_seo_json_list
+    key = Digest::MD5.hexdigest("newjdshopseojsonlist")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    sp = JdShopSeoJson.where(status: 1).select(:shop_id, :shop_name, :img_url, :cate3, :updated_at).order("id desc").limit(10)
+    data = {status: 1, result: sp}
+    render json: data, callback: params[:callback]
+    $dcl.set(key, data)
+  end
+
   def jd_shop_seo_json
     if params[:shop_id].nil?
       render json: {status: 0}, callback: params[:callback]
@@ -623,6 +635,31 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     end
     data = {status: 1, result:{dtk: dtks, coupons: coupons, jd_shops: jd_shops, cores: cores}}.to_json
     render json: data
+    $dcl.set(key, data)
+  end
+
+  def new_zhinan_jd_static_product_keyword_list
+    key = Digest::MD5.hexdigest("newzhinanjdstaticproductkeywordlist")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    sp = ZhinanJdStaticProduct.select(:id, :title).order("id desc").limit(10)
+    k = sp.map{|s| s.title.split.last}.uniq
+    data = {status: 1, result: k}
+    render json: data, callback: params[:callback]
+    $dcl.set(key, data)
+  end
+
+  def new_zhinan_jd_static_product_list
+    key = Digest::MD5.hexdigest("newzhinanjdstaticproductlist")
+    if result = $dcl.get(key)
+      render json: result
+      return
+    end
+    sp = ZhinanJdStaticProduct.select(:id, :source_id, :title, :price_info, :pic_url, :shop_id, :shop_title, :updated_at).order("id desc").limit(10)
+    data = {status: 1, result: sp}
+    render json: data, callback: params[:callback]
     $dcl.set(key, data)
   end
 
