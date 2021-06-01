@@ -768,7 +768,7 @@ where s.id in (#{ids.join(',')})").to_a.each do |row|
     $dcl.set(key, data)
   end
 
-  def jd_seo_data
+  def jd_seo_data_old
     key = Digest::MD5.hexdigest("jdseodata")
     if result = $dcl.get(key)
       render json: result
@@ -783,6 +783,16 @@ where s.id in (#{ids.join(',')})").to_a.each do |row|
     data = {status: 1, cores: core, shops: shop, products: pro}
     render json: data
     $dcl.set(key, data)
+  end
+
+  def jd_seo_data
+    ids = (1..1655).to_a.sample(10)
+    core = JdCoreKeyword.where(id: ids).select(:id, :keyword).to_a
+    shops = JdShopSeoJson.where(status: 1).select(:shop_id, :shop_name, :img_url, :cate3, :updated_at).order("id desc").limit(10)
+    products = ZhinanJdStaticProduct.select(:id, :source_id, :title, :price_info, :pic_url, :shop_id, :shop_title, :updated_at).order("id desc").limit(10)
+    keywords = products.map{|s| s.title.split.last}.uniq
+    data = {status: 1, cores: core, shops: shops, products: products, keyword: keywords}
+    render json: data
   end
 
   def jd_open_search
