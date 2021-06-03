@@ -586,6 +586,39 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     end
   end
 
+  def jd_shop_all_cate
+    key = Digest::MD5.hexdigest("jdshopallcate")
+    if result = $dcl.get(key)
+      render json: result, callback: params[:callback]
+      return
+    end
+    data = JdShopSeoJson.connection.execute("select cate3
+from jd_shop_seo_jsons
+group by cate3
+having count(0) >= 40 and cate3 <> ''").to_a.map{|row| row[0]}
+    
+    if data.nil? || data.size.zero?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
+    r = {status: 1, result: data}
+    render json: r, callback: params[:callback]
+    $dcl.set(key, r)
+  end
+
+  def jd_shop_seo_list_by_cate
+    cate = params[:cate]
+    if cate.nil?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
+    page = params[:page] || 0
+    page = page.to_i
+    data = JdShopSeoJson.where(cate3: cate, status: 1).select(:id, :shop_id, :shop_name, :img_url, :cate3, :updated_at).order("id desc").offset(20 * page).limit(20)
+    total_page = (JdShopSeoJson.where(cate3: cate, status: 1).count * 1.0 / 20).ceil
+    render json: {status: 1, result: data, total_page: total_page}, callback:params[:callback]
+  end
+
   def home_page_json
     key = Digest::MD5.hexdigest("jduuhomepagejson")
     if result = $dcl.get(key)
