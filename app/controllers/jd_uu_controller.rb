@@ -586,16 +586,35 @@ where c.item_id = #{item_id}").to_a.map{|row| row[0]}
     end
   end
 
+  def jd_shop_home_list
+    key = Digest::MD5.hexdigest("jdshophomelist")
+    if result = $dcl.get(key)
+      render json: result, callback: params[:callback]
+      return
+    end
+    data = []
+    JdShopSeoJson.connection.execute("select cate3
+from jd_shop_seo_jsons
+group by cate3
+having count(0) >= 40 and cate3 <> ''
+limit 5").to_a.each do |row|
+      shops = JdShopSeoJson.where(cate3: row[0], status: 1).select(:id, :shop_id, :shop_name, :img_url, :updated_at).limit(5)
+      data << {cate: row[0], shops: shops}
+    end
+    render json: {status: 1, result: data}, callback: params[:callback]
+    $dcl.set(key, data)
+  end
+
   def jd_shop_all_cate
     key = Digest::MD5.hexdigest("jdshopallcate")
     if result = $dcl.get(key)
       render json: result, callback: params[:callback]
       return
     end
-    data = JdShopSeoJson.connection.execute("select cate3
+    data = JdShopSeoJson.connection.execute("select cate3, count(0)
 from jd_shop_seo_jsons
 group by cate3
-having count(0) >= 40 and cate3 <> ''").to_a.map{|row| row[0]}
+having count(0) >= 40 and cate3 <> ''").to_a
     
     if data.nil? || data.size.zero?
       render json: {status: 0}, callback: params[:callback]

@@ -140,6 +140,7 @@ Rails.application.routes.draw do
   get "jduu/jd_home_coupons", to: "jd_uu#jd_home_coupons"
   get "jduu/jd_shop_json", to: "jd_uu#jd_shop_json"
   get "jduu/jd_shop_seo_json", to: "jd_uu#jd_shop_seo_json"
+  get "jduu/jd_shop_home_list", to: "jd_uu#jd_shop_home_list"
   get "jduu/jd_shop_all_cate", to: "jd_uu#jd_shop_all_cate"
   get "jduu/jd_shop_seo_list_by_cate", to: "jd_uu#jd_shop_seo_list_by_cate"
   get "jduu/new_jd_shop_seo_json_list", to: "jd_uu#new_jd_shop_seo_json_list"
