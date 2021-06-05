@@ -601,7 +601,7 @@ limit 5").to_a.each do |row|
       shops = JdShopSeoJson.where(cate3: row[0], status: 1).select(:id, :shop_id, :shop_name, :img_url, :updated_at).limit(5)
       data << {cate: row[0], shops: shops}
     end
-    r = {status: 1 result: data}
+    r = {status: 1, result: data}
     render json: r, callback: params[:callback]
     $dcl.set(key, r)
   end
