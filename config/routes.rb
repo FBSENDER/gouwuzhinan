@@ -143,6 +143,7 @@ Rails.application.routes.draw do
   get "jduu/jd_shop_home_list", to: "jd_uu#jd_shop_home_list"
   get "jduu/jd_shop_all_cate", to: "jd_uu#jd_shop_all_cate"
   get "jduu/jd_shop_seo_list_by_cate", to: "jd_uu#jd_shop_seo_list_by_cate"
+  get "jduu/jd_shop_seo_list_by_cate_ziying", to: "jd_uu#jd_shop_seo_list_by_cate_ziying"
   get "jduu/new_jd_shop_seo_json_list", to: "jd_uu#new_jd_shop_seo_json_list"
   get "jduu/home_page_json", to: "jd_uu#home_page_json"
   get "jduu/new_zhinan_jd_static_product_keyword_list", to: "jd_uu#new_zhinan_jd_static_product_keyword_list"

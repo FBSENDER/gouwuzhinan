@@ -639,6 +639,16 @@ having count(0) >= 40 and cate3 <> ''").to_a
     render json: {status: 1, result: data, total_page: total_page}, callback:params[:callback]
   end
 
+  def jd_shop_seo_list_by_cate_ziying
+    cate = params[:cate]
+    if cate.nil?
+      render json: {status: 0}, callback: params[:callback]
+      return
+    end
+    data = JdShopSeoJson.where(cate3: cate, status: 1).where("shop_name like '%自营%'").select(:id, :shop_id, :shop_name, :img_url, :cate3, :updated_at).order("id desc").limit(20)
+    render json: {status: 1, result: data, total_page: 1}, callback:params[:callback]
+  end
+
   def home_page_json
     key = Digest::MD5.hexdigest("jduuhomepagejson")
     if result = $dcl.get(key)
