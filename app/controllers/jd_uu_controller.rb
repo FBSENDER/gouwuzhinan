@@ -732,9 +732,9 @@ having count(0) >= 40 and cate3 <> ''").to_a
       render json: result
       return
     end
-    sp = ZhinanJdStaticProduct.where(id: params[:id].to_i).select(:info, :related, :liked).take
+    sp = ZhinanJdStaticProduct.where(id: params[:id].to_i).select(:info, :related, :liked, :updated_at).take
     if sp
-      data = {status: 1, liked: sp.liked, info: JSON.parse(sp.info), related: JSON.parse(sp.related) }
+      data = {status: 1, liked: sp.liked, info: JSON.parse(sp.info), related: JSON.parse(sp.related), updated_at: sp.updated_at}
       render json: data
       $dcl.set(key, data)
     else
