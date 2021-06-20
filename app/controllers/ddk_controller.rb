@@ -250,6 +250,7 @@ class DdkController < ApplicationController
       action_params = {
         p_id: pid,
         goods_sign_list:"[\"#{goods_id}\"]",
+        generate_authority_url: true,
         generate_short_url: true,
         multi_group: true,
         generate_weapp_webview: true,
