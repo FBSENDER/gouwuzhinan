@@ -822,7 +822,7 @@ class UuController < ApplicationController
 
   def newbuy
       if is_robot?
-        render plain: "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+        render plain: "https://item.taobao.com/item.htm?id=#{params[:id]}"
         return
       end
       result = ""
@@ -889,7 +889,7 @@ class UuController < ApplicationController
   end
   def pcbuy
     begin
-      url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+      url = "https://item.taobao.com/item.htm?id=#{params[:id]}"
       if channel = get_channel
         result = apply_high_commission(params[:id], channel.sid, channel.pid)
       else
