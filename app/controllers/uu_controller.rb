@@ -1840,4 +1840,14 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
       render json: {status: 1, result: articles}, callback: params[:callback]
     end
   end
+
+  def xiaohui_app
+    file = Rails.root.join("public").join("xiaohui.txt")
+    if !File.exists?(file)
+      @content = "https://18a12005.kuaizhan.com/#/app/down?appId=550416&productType=1&userId=0"
+    else
+      @content = File.read(file)
+    end
+    redirect_to @content
+  end
 end

@@ -100,6 +100,7 @@ Rails.application.routes.draw do
   get "uu/qixiu_good_keyword", to: "uu#qixiu_good_keyword"
   get "uu/group_products", to: "uu#group_products"
   get "uu/query_suggest", to: "uu#query_suggest"
+  get "uu/xiaohui_app", to: "uu#xiaohui_app"
 
   #uu_article
   get "uu/article", to: "uu#article"

@@ -24,4 +24,4 @@ Capfile
 .DS_Store
 /app/controllers/diyquan_controller.rb
 /lib/lanlan_api.rb
-
+/public/xiaohui.txt
