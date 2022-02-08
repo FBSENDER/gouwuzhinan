@@ -390,9 +390,9 @@ class UuController < ApplicationController
       coupon_end_time = 0
       if need_coupon
         result = apply_high_commission(params[:item_id].to_i, $default_sid, $default_pid)
-        if result["coupon_info"]
-          coupon_money = result["coupon_info"].match(/减(\d+)元/)[1].to_i
-          dd = result["coupon_end_time"].split('-')
+        if result["data"]["couponInfo"]
+          coupon_money = result["data"]["couponInfo"].match(/减(\d+)元/)[1].to_i
+          dd = result["data"]["couponEndTime"].split('-')
           coupon_end_time = Time.new(dd[0].to_i, dd[1].to_i, dd[2].to_i).to_i
         end
       end
@@ -816,8 +816,8 @@ class UuController < ApplicationController
   end
 
   def apply_high_commission(product_id, sid, pid)
-    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=#{sid}&pid=#{pid}&num_iid=#{product_id}"
-    JSON.parse(Net::HTTP.get(URI(url)))
+    result = dataoke_get_privilege_link(product_id, sid, pid)
+    JSON.parse(result)
   end
 
   def newbuy
@@ -863,14 +863,18 @@ class UuController < ApplicationController
       else
         result = apply_high_commission(params[:id], $default_sid, $default_pid)
       end
-      url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
+      if result["code"] == 0
+        url = result["data"]["itemUrl"]
+        url = result["data"]["couponClickUrl"] unless result["data"]["couponClickUrl"].empty?
+      end
       if params[:xcx]
         render plain: url
         return
       else
         redirect_to url, status: 302
       end
-    rescue
+    rescue 
+      render plain: url
     end
   end
 
@@ -895,10 +899,14 @@ class UuController < ApplicationController
       else
         result = apply_high_commission(params[:id], $default_sid, $default_pid)
       end
-      url = result["coupon_click_url"] unless result["coupon_click_url"].nil?
+      if result["code"] == 0
+        url = result["data"]["itemUrl"]
+        url = result["data"]["couponClickUrl"] unless result["data"]["couponClickUrl"].empty?
+      end
       url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
       redirect_to url, status: 302
     rescue
+      redirect_to url, status: 302
     end
   end
 
