@@ -57,6 +57,7 @@ class DdkController < ApplicationController
         sort_type: params[:sort_type] || 0,
         page: params[:page] || 1,
         page_size: params[:page_size] || 20,
+        pid: $ddk_default_pid,
         with_coupon: true
       }
       key = Digest::MD5.hexdigest("ddksearch_#{action_params[:keyword]}_#{action_params[:sort_type]}_#{action_params[:page]}_#{action_params[:page_size]}")
@@ -85,6 +86,7 @@ class DdkController < ApplicationController
         page: params[:page] || 1,
         page_size: params[:page_size] || 20,
         activity_tags: atags,
+        pid: $ddk_default_pid,
         with_coupon: params[:has_coupon].nil? ? false : params[:has_coupon]
       }
       key = Digest::MD5.hexdigest("ddksearch_#{action_params[:keyword]}_#{action_params[:sort_type]}_#{atags}_#{action_params[:with_coupon]}_#{action_params[:page]}_#{action_params[:page_size]}")
@@ -783,6 +785,36 @@ class DdkController < ApplicationController
       data = response.body
       render json: data, callback: params[:callback]
       $dcl.set(key, data)
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def authority_query
+    begin
+      action_params = {
+        pid: params[:pid]
+      }
+      qq = system_params("pdd.ddk.member.authority.query").merge(action_params)
+      response = do_request(qq)
+      data = JSON.parse(response.body)
+      render json: data, callback: params[:callback]
+    rescue
+      render json: {status: 0}, callback: params[:callback]
+    end
+  end
+
+  def authority_generate
+    begin
+      action_params = {
+        p_id: params[:pid],
+        goods_sign_list: '["c9r2omogKFFAc7WBwvbZU1ikIb16_J3CTa8HNN"]',
+        generate_authority_url: true
+      }
+      qq = system_params("pdd.ddk.goods.promotion.url.generate").merge(action_params)
+      response = do_request(qq)
+      data = JSON.parse(response.body)
+      render json: data, callback: params[:callback]
     rescue
       render json: {status: 0}, callback: params[:callback]
     end

@@ -182,6 +182,8 @@ Rails.application.routes.draw do
   get "ddk/jd_product_url", to: "ddk#jd_product_url"
   get "ddk/jd_coupons", to: "ddk#jd_coupons"
   get "ddk/jd_miaosha", to: "ddk#jd_miaosha"
+  get "ddk/authority_query", to: "ddk#authority_query"
+  get "ddk/authority_generate", to: "ddk#authority_generate"
 
   post "lgd/jiaowu/wx_login", to: "lgd#wx_login"
   post "lgd/jiaowu/jiaowu_login", to: "lgd#jiaowu_login"
