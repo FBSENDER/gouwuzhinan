@@ -116,6 +116,7 @@ class DdkController < ApplicationController
         page: params[:page] || 1,
         page_size: params[:page_size] || 20,
         activity_tags: atags,
+        pid: $ddk_default_pid,
         with_coupon: coupon > 0
       }
       key = Digest::MD5.hexdigest("ddkoptproducts_#{action_params[:opt_id]}_#{action_params[:sort_type]}_#{action_params[:activity_tags]}_#{coupon}_#{action_params[:page]}_#{action_params[:page_size]}")
@@ -471,7 +472,8 @@ class DdkController < ApplicationController
         return
       end
       action_params = {
-        goods_id_list: '[' + ids.join(',') + ']'
+        goods_id_list: '[' + ids.join(',') + ']',
+        pid: $ddk_default_pid
       }
       qq = system_params("pdd.ddk.goods.search").merge(action_params)
       response = do_request(qq)
