@@ -866,6 +866,7 @@ class UuController < ApplicationController
       if result["code"] == 0
         url = result["data"]["itemUrl"]
         url = result["data"]["couponClickUrl"] unless result["data"]["couponClickUrl"].empty?
+        url = result["data"]["shortUrl"] if params[:short]
       end
       if params[:xcx]
         render plain: url
