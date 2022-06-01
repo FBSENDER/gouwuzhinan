@@ -390,7 +390,7 @@ class UuController < ApplicationController
       coupon_end_time = 0
       if need_coupon
         result = apply_high_commission(params[:item_id].to_i, $default_sid, $default_pid)
-        if result["data"]["couponInfo"]
+        if result["data"]["couponInfo"] && !result["data"]["couponInfo"].empty?
           coupon_money = result["data"]["couponInfo"].match(/减(\d+)元/)[1].to_i
           dd = result["data"]["couponEndTime"].split('-')
           coupon_end_time = Time.new(dd[0].to_i, dd[1].to_i, dd[2].to_i).to_i
