@@ -219,7 +219,7 @@ class DdkController < ApplicationController
     ddkid = params[:pid] || "1781779_28462207"
     action_params = {
       p_id: ddkid,
-      goods_id_list:"[\"#{params[:id]}\"]",
+      goods_sign_list:"[\"#{params[:id]}\"]",
       generate_short_url: true,
       multi_group: true,
       generate_weapp_webview: true,
