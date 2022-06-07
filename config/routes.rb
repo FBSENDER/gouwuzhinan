@@ -72,6 +72,7 @@ Rails.application.routes.draw do
   get "uu/mkq_list", to: "uu#mkq_list"
   get "uu/mkq_detail", to: "uu#mkq_detail"
   get "uu/hot_keywords", to: "uu#hot_keywords"
+  get "uu/hot_keywords_new", to: "uu#hot_keywords_new"
   get "uu/banners", to: "uu#banners"
   get "uu/create_tbwd", to: "uu#create_tbwd"
   get "uu/query_tbwd", to: "uu#query_tbwd"

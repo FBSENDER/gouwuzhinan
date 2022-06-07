@@ -9,6 +9,9 @@ class UuController < ApplicationController
   def hot_keywords
     render json: lanlan_hot_search_keywords
   end
+  def hot_keywords_new
+    render json: dataoke_hot_search
+  end
   def home_list
     page = params[:page].nil? ? 1 : params[:page].to_i
     cid = params[:cid].nil? ? 0 : params[:cid].to_i
