@@ -68,6 +68,7 @@ Rails.application.routes.draw do
   get "uu/buy", to: "uu#buy"
   get "uu/pcbuy", to: "uu#pcbuy"
   get "uu/newbuy", to: "uu#newbuy"
+  get "uu/buy_kouling", to: "uu#buy_kouling"
   get "uu/game_list", to: "uu#game_list"
   get "uu/mkq_list", to: "uu#mkq_list"
   get "uu/mkq_detail", to: "uu#mkq_detail"

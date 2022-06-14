@@ -882,6 +882,27 @@ class UuController < ApplicationController
     end
   end
 
+  def buy_kouling
+    begin
+      if is_robot?
+        render json: {k: "￥5orl2n3dyFa￥"}, callback: params[:callback]
+        return
+      end
+      kouling = "￥5orl2n3dyFa￥"
+      if channel = get_channel
+        result = apply_high_commission(params[:id], channel.sid, channel.pid)
+      else
+        result = apply_high_commission(params[:id], $default_sid, $default_pid)
+      end
+      if result["code"] == 0
+        kouling = result["data"]["longTpwd"]
+      end
+      render json: {k: kouling}, callback: params[:callback]
+    rescue 
+      render json: {k: "￥5orl2n3dyFa￥"}, callback: params[:callback]
+    end
+  end
+
   def get_channel
     if params[:channel].nil?
       return nil
