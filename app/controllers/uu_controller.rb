@@ -1702,6 +1702,17 @@ class UuController < ApplicationController
     end
     render json: dataoke_get_category_goods(category_id, page), callback: params[:callback]
   end
+
+  def dtk_category_new_goods
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    category_id = params[:cid].nil? ? 0 : params[:cid].to_i
+    if category_id.zero? || page.zero?
+      render json: {code: -1}
+      return
+    end
+    render json: dataoke_get_category_new_goods(category_id, page), callback: params[:callback]
+  end
+
   def dtk_topic_goods
     page = params[:page].nil? ? 1 : params[:page].to_i
     topic_id = params[:topic_id].nil? ? 0 : params[:topic_id].to_i
