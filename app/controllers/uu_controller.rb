@@ -394,7 +394,7 @@ class UuController < ApplicationController
       if need_coupon
         result = apply_high_commission(params[:item_id].to_i, $default_sid, $default_pid)
         if result["data"]["couponInfo"] && !result["data"]["couponInfo"].empty?
-          coupon_money = result["data"]["couponInfo"].match(/减(\d+)元/)[1].to_i
+          coupon_money = result["data"]["couponInfo"].match(/减([\d\.]+)元/)[1].to_i
           dd = result["data"]["couponEndTime"].split('-')
           coupon_end_time = Time.new(dd[0].to_i, dd[1].to_i, dd[2].to_i).to_i
         end
@@ -853,14 +853,14 @@ class UuController < ApplicationController
   def buy
     begin
       if is_robot?
-        render plain: "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+        render plain: "https://item.taobao.com/item.htm?id=#{params[:id]}"
         return
       end
       if params[:xcx] && params[:channel].to_i == 12
         render plain: ''
         return
       end
-      url = "https://detail.taobao.com/item.htm?id=#{params[:id]}"
+      url = "https://item.taobao.com/item.htm?id=#{params[:id]}"
       if channel = get_channel
         result = apply_high_commission(params[:id], channel.sid, channel.pid)
       else
