@@ -364,7 +364,7 @@ class UuController < ApplicationController
   end
   def product_tb
     begin
-      item_id = params[:item_id].to_i
+      item_id = params[:item_id].strip
       need_coupon = params[:need_coupon] ? 1 : 0
       key = Digest::MD5.hexdigest("tbitem_#{item_id}_#{need_coupon}")
       if result = $dcl.get(key)
@@ -392,10 +392,10 @@ class UuController < ApplicationController
       coupon_money = 0
       coupon_end_time = 0
       if need_coupon
-        result = apply_high_commission(params[:item_id].to_i, $default_sid, $default_pid)
-        if result["data"]["couponInfo"] && !result["data"]["couponInfo"].empty?
-          coupon_money = result["data"]["couponInfo"].match(/减([\d\.]+)元/)[1].to_i
-          dd = result["data"]["couponEndTime"].split('-')
+        result = apply_high_commission(params[:item_id], $default_sid, $default_pid)
+        if result["coupon_info"] && !result["coupon_info"].empty?
+          coupon_money = result["coupon_info"].match(/减([\d\.]+)元/)[1].to_i
+          dd = result["coupon_end_time"].split('-')
           coupon_end_time = Time.new(dd[0].to_i, dd[1].to_i, dd[2].to_i).to_i
         end
       end
@@ -819,8 +819,8 @@ class UuController < ApplicationController
   end
 
   def apply_high_commission(product_id, sid, pid)
-    result = dataoke_get_privilege_link(product_id, sid, pid)
-    JSON.parse(result)
+    url = "https://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5969&pid=mm_324350007_343700229_97295400242&num_iid=#{product_id}"
+    JSON.parse(Net::HTTP.get(URI(url)))
   end
 
   def newbuy
@@ -866,10 +866,9 @@ class UuController < ApplicationController
       else
         result = apply_high_commission(params[:id], $default_sid, $default_pid)
       end
-      if result["code"] == 0
-        url = result["data"]["itemUrl"]
-        url = result["data"]["couponClickUrl"] unless result["data"]["couponClickUrl"].empty?
-        url = result["data"]["shortUrl"] if params[:short]
+      if result["error_response"].nil?
+        url = result["item_url"]
+        url = result["coupon_click_url"] if !result["coupon_click_url"].empty? && !result["coupon_info"].nil?
       end
       if params[:xcx]
         render plain: url
@@ -924,9 +923,9 @@ class UuController < ApplicationController
       else
         result = apply_high_commission(params[:id], $default_sid, $default_pid)
       end
-      if result["code"] == 0
-        url = result["data"]["itemUrl"]
-        url = result["data"]["couponClickUrl"] unless result["data"]["couponClickUrl"].empty?
+      if result["error_response"].nil?
+        url = result["item_url"]
+        url = result["coupon_click_url"] if !result["coupon_click_url"].empty? && !result["coupon_info"].nil?
       end
       url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
       redirect_to url, status: 302
