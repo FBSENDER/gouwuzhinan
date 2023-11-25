@@ -8,6 +8,5 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app
 
 ENV RAILS_ENV production 
-RUN gem update --system
 RUN bundle install
 CMD bundle exec rake assets:precompile ; bundle exec puma -C config/puma.rb
