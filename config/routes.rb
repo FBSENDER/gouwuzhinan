@@ -113,6 +113,7 @@ Rails.application.routes.draw do
   get "uu/dtk_category_goods", to: "uu#dtk_category_goods"
   get "uu/dtk_category_new_goods", to: "uu#dtk_category_new_goods"
   get "uu/dtk_topics", to: "uu#dtk_topics"
+  get "uu/dtk_ranks", to: "uu#dtk_ranks"
   get "uu/dtk_topic_goods", to: "uu#dtk_topic_goods"
   get "uu/dtk_brands", to: "uu#dtk_brands"
   get "uu/dtk_brand_detail", to: "uu#dtk_brand_detail"

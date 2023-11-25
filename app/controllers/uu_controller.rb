@@ -1697,6 +1697,12 @@ class UuController < ApplicationController
   def dtk_topics
     render json: dataoke_get_topics, callback: params[:callback]
   end
+  def dtk_ranks
+    page = params[:page].nil? ? 1 : params[:page].to_i
+    cid = params[:cid].nil? ? 0 : params[:cid].to_i
+    type = params[:type].nil? ? 1 : params[:type].to_i
+    render json: dataoke_get_ranking_list(type, cid, page)
+  end
 
   def dtk_category_goods
     page = params[:page].nil? ? 1 : params[:page].to_i
