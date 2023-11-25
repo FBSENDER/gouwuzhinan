@@ -645,7 +645,13 @@ class UuController < ApplicationController
   def jiukuaijiu_list
     page = params[:page].nil? ? 1 : params[:page].to_i
     cid = params[:cid].nil? ? 0 : params[:cid].to_i
-    render json: lanlan_type_coupon_list(4, cid, 1, page, 20), callback: params[:callback]
+    dtk = params[:dtk].nil? ? 0 : params[:dtk].to_i
+    nine_cid = params[:nine].nil? ? -1: params[:nine].to_i
+    if dtk == 1
+      render json: dataoke_get_nine_op_goods(nine_cid, page), callback: params[:callback]
+    else
+      render json: lanlan_type_coupon_list(4, cid, 1, page, 20), callback: params[:callback]
+    end
   end
 
   def temai_list
@@ -1893,4 +1899,5 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
     end
     redirect_to @content
   end
+
 end
