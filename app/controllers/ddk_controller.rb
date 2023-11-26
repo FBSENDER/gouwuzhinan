@@ -799,13 +799,21 @@ class DdkController < ApplicationController
 
   def authority_query
     begin
+      uid = params[:uid].nil? ? "" : params[:uid]
+      sid = params[:sid].nil? ? "" : params[:sid]
+      channel = get_channel
+      pid = channel.nil? ? $ddk_default_pid : channel.pid
       action_params = {
-        pid: params[:pid]
+        pid: pid,
+        custom_parameters: "{\"uid\":\"#{uid}\",\"sid\":\"#{sid}\"}"
       }
       qq = system_params("pdd.ddk.member.authority.query").merge(action_params)
       response = do_request(qq)
-      data = JSON.parse(response.body)
-      render json: data, callback: params[:callback]
+      result = JSON.parse(response.body)
+      if bind = result["authority_query_response"]["bind"]
+        data = {status: 1, bind: bind}
+        render json: data, callback: params[:callback]
+      end
     rescue
       render json: {status: 0}, callback: params[:callback]
     end
@@ -813,15 +821,27 @@ class DdkController < ApplicationController
 
   def authority_generate
     begin
+      id = params[:id]
+      uid = params[:uid].nil? ? "" : params[:uid]
+      sid = params[:sid].nil? ? "" : params[:sid]
+      channel = get_channel
+      pid = channel.nil? ? $ddk_default_pid : channel.pid
       action_params = {
-        p_id: params[:pid],
-        goods_sign_list: '["c9r2omogKFFAc7WBwvbZU1ikIb16_J3CTa8HNN"]',
-        generate_authority_url: true
+        p_id_list: "[\"#{pid}\"]",
+        channel_type: 10,
+        custom_parameters: "{\"uid\":\"#{uid}\",\"sid\":\"#{sid}\"}",
+        goods_sign: "#{id}",
+        generate_qq_app: true,
+        generate_short_url: true
       }
-      qq = system_params("pdd.ddk.goods.promotion.url.generate").merge(action_params)
+      qq = system_params("pdd.ddk.rp.prom.url.generate").merge(action_params)
       response = do_request(qq)
       data = JSON.parse(response.body)
-      render json: data, callback: params[:callback]
+      result = JSON.parse(response.body)
+      if urls = result["rp_promotion_url_generate_response"]["url_list"][0]
+        d_data = {status: 1, result: urls}
+        render json: d_data, callback: params[:callback]
+      end
     rescue
       render json: {status: 0}, callback: params[:callback]
     end
