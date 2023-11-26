@@ -374,27 +374,28 @@ class DdkController < ApplicationController
   end
 
   def theme_list
-    begin
-      page =  params[:page] || 1
-      page_size = params[:page_size] || 20
-      key = Digest::MD5.hexdigest("ddkthemelist_#{page}_#{page_size}")
-      if result = $dcl.get(key)
-        render json: result, callback: params[:callback]
-        return
-      end
-      action_params = {
-        page: page,
-        page_size: page_size
-      }
-      qq = system_params("pdd.ddk.theme.list.get").merge(action_params)
-      response = do_request(qq)
-      data = JSON.parse(response.body)
-      d_data = {status: 1, result: data["theme_list_get_response"]["theme_list"]}
-      render json: d_data, callback: params[:callback]
-      $dcl.set(key, d_data.to_json)
-    rescue
-      render json: {status: 0}, callback: params[:callback]
-    end
+    render json: {status: 0}, callback: params[:callback]
+    #begin
+    #  page =  params[:page] || 1
+    #  page_size = params[:page_size] || 20
+    #  key = Digest::MD5.hexdigest("ddkthemelist_#{page}_#{page_size}")
+    #  if result = $dcl.get(key)
+    #    render json: result, callback: params[:callback]
+    #    return
+    #  end
+    #  action_params = {
+    #    page: page,
+    #    page_size: page_size
+    #  }
+    #  qq = system_params("pdd.ddk.theme.list.get").merge(action_params)
+    #  response = do_request(qq)
+    #  data = JSON.parse(response.body)
+    #  d_data = {status: 1, result: data["theme_list_get_response"]["theme_list"]}
+    #  render json: d_data, callback: params[:callback]
+    #  $dcl.set(key, d_data.to_json)
+    #rescue
+    #  render json: {status: 0}, callback: params[:callback]
+    #end
   end
 
   def theme_detail
