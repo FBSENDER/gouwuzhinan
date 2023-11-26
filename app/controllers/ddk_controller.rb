@@ -243,6 +243,9 @@ class DdkController < ApplicationController
   def get_promotion_url_new
     begin
       goods_id = params[:id]
+      auth = params[:auth].nil? ? false : true
+      uid = params[:uid].nil? ? "" : params[:uid]
+      sid = params[:sid].nil? ? "" : params[:sid]
       channel = get_channel
       pid = channel.nil? ? $ddk_default_pid : channel.pid
       key = Digest::MD5.hexdigest("ddkpromotionurl_#{goods_id}_#{pid}")
@@ -258,7 +261,9 @@ class DdkController < ApplicationController
         multi_group: true,
         generate_weapp_webview: true,
         generate_we_app: true,
-        generate_qq_app: true
+        generate_qq_app: true,
+        generate_authority_url: auth,
+        custom_parameters: "{\"uid\":\"#{uid}\",\"sid\":\"#{sid}\"}"
       }
       qq = system_params("pdd.ddk.goods.promotion.url.generate").merge(action_params)
       response = do_request(qq)
