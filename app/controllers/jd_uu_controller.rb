@@ -72,14 +72,14 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         render json: {status: 0}
         return 
       end
-      id = [params[:id].to_i]
+      id = params[:id].to_i
       key = Digest::MD5.hexdigest("jduuproduct_#{params[:id].to_i}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(1, 20, nil, nil, nil, nil, id, nil, nil, nil, nil, nil, nil, nil, nil)
-      data = do_with_search_result_product(JSON.parse(r))
+      r = dataoke_get_jd_product_detail(id)
+      data = do_with_search_result_product_dtk(r)
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
@@ -325,6 +325,53 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
     end
   end
 
+  def do_with_search_result_product_dtk(r)
+    begin
+      result = JSON.parse(r)
+      if result["code"] == 0 && result["data"] && result["data"].size > 0
+        d = result["data"][0]
+        item = {
+          item_id: d["skuId"],
+          title: d["skuName"],
+          pict_url: d["picMain"],
+          images: d["detailImages"],
+          sales: d["inOrderCount30Days"],
+          comments: d["comments"],
+          good_share: d["goodCommentsShare"],
+          product_url: d["materialUrl"],
+          o_price: d["originPrice"],
+          lowest_price: d["actualPrice"],
+          lowest_coupon_price: d["actualPrice"],
+          price_type: d["isSeckill"].to_i == 1 ? 2 : 0,
+          shop_id: d["shopId"],
+          shop_title: d["shopName"],
+          is_hot: 0,
+          owner: d["isOwner"],
+          brand_code: "",
+          brand_name: "",
+          cid1: d["cid1"],
+          cid2: d["cid2"],
+          cid3: d["cid3"],
+          cname1: d["cid1Name"],
+          cname2: d["cid2Name"],
+          cname3: d["cid3Name"],
+          coupon_amount: d["couponAmount"],
+          coupon_url: d["couponLink"],
+          coupon_quota: d["couponRemainCount"],
+          coupon_type: d["couponType"],
+          end_time: 0
+        }
+        if d["couponUserEndTime"] && d["couponUserEndTime"].size > 0
+          item[:end_time] = DateTime.strptime(d["couponUserEndTime"], "%Y-%m-%d %H:%M:%S").to_time.to_i
+        end
+        return {status: 200, result: item}
+      else
+        return {status: 0}
+      end
+    rescue
+      return {status: 0}
+    end
+  end
   def do_with_search_result_product(r)
     begin
       rr = r["jd_union_open_goods_query_response"]["result"]
