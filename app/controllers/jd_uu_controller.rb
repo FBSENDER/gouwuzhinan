@@ -109,8 +109,9 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, cid1, nil, nil, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
-      data = do_with_search_result_query(JSON.parse(r))
+      #r = jd_union_open_goods_query(page, 20, nil, cid1, nil, nil, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
+      r = dataoke_jd_search_normal(page, 20, nil, cid1, nil, nil, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
+      data = do_with_search_result_query_dtk(r)
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
@@ -140,8 +141,9 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
-      data = do_with_search_result_query(JSON.parse(r))
+      #r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
+      r = dataoke_jd_search_normal(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
+      data = do_with_search_result_query_dtk(r)
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
@@ -172,8 +174,9 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, shop_id, nil)
-      data = do_with_search_result_query(JSON.parse(r))
+      #r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, shop_id, nil)
+      r = dataoke_jd_search_normal(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, shop_id, nil)
+      data = do_with_search_result_query_dtk(r)
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
@@ -204,8 +207,9 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, brand_id)
-      data = do_with_search_result_query(JSON.parse(r))
+      #r = jd_union_open_goods_query(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, brand_id)
+      r = dataoke_jd_search_normal(page, 20, nil, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, brand_id)
+      data = do_with_search_result_query_dtk(r)
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
@@ -222,8 +226,9 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         render json: result, callback: params[:callback]
         return
       end
-      r = jd_union_open_goods_query(page, 20, nil, nil, nil, nil, ids, nil, nil, nil, nil, nil, nil, nil, nil)
-      data = do_with_search_result_query(JSON.parse(r))
+      #r = jd_union_open_goods_query(page, 20, nil, nil, nil, nil, ids, nil, nil, nil, nil, nil, nil, nil, nil)
+      r = dataoke_jd_search_normal(page, 20, nil, nil, nil, nil, ids, nil, nil, nil, nil, nil, nil, nil, nil)
+      data = do_with_search_result_query_dtk(r)
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
@@ -254,8 +259,9 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         return
       end
       #(page, page_size, keyword, cid1, cid2, cid3, sku_ids, owner, sort_name, sort, is_coupon, is_pg, is_hot, shop_id, brand_code)
-      r = jd_union_open_goods_query(page, 20, keyword, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
-      data = do_with_search_result_query(JSON.parse(r))
+      #r = jd_union_open_goods_query(page, 20, keyword, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
+      r = dataoke_jd_search_normal(page, 20, keyword, nil, nil, cid3, nil, owner, sort_name, sort, is_coupon, is_pg, is_hot, nil, nil)
+      data = do_with_search_result_query_dtk(r)
       render json: data, callback: params[:callback]
       $dcl.set(key, data.to_json) if data[:status] == 200
     rescue
@@ -311,6 +317,70 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
                 item[:coupon_quota] = c["quota"].to_i
                 item[:coupon_type] = c["bindType"]
                 item[:lowest_coupon_price] = (item[:lowest_price] - c["discount"].to_i).round(2)
+              end
+            end
+          end
+          results << item
+        end
+        return {status: 200, results: results}
+      else
+        return {status: 0}
+      end
+    rescue
+      return {status: 0}
+    end
+  end
+
+  def do_with_search_result_query_dtk(r)
+    begin
+      result = JSON.parse(r)
+      if result["code"] == 0 && result["data"] && result["data"]["list"] && result["data"]["list"].size > 0
+        total = result["data"]["totalNum"] ? result["data"]["totalNum"].to_i : 0
+        results = []
+        result["data"]["list"].each do |d|
+          item = {
+            item_id: d["skuId"],
+            title: d["skuName"],
+            pict_url: d["whiteImage"],
+            images: d["imageUrlList"],
+            sales: d["inOrderCount30Days"],
+            comments: d["comments"],
+            good_share: d["goodCommentsShare"],
+            product_url: d["materialUrl"],
+            o_price: d["price"],
+            lowest_price: d["lowestPrice"],
+            lowest_coupon_price: d["lowestCouponPrice"],
+            price_type: d["lowestPriceType"],
+            shop_id: d["shopId"],
+            shop_title: d["shopName"],
+            spuid: d["spuid"],
+            brand_code: d["brandCode"],
+            brand_name: d["brandName"],
+            cid1: d["cid1"],
+            cid2: d["cid2"],
+            cid3: d["cid3"],
+            cname1: d["cid1Name"],
+            cname2: d["cid2Name"],
+            cname3: d["cid3Name"],
+            coupon_amount: 0,
+            coupon_url: "",
+            coupon_quota: 0,
+            coupon_type: 0,
+            is_hot: 0,
+            owner: d["owner"],
+            end_time: 0
+          }
+          if d["couponList"].size > 0
+            item[:coupon_amount] = d["couponList"][0]["discount"].to_i
+            item[:coupon_url] = d["couponList"][0]["link"]
+            item[:coupon_quota] = d["couponList"][0]["quota"].to_i
+            item[:coupon_type] = d["couponList"][0]["bindType"]
+            d["couponList"].each do |c|
+              if c["isBest"] == 1
+                item[:coupon_amount] = c["discount"].to_i
+                item[:coupon_url] = c["link"]
+                item[:coupon_quota] = c["quota"].to_i
+                item[:coupon_type] = c["bindType"]
               end
             end
           end
