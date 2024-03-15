@@ -495,6 +495,7 @@ class UuController < ApplicationController
         g = {}
         g["item_id"] = item["item_id"]
         g["pict_url"] = item["item_basic_info"]["pict_url"]
+        g["white_image"] = item["item_basic_info"]["white_image"]
         g["title"] = item["item_basic_info"]["title"]
         g["short_title"] = item["item_basic_info"]["short_title"]
         g["user_type"] = item["item_basic_info"]["user_type"]
@@ -519,6 +520,7 @@ class UuController < ApplicationController
         g = {}
         g["item_id"] = item["item_id"]
         g["pict_url"] = item["item_basic_info"]["pict_url"]
+        g["white_image"] = item["item_basic_info"]["white_image"]
         g["title"] = item["item_basic_info"]["title"]
         g["short_title"] = item["item_basic_info"]["short_title"]
         g["user_type"] = item["item_basic_info"]["user_type"]
