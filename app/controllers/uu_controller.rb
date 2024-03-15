@@ -492,28 +492,21 @@ class UuController < ApplicationController
     dg_material_result = get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page, 40)
     if dg_material_result && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].size > 0 
       result = dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].map do |item|
-        item.delete("commission_rate")
-        item.delete("commission_type")
-        item.delete("coupon_id")
-        item.delete("level_one_category_id")
-        item.delete("real_post_fee")
-        item.delete("coupon_start_time")
-        item.delete("coupon_remain_count")
-        item.delete("coupon_start_fee")
-        item.delete("coupon_total_count")
-        item.delete("shop_dsr")
-        item.delete("category_id")
-        item.delete("coupon_end_time")
-        item.delete("url")
-        item.delete("white_image")
-        item.delete("item_url")
-        item.delete("num_iid")
-        item.delete("coupon_share_url")
-        item.delete("small_images")
-        item.delete("info_dxjh")
-        item.delete("include_mkt")
-        item.delete("include_dxjh")
-        item
+        g = {}
+        g["item_id"] = item["item_id"]
+        g["pict_url"] = item["item_basic_info"]["pict_url"]
+        g["title"] = item["item_basic_info"]["title"]
+        g["short_title"] = item["item_basic_info"]["short_title"]
+        g["user_type"] = item["item_basic_info"]["user_type"]
+        g["shop_title"] = item["item_basic_info"]["shop_title"]
+        g["seller_id"] = item["item_basic_info"]["seller_id"]
+        g["volume"] = item["item_basic_info"]["volume"]
+        g["reserve_price"] = item["price_promotion_info"]["reserve_price"]
+        g["zk_final_price"] = item["price_promotion_info"]["zk_final_price"]
+        if item["price_promotion_info"]["final_promotion_price"]
+          g["coupon_amount"] = (g["zk_final_price"].to_f - item["price_promotion_info"]["final_promotion_price"].to_f).to_i
+        end
+        g
       end
       return {status: 1, results: result}
     end
@@ -523,14 +516,21 @@ class UuController < ApplicationController
     dg_material_result = get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
     if dg_material_result && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].size > 0 
       result = dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].map do |item|
-        item.delete("item_url")
-        item.delete("num_iid")
-        item.delete("coupon_share_url")
-        item.delete("small_images")
-        item.delete("info_dxjh")
-        item.delete("include_mkt")
-        item.delete("include_dxjh")
-        item
+        g = {}
+        g["item_id"] = item["item_id"]
+        g["pict_url"] = item["item_basic_info"]["pict_url"]
+        g["title"] = item["item_basic_info"]["title"]
+        g["short_title"] = item["item_basic_info"]["short_title"]
+        g["user_type"] = item["item_basic_info"]["user_type"]
+        g["shop_title"] = item["item_basic_info"]["shop_title"]
+        g["seller_id"] = item["item_basic_info"]["seller_id"]
+        g["volume"] = item["item_basic_info"]["volume"]
+        g["reserve_price"] = item["price_promotion_info"]["reserve_price"]
+        g["zk_final_price"] = item["price_promotion_info"]["zk_final_price"]
+        if item["price_promotion_info"]["final_promotion_price"]
+          g["coupon_amount"] = (g["zk_final_price"].to_f - item["price_promotion_info"]["final_promotion_price"].to_f).to_i
+        end
+        g
       end
       return {status: 1, results: result}
     end
