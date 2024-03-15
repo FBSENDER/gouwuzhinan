@@ -490,8 +490,8 @@ class UuController < ApplicationController
   
   def dg_seo_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
     dg_material_result = get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page, 40)
-    if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
-      result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
+    if dg_material_result && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].size > 0 
+      result = dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].map do |item|
         item.delete("commission_rate")
         item.delete("commission_type")
         item.delete("coupon_id")
@@ -521,8 +521,8 @@ class UuController < ApplicationController
   end
   def dg_goods_list_data(page, keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price)
     dg_material_result = get_tbk_dg_material_json_only_search(keyword, cat, sort, is_tmall, is_overseas, has_coupon, start_dsr, start_tk_rate, end_tk_rate, start_price, end_price, page)
-    if dg_material_result && dg_material_result["tbk_dg_material_optional_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].size > 0 
-      result = dg_material_result["tbk_dg_material_optional_response"]["result_list"]["map_data"].map do |item|
+    if dg_material_result && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"] && dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].size > 0 
+      result = dg_material_result["tbk_dg_material_optional_upgrade_response"]["result_list"]["map_data"].map do |item|
         item.delete("item_url")
         item.delete("num_iid")
         item.delete("coupon_share_url")
