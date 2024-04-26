@@ -1908,4 +1908,21 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
     redirect_to @content
   end
 
+  def a_content
+    id = params[:id].to_i
+    @content = UuAiContent.where(id: id, status: 1).take
+    if @content.nil?
+      render json: {status: 0}
+    else
+      render json: {status: 1, result: {
+        title: @content.title,
+        keyword: @content.base_keyword,
+        markdown: @content.markdown,
+        created_at: @content.created_at.strftime("%F %H:%M"),
+        updated_at: @content.updated_at.strftime("%F %H:%M")
+      }}
+    end
+  end
+
 end
+

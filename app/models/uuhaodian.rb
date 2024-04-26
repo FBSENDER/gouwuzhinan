@@ -218,3 +218,7 @@ end
 class UuArticleTagRelation < ApplicationRecord
   self.table_name = 'uu_article_tag_relations'
 end
+
+class UuAiContent < ApplicationRecord
+  self.table_name = 'uu_ai_contents'
+end
