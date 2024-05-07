@@ -1922,6 +1922,11 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
         updated_at: @content.updated_at.strftime("%F %H:%M")
       }}
     end
+    user_agent = request.headers["HTTP_USER_AGENT"]
+    if user_agent.present? && user_agent =~ /Smartapp/
+      @content.crawle_times += 1
+      @content.save
+    end
   end
 
 end
