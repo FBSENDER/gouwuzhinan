@@ -339,7 +339,7 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         results = []
         result["data"]["list"].each do |d|
           item = {
-            item_id: d["skuId"],
+            item_id: d["itemId"],
             title: d["skuName"],
             pict_url: d["whiteImage"],
             images: d["imageUrlList"],
