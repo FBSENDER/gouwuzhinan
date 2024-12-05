@@ -68,12 +68,13 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
 
   def product
     begin
-      if params[:id].nil? || params[:id].to_i <= 0
+      #if params[:id].nil? || params[:id].to_i <= 0
+      if params[:id].nil?
         render json: {status: 0}
         return 
       end
-      id = params[:id].to_i
-      key = Digest::MD5.hexdigest("jduuproduct_#{params[:id].to_i}")
+      id = params[:id]
+      key = Digest::MD5.hexdigest("jduuproduct_#{params[:id]}")
       if result = $dcl.get(key)
         render json: result, callback: params[:callback]
         return
@@ -339,7 +340,7 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
         results = []
         result["data"]["list"].each do |d|
           item = {
-            item_id: d["skuId"],
+            item_id: d["itemId"],
             title: d["skuName"],
             pict_url: d["whiteImage"],
             images: d["imageUrlList"],
