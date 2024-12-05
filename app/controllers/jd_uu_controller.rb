@@ -401,7 +401,7 @@ where sk.keyword_id = #{keyword.id}").to_a.map{|row| {id: row[0], source_id: row
       if result["code"] == 0 && result["data"] && result["data"].size > 0
         d = result["data"][0]
         item = {
-          item_id: d["skuId"],
+          item_id: d["itemId"],
           title: d["skuName"],
           pict_url: d["picMain"],
           detail_images: d["detailImages"],
