@@ -394,7 +394,7 @@ class UuController < ApplicationController
       if need_coupon
         result = apply_high_commission(params[:item_id], $default_sid, $default_pid)
         #if result["coupon_info"] && !result["coupon_info"].empty?
-        if result["item_url_list"]["item_url_list"].size > 0 && result["item_url_list"]["item_url_list"][0]["coupon_info_dto"]
+        if result["item_url_list"]["item_url_list"].size > 0 && result["item_url_list"]["item_url_list"][0]["coupon_info_dto"].size > 0
           cdto = result["item_url_list"]["item_url_list"][0]["coupon_info_dto"]
           coupon_money = cdto["coupon_amount"].to_i
           dd =cdto["coupon_end_time"].split('-')
