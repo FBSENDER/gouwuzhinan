@@ -104,6 +104,7 @@ Rails.application.routes.draw do
   get "uu/query_suggest", to: "uu#query_suggest"
   get "uu/xiaohui_app", to: "uu#xiaohui_app"
   get "uu/a_content", to: "uu#a_content"
+  get "uu/agents_coupon_query", to: "uu#agents_coupon_query"
 
   #uu_article
   get "uu/article", to: "uu#article"

@@ -827,7 +827,7 @@ class UuController < ApplicationController
   end
 
   def apply_high_commission(product_id, sid, pid)
-    url = "http://www.heimataoke.com/api-zhuanlian?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5969&pid=mm_324350007_343700229_97295400242&num_iid=#{product_id}"
+    url = "https://www.heimataoke.com/api-linkConvert?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5969&pid=mm_324350007_343700229_97295400242&num_iid=#{product_id}"
     JSON.parse(Net::HTTP.get(URI(url)))
   end
 
@@ -1926,6 +1926,24 @@ where pu.product_id in(#{products.map{|pp| pp.id}.join(',')})").to_a.each do |ro
     if user_agent.present? && user_agent =~ /Smartapp/
       @content.crawle_times += 1
       @content.save
+    end
+  end
+
+  def agents_coupon_query
+    begin
+      keyword = params[:keyword].gsub('+', '') if params[:keyword]
+
+      data = dg_goods_list_data(1, keyword, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+      simple_data = data[:results].map{|item| {
+        pic_url: item["pict_url"],
+        title: item["title"],
+        product_url: "https://www.uuhaodian.com/yh/#{item["item_id"]}",
+        price: item["zk_final_price"],
+        tags: ["#{item["coupon_amount"]}元券"]
+      }}
+      render json: simple_data, callback: params[:callback]
+    rescue Exception => ex
+      render json: [], callback: params[:callback]
     end
   end
 
