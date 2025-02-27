@@ -393,9 +393,11 @@ class UuController < ApplicationController
       coupon_end_time = 0
       if need_coupon
         result = apply_high_commission(params[:item_id], $default_sid, $default_pid)
-        if result["coupon_info"] && !result["coupon_info"].empty?
-          coupon_money = result["coupon_info"].match(/减([\d\.]+)元/)[1].to_i
-          dd = result["coupon_end_time"].split('-')
+        #if result["coupon_info"] && !result["coupon_info"].empty?
+        if result["item_url_list"]["item_url_list"].size > 0 && result["item_url_list"]["item_url_list"][0]["coupon_info_dto"]
+          cdto = result["item_url_list"]["item_url_list"][0]["coupon_info_dto"]
+          coupon_money = cdto["coupon_amount"].to_i
+          dd =cdto["coupon_end_time"].split('-')
           coupon_end_time = Time.new(dd[0].to_i, dd[1].to_i, dd[2].to_i).to_i
         end
       end
@@ -827,7 +829,7 @@ class UuController < ApplicationController
   end
 
   def apply_high_commission(product_id, sid, pid)
-    url = "https://www.heimataoke.com/api-linkConvert?appkey=#{$heima_appkey}&appsecret=#{$heima_appsecret}&sid=5969&pid=mm_324350007_343700229_97295400242&num_iid=#{product_id}"
+    url = "https://www.heimataoke.com/api-linkConvert?apikey=#{$heima_appsecret}&key_type=1&sid=5969&pid=mm_324350007_343700229_97295400242&item_id=#{product_id}"
     JSON.parse(Net::HTTP.get(URI(url)))
   end
 
@@ -874,9 +876,10 @@ class UuController < ApplicationController
       else
         result = apply_high_commission(params[:id], $default_sid, $default_pid)
       end
-      if result["error_response"].nil?
-        url = result["item_url"]
-        url = result["coupon_click_url"] if !result["coupon_click_url"].empty? && !result["coupon_info"].nil?
+      if result["item_url_list"]["item_url_list"].size > 0
+        item_url_list = result["item_url_list"]["item_url_list"][0]
+        url = item_url_list["link_info_dto"]["cps_short_url"]
+        url = item_url_list["link_info_dto"]["coupon_short_url"] if !item_url_list["link_info_dto"]["coupon_short_url"].empty?
       end
       if params[:xcx]
         render plain: url
@@ -901,8 +904,8 @@ class UuController < ApplicationController
       else
         result = apply_high_commission(params[:id], $default_sid, $default_pid)
       end
-      if result["code"] == 0
-        kouling = result["data"]["longTpwd"]
+      if result["item_url_list"]["item_url_list"].size > 0
+        kouling = result["item_url_list"]["item_url_list"][0]["link_info_dto"]["coupon_short_tpwd"]
       end
       render json: {k: kouling}, callback: params[:callback]
     rescue 
@@ -931,11 +934,12 @@ class UuController < ApplicationController
       else
         result = apply_high_commission(params[:id], $default_sid, $default_pid)
       end
-      if result["error_response"].nil?
-        url = result["item_url"]
-        url = result["coupon_click_url"] if !result["coupon_click_url"].empty? && !result["coupon_info"].nil?
+      if result["item_url_list"]["item_url_list"].size > 0
+        item_url_list = result["item_url_list"]["item_url_list"][0]
+        url = item_url_list["link_info_dto"]["cps_short_url"]
+        url = item_url_list["link_info_dto"]["coupon_short_url"] if !item_url_list["link_info_dto"]["coupon_short_url"].empty?
       end
-      url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
+      #url += "&activityId=#{params[:activity_id]}" if params[:activity_id]
       redirect_to url, status: 302
     rescue
       redirect_to url, status: 302
